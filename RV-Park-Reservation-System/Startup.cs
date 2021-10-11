@@ -30,7 +30,7 @@ namespace RV_Park_Reservation_System
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDatabaseDeveloperPageExceptionFilter();
+            //services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
@@ -42,7 +42,7 @@ namespace RV_Park_Reservation_System
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
+                //app.UseMigrationsEndPoint();
             }
             else
             {
@@ -59,10 +59,10 @@ namespace RV_Park_Reservation_System
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-            });
+            //app.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapRazorPages();
+            //});
         }
     }
 }
