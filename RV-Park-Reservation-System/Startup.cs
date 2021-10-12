@@ -27,13 +27,15 @@ namespace RV_Park_Reservation_System
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             //services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddRazorPages();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +45,7 @@ namespace RV_Park_Reservation_System
             {
                 app.UseDeveloperExceptionPage();
                 //app.UseMigrationsEndPoint();
+                
             }
             else
             {
@@ -59,10 +62,10 @@ namespace RV_Park_Reservation_System
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapRazorPages();
-            //});
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
         }
     }
 }
