@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-body px-lg-5 pt-4">
                     <form method="post" autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl">
-                        <h3 class="col-12 text-success text-center py-4">
+                        <h3 class="col-12 text-primary text-center py-4">
                             @if (User.IsInRole(SD.AdminRole))
                             {
                 <strong>Register an account!</strong> }
@@ -57,7 +57,7 @@
                 <input type="radio" name="rdUserRole" value="@SD.AdminRole" /> @SD.AdminRole
             </div>}
                         <div class="py-2">
-                            <button type="submit" class="btn btn-success form-control">Register</button>
+                            <button type="submit" class="btn btn-primary form-control">Register</button>
                         </div>
                     </form>
                 </div>
@@ -67,11 +67,11 @@
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>$(function () {
+    @*<script>$(function () {
             $("#datepicker").datepicker({
                 yearRange: '1900: ' + new Date().getFullYear(),
                 changeMonth: true,
                 changeYear: true
             });
-        });</script>
+        });</script>*@
 }

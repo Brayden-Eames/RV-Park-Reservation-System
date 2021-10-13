@@ -118,7 +118,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
                     {
                         await _userManager.AddToRoleAsync(user, SD.AdminRole);
                     }
-                    if (role == SD.CustomerRole)
+                    else /*(role == SD.CustomerRole)*/ //maybe change to 'else' instead of if 
                     {
                         await _userManager.AddToRoleAsync(user, SD.CustomerRole);
                     }
