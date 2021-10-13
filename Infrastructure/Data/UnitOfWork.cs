@@ -16,66 +16,16 @@ namespace Infrastructure.Data
             _dbContext = dbContext;
         }
 
-        private IGenericRepository<Client> _Client;
-        private IGenericRepository<ClientResponse> _ClientResponse;
-        private IGenericRepository<Friend> _Friend;
-        private IGenericRepository<FriendResponse> _FriendResponse;
-        private IGenericRepository<Adjective> _Adjective;
-        //private IGenericRepository<ApplicationUser> _ApplicationUser;
+        private IGenericRepository<Customer> _Customer;
 
-        public IGenericRepository<Client> Client
+        public IGenericRepository<Customer> Customer
         {
             get
             {
-                if (_Client == null) _Client = new GenericRepository<Client>(_dbContext);
-                return _Client;
+                if (_Customer == null) _Customer = new GenericRepository<Customer>(_dbContext);
+                return _Customer;
             }
         }
-
-        public IGenericRepository<ClientResponse> ClientResponse
-        {
-            get
-            {
-                if (_ClientResponse == null) _ClientResponse = new GenericRepository<ClientResponse>(_dbContext);
-                return _ClientResponse;
-            }
-        }
-
-        public IGenericRepository<Friend> Friend
-        {
-            get
-            {
-                if (_Friend == null) _Friend = new GenericRepository<Friend>(_dbContext);
-                return _Friend;
-            }
-        }
-
-        public IGenericRepository<FriendResponse> FriendResponse
-        {
-            get
-            {
-                if (_FriendResponse == null) _FriendResponse = new GenericRepository<FriendResponse>(_dbContext);
-                return _FriendResponse;
-            }
-        }
-
-        public IGenericRepository<Adjective> Adjective
-        {
-            get
-            {
-                if (_Adjective == null) _Adjective = new GenericRepository<Adjective>(_dbContext);
-                return _Adjective;
-            }
-        }
-
-        //public IGenericRepository<ApplicationUser> ApplicationUser
-        //{
-        //    get
-        //    {
-        //        if (_ApplicationUser == null) _ApplicationUser = new GenericRepository<ApplicationUser>(_dbContext);
-        //        return _ApplicationUser;
-        //    }
-        //} //if someone is not logged in this makes the object to use during the session
 
         public int Commit()
         {

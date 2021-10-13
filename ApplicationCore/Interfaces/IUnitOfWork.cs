@@ -9,13 +9,7 @@ namespace ApplicationCore.Interfaces
     public interface IUnitOfWork
     {
    
-        public IGenericRepository<Client> Client { get; }
-        public IGenericRepository<ClientResponse> ClientResponse { get; }
-        public IGenericRepository<Friend> Friend { get; }
-        public IGenericRepository<FriendResponse> FriendResponse { get; }
-        public IGenericRepository<Adjective> Adjective { get; }
-        //public IGenericRepository<ApplicationUser> ApplicationUser { get; }
-
+        public IGenericRepository<Customer> Customer { get; }
 
         int Commit();
 

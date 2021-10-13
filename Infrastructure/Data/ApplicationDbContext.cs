@@ -15,11 +15,7 @@ namespace Infrastructure.Data
         {
         }
 
-        public DbSet<Client> Client { get; set; }
-        public DbSet<ClientResponse> ClientResponse { get; set; }
-        public DbSet<Friend> Friend { get; set; }       
-        public DbSet<FriendResponse> FriendResponse { get; set; }
-        public DbSet<Adjective> Adjective { get; set; }
-        //    public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+
        }
     }
