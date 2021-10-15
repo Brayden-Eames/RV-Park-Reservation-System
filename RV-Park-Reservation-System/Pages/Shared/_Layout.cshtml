@@ -27,14 +27,41 @@
                             @if (User.IsInRole(SD.AdminRole))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Index">Admin Page</a>
+                                    <a class="nav-link text-dark" asp-page="/Index">Admin Page</a>
                                 </li>
+
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Admin/Users/Index">Users</a>
+                                    <a class="nav-link text-dark" asp-page="/Admin/Reports">Reports</a>
                                 </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-page="/Admin/Reservations">Reservations</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-page="/Admin/Sites">Sites</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-page="/Admin/Billing">Billing</a>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link text-dark dropdown-toggle" href="#" data-toggle="dropdown">
+                                        Edit
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item text-dark" asp-page="/Admin/Users/Index">Users</a>
+                                        <a class="dropdown-item text-dark" asp-page="/Admin/Manage">Other</a>
+                                    </div>
+                                </li>
+
                             }
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Reserve a Site</a>
+                                <a class="nav-link text-dark" asp-page="/Client/Booking">Reserve a Site</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-page="/Client/MyReservations">My Reservations</a>
                             </li>
                         }
                     </ul>
@@ -51,8 +78,9 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - RV_Park_Reservation_System
-        </div>
+            &copy; 2021 - RV Park Reservation System           
+            <a class="nav-link text-dark" asp-page="/Shared/About">About</a>       
+        </div>      
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
