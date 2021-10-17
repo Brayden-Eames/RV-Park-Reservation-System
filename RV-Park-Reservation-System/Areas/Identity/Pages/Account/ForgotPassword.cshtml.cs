@@ -51,7 +51,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
 
                 
 
-                return RedirectToPage("/ForgotPasswordSecurityQuestions", new { email = Input.Email});
+                return RedirectToPage("./ForgotPasswordSecurityQuestions", new { email = Input.Email});
             }
 
             return Page();

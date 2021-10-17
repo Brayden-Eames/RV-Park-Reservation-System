@@ -1,5 +1,5 @@
 ﻿@page
-@model RV_Park_Reservation_System.Areas.Identity.Pages.Account.ForgotPasswordSecurityQuestionsModel
+@model RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage.ConfirmSecurityQuestionsModel
 @{
     ViewData["Title"] = "Security Confirmation";
 }
@@ -12,21 +12,21 @@
 
                     <hr />
                     <form method="post">
-                        <input type="hidden" asp-for="Input.Email"/>
+                        <input type="hidden" asp-for="Input.Email" />
                         <h3>@Model.Input.Question1</h3>
 
                         <div class="form-group">
-                            
+                            <label asp-for="Input.Answer1"> </label>
                             <input asp-for="Input.Answer1" class="form-control" />
                             <span asp-validation-for="Input.Answer1" class="text-danger"></span>
                         </div>
                         <h3>@Model.Input.Question2</h3>
                         <div class="form-group">
-                            
+                            <label asp-for="Input.Answer2"></label>
                             <input asp-for="Input.Answer2" class="form-control" />
                             <span asp-validation-for="Input.Answer2" class="text-danger"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary">Request Reset</button>
+                        <button type="submit" class="btn btn-primary">Confirm</button>
                     </form>
                 </div>
             </div>
