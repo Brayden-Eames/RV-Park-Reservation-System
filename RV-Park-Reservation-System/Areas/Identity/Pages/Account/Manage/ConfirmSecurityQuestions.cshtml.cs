@@ -14,15 +14,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
+namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
 {
-    public class ForgotPasswordSecurityQuestionsModel : PageModel
+    public class ConfirmSecurityQuestionsModel : PageModel
     {
         private readonly UserManager<Customer> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ForgotPasswordSecurityQuestionsModel(UserManager<Customer> userManager, IEmailSender emailSender,IUnitOfWork unitOfWork)
+        public ConfirmSecurityQuestionsModel(UserManager<Customer> userManager, IEmailSender emailSender, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -36,7 +36,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
 
         public IEnumerable<Security_Question> questions { get; set; }
 
-       
+
         public string email { get; set; }
 
         public class InputModel
@@ -61,20 +61,29 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
             public string Answer2 { get; set; } = "correct answer placeholder";
         }
 
-        public async Task OnGet(string? email)
+        public async Task OnGet()
         {
-            
-            Input = new InputModel();
 
+
+            Input = new InputModel();
+            
             //Finds User
-            Input.Email = email;
-            var user = await _userManager.FindByEmailAsync(email);
+           
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
 
             //Gets answers and questions
             Answers = await _unitOfWork.Security_Answer.ListAsync(a => a.Id == user.Id);
 
+            if (Answers.ToList().Count() == 0)
+            {
+                RedirectToPage("./UpsertSecurityQuestions");
+            }
+            else
+            {
             Input.Question1 = _unitOfWork.Security_Question.GetById(Answers.ToList()[0].QuestionID).QuestionText;
             Input.Question2 = _unitOfWork.Security_Question.GetById(Answers.ToList()[1].QuestionID).QuestionText;
+            }
+
 
 
 
@@ -85,33 +94,23 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(Input.Email);
+                var user = await _userManager.FindByEmailAsync(User.Identity.Name);
                 Answers = await _unitOfWork.Security_Answer.ListAsync(a => a.Id == user.Id);
                 if (Input.Answer1 != Answers.ToList()[0].AnswerText || Input.Answer2 != Answers.ToList()[1].AnswerText)
                 {
                     // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToPage("./ForgotPasswordConfirmation");
+                    return Page();
                 }
 
                 // For more information on how to enable account confirmation and password reset please 
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
-                    pageHandler: null,
-                    values: new { area = "Identity", code },
-                    protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                return RedirectToPage("./ForgotPasswordConfirmation");
+                return RedirectToPage("./UpsertSecurityQuestions");
             }
 
             return Page();
         }
     }
 }
+

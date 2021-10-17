@@ -1,7 +1,7 @@
 ﻿@page
 @model ConfirmEmailModel
 @{
-    ViewData["Title"] = "Confirm email";
+    ViewData["Title"] = "Confirmed email";
 }
 
 <div class="py-4 my-4">
@@ -10,23 +10,15 @@
             <div class="card">
                 <div class="card-body px-lg-5 pt-4">
                     <h1 class="text-center">@ViewData["Title"]</h1>
-
                     <hr />
-                    <form method="post">
-
-
-                        <div class="form-group">
-                            <label asp-for="Input.Question1ddl"> </label>
-                            <input asp-for="Input.Answer1AnswerText" class="form-control" />
-                            <span asp-validation-for="Input.Answer1AnswerText" class="text-danger"></span>
+                    <h5 class="text-center">Please set your security questions to activate reset password.</h5>
+                    <div class="row">
+                        <div class="col-4"></div>
+                        <div class="col-4">
+                            <input class="container-fluid btn btn-primary"  type="submit" value="submit" />
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Input.Question2ddl"></label>
-                            <input asp-for="Input.Answer2AnswerText" class="form-control" />
-                            <span asp-validation-for="Input.Answer2AnswerText" class="text-danger"></span>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Request Reset</button>
-                    </form>
+                        <div class="col-4"></div>
+                    </div>
                 </div>
             </div>
         </div>

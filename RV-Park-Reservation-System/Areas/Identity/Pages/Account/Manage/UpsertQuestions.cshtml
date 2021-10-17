@@ -1,0 +1,78 @@
+﻿@page
+@model RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage.UpsertQuestionsModel
+@{
+}
+
+@if (Model.Error == false)
+{
+    <div class="py-4 my-4">
+        <div class="row form-group">
+            <div class="col-8 offset-2">
+                <div class="card">
+                    <div class="card-body px-lg-5 pt-4">
+                        <h1 class="text-center">Set Security Questions</h1>
+                        <hr />
+                        <form method="post">
+
+                            <select class="text-center container-fluid p-2 " id="ddlQuestion1" asp-for="Input.Question1" asp-items="@Model.Input.ddlQuestion">
+                                <option value="">- Select a Question -</option>
+                            </select>
+                            <br />
+                            <br />
+                            <div class="form-group">
+                                <input asp-for="Input.Answer1Text" class="form-control" />
+                                <span asp-validation-for="Input.Answer1Text" class="text-danger"></span>
+                            </div>
+
+                            <select class="text-center container-fluid p-2" id="ddlQuestion2" asp-for="Input.Question2" asp-items="@Model.Input.ddlQuestion">
+                                <option value="">- Select a Question -</option>
+                            </select>
+                            <div class="form-group">
+                                <label></label>
+                                <input asp-for="Input.Answer2Text" class="form-control" />
+                                <span asp-validation-for="Input.Answer2Text" class="text-danger"></span>
+                            </div>
+                            <input type="hidden" class="form-control" asp-for="@Model.Error" />
+                            <button onclick="ValidateInput()" type="submit" class="btn btn-primary">Reset Security Questions</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="py-4 my-4">
+        <div class="row form-group">
+            <div class="col-8 offset-2">
+                <div class="card">
+                    <div class="card-body px-lg-5 pt-4">
+                        <h1 class="text-center">Confirm Security Questions</h1>
+                        <hr />
+                        <form method="post">
+
+                            <h3>@Model.Input.Question1</h3>
+
+                            <div class="form-group">
+
+                                <input asp-for="Input.Answer1Text" class="form-control" />
+                                <span asp-validation-for="Input.Answer1Text" class="text-danger"></span>
+                            </div>
+                            <h3>@Model.Input.Question2</h3>
+                            <div class="form-group">
+
+                                <input asp-for="Input.Answer2Text" class="form-control" />
+                                <span asp-validation-for="Input.Answer2Text" class="text-danger"></span>
+                            </div>
+                            <input type="hidden" class="form-control" asp-for="@Model.Error" />
+                            <button type="submit" class="btn btn-primary">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
