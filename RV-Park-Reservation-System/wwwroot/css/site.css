@@ -1,6 +1,123 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
+:root {
+    --blue: #0f172e !important;
+    --dark-blue: #0f172e !important;
+    --light-blue: #0177a9 !important;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #ba0828 !important;
+    --light-red: #cf2727;
+    --orange: #fd7e14;
+    --yellow: #ffc233 !important;
+    --light-yellow: #f7c63b;
+    --green: #5E700E !important;
+    --light-green: #919900 !important;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #7a7a7a;
+    --gray-dark: #18181 !important8;
+    --primary: #0f172e !important;
+    --secondary: #0177a9 !important;
+    --success: #5E700E !important;
+    --info: #6ec1e4;
+    --warning: #ffc233 !important;
+    --danger: #ba0828 !important;
+    --light: #6ec1e4;
+    --dark: #181818 !important;
+    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, 'Poppins', Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-family-heading: 'Montserrat', sans-serif !important;
+}
 
+html, body {
+    font-family: var(--font-family-sans-serif) !important;
+    min-height: 100vh;
+}
+
+h1 {
+    font-family: var(--font-family-heading) !important;
+    font-weight: 900 !important;
+}
+
+.bg-light {
+    background-color: var(--light) !important;
+}
+
+.bg-white {
+    background-color: var(--white) !important;
+}
+
+.bg-dark {
+    background-color: var(--dark) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary) !important;
+}
+
+.bg-info {
+    background-color: var(--info) !important;
+}
+
+.bg-success {
+    background-color: var(--success) !important;
+}
+
+.bg-warning {
+    background-color: var(--warning) !important;
+}
+
+.bg-danger {
+    background-color: var(--danger) !important;
+}
+
+.text-light {
+    color: var(--white) !important;
+}
+
+.text-white {
+    color: var(--white) !important;
+}
+
+.text-dark {
+    color: var(--dark) !important;
+}
+
+.text-primary {
+    color: var(--dark-blue) !important;
+}
+
+.text-secondary {
+    color: var(--secondary) !important;
+}
+
+.text-info {
+    color: var(--info) !important;
+}
+
+.text-success {
+    color: var(--success) !important;
+}
+
+.text-warning {
+    color: var(--warning) !important;
+}
+
+.text-danger {
+    color: var(--danger) !important;
+}
+
+body {
+    background-color: var(--white) !important;
+    color: var(--dark) !important;
+}
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -9,19 +126,86 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: var(--blue) !important;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    a:hover {
+        color: var(--light-blue) !important;
+    }
+
+a.nav-link, a.navbar-brand, .btn-link {
+    color: var(--white) !important;
 }
+
+    a.nav-link:hover, a.navbar-brand:hover, .btn-link:hover {
+        color: var(--light) !important;
+    }
+
+.btn-primary {
+    color: var(--white) !important;
+    background-color: var(--primary) !important;
+    border-color: var(--primary) !important;
+}
+
+    .btn-primary:hover {
+        color: var(--light) !important;
+        background-color: var(--dark-blue) !important;
+        border-color: var(--dark-blue) !important;
+    }
+
+.btn-success {
+    color: var(--white);
+    background-color: var(--success) !important;
+    border-color: var(--success) !important;
+}
+
+    .btn-success:hover {
+        color: var(--white);
+        background-color: var(--light-green) !important;
+        border-color: var(--light-green) !important;
+    }
+
+.btn-danger {
+    color: var(--white);
+    background-color: var(--danger);
+    border-color: var(--danger);
+}
+
+    .btn-danger:hover {
+        color: var(--white);
+        background-color: var(--danger);
+        border-color: var(--danger);
+    }
+
+.btn-warning {
+    color: var(--white);
+    background-color: var(--warning);
+    border-color: var(--warning);
+}
+
+    .btn-warning:hover {
+        color: var(--white);
+        background-color: var(--warning);
+        border-color: var(--warning);
+    }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+.card {
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, .2) !important;
+}
+
+.hero {
+    background-image: url('../Images/camperfireside-2000x1080.jpg');
+}
+@media (max-width: 992px) {
+    .hero {
+        background-image: url('../Images/fireside-800x1200.jpg');
+    }
 }
 
 /* Sticky footer styles
