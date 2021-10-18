@@ -32,12 +32,19 @@ namespace ApplicationCore.Models
 
         public DateTime CustLastModifiedDate { get; set; }
 
-        [NotMapped]
+        public int ServiceStatusID { get; set; }
+
+       
         [ForeignKey("ServiceStatusID")]
+        [Required]
         public int ServiceStatusId { get; set; }
 
-        [NotMapped]
+
+        public int DODAffiliationID { get; set; }
+        
+
         [ForeignKey("DODAffiliationID")]
+        [Required]
         public int DODAffiliationId { get; set; }
     }
 }
