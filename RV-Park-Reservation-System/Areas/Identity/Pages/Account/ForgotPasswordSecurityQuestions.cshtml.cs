@@ -36,7 +36,9 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
 
         public IEnumerable<Security_Question> questions { get; set; }
 
-       
+        [BindProperty]
+        public bool Error { get; set; }
+
         public string email { get; set; }
 
         public class InputModel
@@ -48,17 +50,17 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
             public IEnumerable<SelectListItem> ddlQuestion { get; set; }
 
 
-            public string Question1 { get; set; } = "Question 1 Placeholder";
+            public string Question1 { get; set; }
 
-            public string Question2 { get; set; } = "Question 2 Placeholder";
+            public string Question2 { get; set; }
 
 
-
-            [Required]
-            public string Answer1 { get; set; } = "correct answer placeholder";
 
             [Required]
-            public string Answer2 { get; set; } = "correct answer placeholder";
+            public string Answer1 { get; set; }
+
+            [Required]
+            public string Answer2 { get; set; } 
         }
 
         public async Task OnGet(string? email)
@@ -73,8 +75,18 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
             //Gets answers and questions
             Answers = await _unitOfWork.Security_Answer.ListAsync(a => a.Id == user.Id);
 
-            Input.Question1 = _unitOfWork.Security_Question.GetById(Answers.ToList()[0].QuestionID).QuestionText;
-            Input.Question2 = _unitOfWork.Security_Question.GetById(Answers.ToList()[1].QuestionID).QuestionText;
+            Answers = await _unitOfWork.Security_Answer.ListAsync(a => a.Id == user.Id);
+
+            if (Answers.ToList().Count() == 0)
+            {
+                Error = true;
+            }
+            else
+            {
+                Input.Question1 = _unitOfWork.Security_Question.GetById(Answers.ToList()[0].QuestionID).QuestionText;
+                Input.Question2 = _unitOfWork.Security_Question.GetById(Answers.ToList()[1].QuestionID).QuestionText;
+            }
+
 
 
 

@@ -33,6 +33,7 @@
                                 <span asp-validation-for="Input.Answer2Text" class="text-danger"></span>
                             </div>
                             <input type="hidden" class="form-control" asp-for="@Model.Error" />
+                            
                             <button onclick="ValidateInput()" type="submit" class="btn btn-primary">Reset Security Questions</button>
                         </form>
                     </div>
@@ -67,6 +68,7 @@ else
                                 <span asp-validation-for="Input.Answer2Text" class="text-danger"></span>
                             </div>
                             <input type="hidden" class="form-control" asp-for="@Model.Error" />
+                            
                             <button type="submit" class="btn btn-primary">Confirm</button>
                         </form>
                     </div>

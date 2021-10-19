@@ -36,6 +36,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
 
         public IEnumerable<Security_Question> questions { get; set; }
 
+        public bool Error { get; set; } = false;
 
         public string email { get; set; }
 
@@ -48,17 +49,17 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
             public IEnumerable<SelectListItem> ddlQuestion { get; set; }
 
 
-            public string Question1 { get; set; } = "Question 1 Placeholder";
+            public string Question1 { get; set; } 
 
-            public string Question2 { get; set; } = "Question 2 Placeholder";
+            public string Question2 { get; set; } 
 
 
-
-            [Required]
-            public string Answer1 { get; set; } = "correct answer placeholder";
 
             [Required]
-            public string Answer2 { get; set; } = "correct answer placeholder";
+            public string Answer1 { get; set; } 
+
+            [Required]
+            public string Answer2 { get; set; } 
         }
 
         public async Task OnGet()
@@ -76,7 +77,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
 
             if (Answers.ToList().Count() == 0)
             {
-                RedirectToPage("./UpsertSecurityQuestions");
+                RedirectToPage("./UpsertQuestions", new { error = Error });
             }
             else
             {
