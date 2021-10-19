@@ -153,14 +153,14 @@ a.nav-link, a.navbar-brand, .btn-link {
         border-color: var(--dark-blue) !important;
     }
 
-.btn-success {
-    color: var(--white);
+a.btn.btn-success {
+    color: var(--white) !important;
     background-color: var(--success) !important;
     border-color: var(--success) !important;
 }
 
-    .btn-success:hover {
-        color: var(--white);
+    a.btn.btn-success:hover {
+        color: var(--white) !important;
         background-color: var(--light-green) !important;
         border-color: var(--light-green) !important;
     }
