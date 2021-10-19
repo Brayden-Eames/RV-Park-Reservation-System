@@ -64,16 +64,28 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
         }
 
 
-        public async Task OnGet(bool? error)
+        public async Task OnGet(bool? error, string? email)
         {
+            Input = new InputModel();
             if (error != null)
             {
                 Error = (bool)error;
             }
+            if (email != null)
+            {
+                Input.Email = email;
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                Answers = await _unitOfWork.Security_Answer.ListAsync(a => a.Id == user.Id);
+            }
+            else
+            {
+                var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+                Answers = await _unitOfWork.Security_Answer.ListAsync(a => a.Id == user.Id);
+            }
 
-            Input = new InputModel();
-            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
-            Answers = await _unitOfWork.Security_Answer.ListAsync(a => a.Id == user.Id);
+            
+            
+            
 
             if (Error == true)
             {
@@ -117,9 +129,12 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
                 var user = await _userManager.FindByEmailAsync(User.Identity.Name);
                 if (Error == true)
                 {
-                    
+
+
                     Answers = await _unitOfWork.Security_Answer.ListAsync(a => a.Id == user.Id);
-                    if (Input.Answer1Text != Answers.ToList()[0].AnswerText || Input.Answer2Text != Answers.ToList()[1].AnswerText)
+                    Input.Question1 = _unitOfWork.Security_Question.GetById(Answers.ToList()[0].QuestionID).QuestionText;
+                    Input.Question2 = _unitOfWork.Security_Question.GetById(Answers.ToList()[1].QuestionID).QuestionText;
+                    if (Input.Answer1Text != Answers.ToList()[0].AnswerText || Input.Answer2Text != Answers.ToList()[1].AnswerText || Input.Question1 == Input.Question2)
                     {
 
                         // Don't reveal that the user does not exist or is not confirmed
@@ -134,7 +149,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
                 }
                 else
                 {
-                    if (Input.Question1 == null || Input.Question2 == null || Input.Answer1Text == null || Input.Answer2Text == null)
+                    if (Input.Question1 == null || Input.Question2 == null || Input.Answer1Text == null || Input.Answer2Text == null || Input.Question1 == Input.Question2)
                     {
                         return RedirectToPage("./UpsertQuestions", new { error = Error });
                     }
