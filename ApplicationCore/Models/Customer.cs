@@ -32,19 +32,19 @@ namespace ApplicationCore.Models
 
         public DateTime CustLastModifiedDate { get; set; }
 
+        [Required]
         public int ServiceStatusID { get; set; }
 
-       
+
         [ForeignKey("ServiceStatusID")]
+        public virtual Service_Status_Type Service_Status_Type { get; set; }
+
         [Required]
-        public int ServiceStatusId { get; set; }
-
-
         public int DODAffiliationID { get; set; }
-        
+
 
         [ForeignKey("DODAffiliationID")]
-        [Required]
-        public int DODAffiliationId { get; set; }
+        public virtual DOD_Affiliation DOD_Affiliation { get; set; }
     }
+
 }
