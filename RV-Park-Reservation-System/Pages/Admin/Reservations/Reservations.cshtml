@@ -1,0 +1,38 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Admin.ReservationsModel
+@{
+    ViewData["Title"] = "Reservations";
+}
+
+<div class="container">
+    <h1 class="display-4 text-center text-primary my-5">RESERVATIONS</h1>
+    <!--TODO: MANAGE RESERVATIONS-->
+    <div class="border backgroundWhite mt-5 p-3">
+        <div class="row mt-3">
+            <div class="col-6">
+                <h2 class="text-primary">Reservations</h2>
+            </div>
+            <div class="col-6 text-right">
+                <a asp-page="/Admin/Reservations/Reservations" asp-area="Identity" class="btn btn-primary"><i class="fas fa-plus"></i> &nbsp; Create New Reservation</a>
+            </div>
+        </div>
+        <br /><br />
+        @*<p class="hidden" id="success">@Model.Success.ToString()</p>
+        <p class="hidden" id="message">@Model.Message</p>*@
+        <table class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th scope="col">Reservation ID</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Site Number</th>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Customer Phone #</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
