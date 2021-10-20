@@ -24,6 +24,11 @@ namespace ApplicationCore.Models
 
         public string EventDescription { get; set; }
 
+        public int Daily_Surcharge { get; set; }
+
+        public int Weekly_Surcharge { get; set; }
+       
+
         [Required]
         public int LocationID { get; set; }
 
