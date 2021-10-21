@@ -5,7 +5,34 @@
 }
 
 <div class="container">
-    <h1 class="display-4 text-center text-primary my-5">SITES AND RATES</h1>
+    <h1 class="display-4 text-center text-primary my-5">Manage Sites</h1>
 
-        <!--TODO: MANAGE SITES AND ASSIGN RATES BASED ON CATEGORY-->
+    <table id="DT_load" class="table table-bordered table-striped m-2">
+        <thead>
+            <tr>
+                <th>
+                    Type
+                </th>
+                <th>
+                    Site Number
+                </th>
+                <th>
+                    Length
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Last Modified
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+    </table>
+
+@section Scripts{
+    <script src="~/js/Sites.js"></script>
+}
 </div>
