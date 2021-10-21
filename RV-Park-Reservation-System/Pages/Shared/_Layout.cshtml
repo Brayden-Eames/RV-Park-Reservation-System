@@ -63,7 +63,7 @@
                                 </li>
 
                             }
-                            @if (User.IsInRole(SD.CustomerRole))
+                            @if (User.IsInRole(SD.CustomerRole) && !User.IsInRole(SD.AdminRole))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-page="/Client/Booking">Reserve a Site</a>
