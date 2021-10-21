@@ -22,7 +22,7 @@
         <table class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
-                    <th scope="col">Reservation ID</th>
+                    <th scope="col">Reservation #</th>
                     <th scope="col">Customer Name</th>
                     <th scope="col">Site Number</th>
                     <th scope="col">Start Date</th>
@@ -32,6 +32,23 @@
                 </tr>
             </thead>
             <tbody>
+                @{ 
+                    foreach(var reservation in Model.AdminReservationObject.Reservations)
+                    {
+                                <tr>
+                                    <td>@reservation.ResID</td>
+                                    <td>@reservation.Customer</td>
+                                    <td>@reservation.SiteID</td>
+                                    <td>@reservation.ResStartDate</td>
+                                    <td>@reservation.ResEndDate</td>
+                                    <td>801-999-9999</td>
+                                    <td>
+                                        <a class="btn btn-success text-light" asp-page="/Admin/Reservations/Update" asp-route-id="">Update</a>
+                                        <a class="btn btn-danger text-light" asp-page="/Admin/Reservations/Delete" asp-route-id="">Delete</a>
+                                    </td>
+                                </tr>
+                    }
+                }
             </tbody>
         </table>
     </div>
