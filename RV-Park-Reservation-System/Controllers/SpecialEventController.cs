@@ -10,10 +10,10 @@ namespace RV_Park_Reservation_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Special_EventController : Controller
+    public class SpecialEventController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public Special_EventController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        public SpecialEventController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
         public IActionResult Get()
