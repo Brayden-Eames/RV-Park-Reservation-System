@@ -36,34 +36,6 @@ function loadLists() {
         "width": "100%"
     });
 
-    dtsite = $('#DTsite').DataTable({
-        "ajax": {
-            "url": "/api/site",
-            "type": "GET",
-            "datatype": "json"
-        },
-        "columns": [
-            { data: "siteNumber", width: "20%" },
-            { data: "siteLength", width: "20%" },
-            { data: "siteDescription", width: "40%" },
-            {
-                data: "siteID", width: "20%",
-                "render": function (data) {
-                    return `<div class="text-center">
-                            <a href="/Admin/Sites/Upsert?id=${data}"
-                            class ="btn btn-success text-white style="cursor:pointer; width=100px;"><i class="far fa-edit"></i> Edit</a>
-                            <a onClick=DeleteSite('/api/site/'+${data})
-                            class ="btn btn-danger text-white style="cursor:pointer; width=100px;"><i class="far fa-trash-alt"></i> Delete</a>
-                    </div>`;
-                }
-            }
-        ],
-        "language": {
-            "emptyTable": "no data found."
-        },
-        "width": "100%"
-    });
-
     dtsiteRate = $('#DTsiteRate').DataTable({
         "ajax": {
             "url": "/api/site_rate",
@@ -82,6 +54,35 @@ function loadLists() {
                             <a href="/Admin/SiteRates/Upsert?id=${data}"
                             class ="btn btn-success text-white style="cursor:pointer; width=100px;"><i class="far fa-edit"></i> Edit</a>
                             <a onClick=DeleteSiteRate('/api/site_rate/'+${data})
+                            class ="btn btn-danger text-white style="cursor:pointer; width=100px;"><i class="far fa-trash-alt"></i> Delete</a>
+                    </div>`;
+                }
+            }
+        ],
+        "language": {
+            "emptyTable": "no data found."
+        },
+        "width": "100%"
+    });
+
+    dtspecEvent = $('#DTspecEvent').DataTable({
+        "ajax": {
+            "url": "/api/specialEvent",
+            "type": "GET",
+            "datatype": "json"
+        },
+        "columns": [
+            { data: "eventName", width: "20%" },
+            { data: "eventStartDate", width: "15%" },
+            { data: "eventEndDate", width: "15%" },
+            { data: "eventDescription", width: "25%" },
+            {
+                data: "eventID", width: "25%",
+                "render": function (data) {
+                    return `<div class="text-center">
+                            <a href="/Admin/SpecialEvents/Upsert?id=${data}"
+                            class ="btn btn-success text-white style="cursor:pointer; width=100px;"><i class="far fa-edit"></i> Edit</a>
+                            <a onClick=DeleteSpecialEvent('/api/specialEvent/'+${data})
                             class ="btn btn-danger text-white style="cursor:pointer; width=100px;"><i class="far fa-trash-alt"></i> Delete</a>
                     </div>`;
                 }
@@ -119,31 +120,6 @@ function DeleteCat(url) {
     })
 }
 
-function DeleteSite(url) {
-    swal({
-        title: "Are you sure you want to delete?",
-        text: "You will not be able to restore this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                type: 'DELETE',
-                url: url,
-                success: function (data) {
-                    if (data.success) {
-                        toastr.success(data.message);
-                        dtsite.ajax.reload();
-                    } else {
-                        toastr.error(data.message);
-                    }
-                }
-            })
-        }
-    })
-}
-
 function DeleteSiteRate(url) {
     swal({
         title: "Are you sure you want to delete?",
@@ -160,6 +136,31 @@ function DeleteSiteRate(url) {
                     if (data.success) {
                         toastr.success(data.message);
                         dtsiteRate.ajax.reload();
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            })
+        }
+    })
+}
+
+function DeleteSpecialEvent(url) {
+    swal({
+        title: "Are you sure you want to delete?",
+        text: "You will not be able to restore this data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: 'DELETE',
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        dtspecEvent.ajax.reload();
                     } else {
                         toastr.error(data.message);
                     }
