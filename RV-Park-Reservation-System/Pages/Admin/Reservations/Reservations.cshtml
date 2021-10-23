@@ -33,18 +33,21 @@
             </thead>
             <tbody>
                 @{ 
-                    foreach(var reservation in Model.AdminReservationObject.Reservations)
+                    foreach(var reservation in Model.ReservationList)
                     {
                                 <tr>
                                     <td>@reservation.ResID</td>
-                                    <td>@reservation.Customer</td>
+                                    <td>@reservation.Customer.CustFirstName  @reservation.Customer.CustLastName</td>
                                     <td>@reservation.SiteID</td>
                                     <td>@reservation.ResStartDate</td>
                                     <td>@reservation.ResEndDate</td>
-                                    <td>801-999-9999</td>
+                                    <td>@reservation.Customer.CustPhone</td>
                                     <td>
-                                        <a class="btn btn-success text-light" asp-page="/Admin/Reservations/Update" asp-route-id="">Update</a>
-                                        <a class="btn btn-danger text-light" asp-page="/Admin/Reservations/Delete" asp-route-id="">Delete</a>
+                                        <form method="post">
+                                            <a class="btn btn-success text-light" asp-page="/Admin/Reservations/ReservationsUpdate" asp-route-id="@reservation.ResID">Update</a>
+                                            <a class="btn btn-danger text-light" asp-page="/Admin/Reservations/Delete" asp-route-id="">Delete</a>
+                                            <input type="hidden" value="@reservation.ResID" />
+                                        </form>
                                     </td>
                                 </tr>
                     }

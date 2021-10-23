@@ -15,6 +15,7 @@ namespace RV_Park_Reservation_System.Pages.Admin
         private readonly IUnitOfWork _unitofWork;
         public ReservationsModel(IUnitOfWork unitofWork) => _unitofWork = unitofWork;
 
+        [BindProperty]
         public IEnumerable<Reservation> ReservationList { get; set; }
 
         public AdminReservationVM AdminReservationObject { get; set; }
@@ -34,6 +35,11 @@ namespace RV_Park_Reservation_System.Pages.Admin
 
             //IMPORTANT: NEED TO MAKE LINQ QUERY (Copy admin methodology from JohariWindow) TO DISPLAY PROPER DATA
             //Possible Idea: use admin vm page object data to populate lists for the LINQ query
+        }
+
+        public async Task<IActionResult> OnPost(int? id)
+        {
+            return RedirectToPage("./ReservationsUpdate", new { reservationID = id });
         }
     }
 }
