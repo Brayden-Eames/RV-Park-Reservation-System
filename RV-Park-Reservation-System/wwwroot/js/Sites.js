@@ -13,15 +13,16 @@ function loadList() {
         },
         "columns": [
             { data: "site_Category.siteCategoryName", width: "15%" },
-            { data: "siteNumber", width: "15%" },
-            { data: "siteLength", width: "10%" }, 
-            { data: "siteDescription", width: "20%" },
-            { data: "siteLastModifiedDate", width: "15%" },
+            { data: "siteNumber", width: "5%" },
+            { data: "siteLength", width: "5%" }, 
+            { data: "siteDescription", width: "25%" },
+            { data: "siteLastModifiedDate", width: "12%"},
+            { data: "siteLastModifiedBy", width: "12%" },
             {
                 data: "siteID", width: "25%",
                 "render": function (data) {
                     return `<div class="text-center">
-                            <a href="/Admin/MenuItems/Upsert?id=${data}"
+                            <a href="/Admin/ManageSites/Upsert?id=${data}"
                             class ="btn btn-success text-white style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i> Edit</a>                            
                             <a onClick=Delete('/api/sites/'+${data})
                             class ="btn btn-danger text-white style="cursor:pointer; width=100px;"> <i class="far fa-trash-alt"></i> Delete</a>

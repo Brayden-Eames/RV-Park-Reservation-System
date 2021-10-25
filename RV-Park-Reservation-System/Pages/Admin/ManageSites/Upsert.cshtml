@@ -1,0 +1,105 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Admin.ManageSites.UpsertModel
+
+@{
+    ViewData["Title"] = "Manage Sites";
+}
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row px-2 mx-2 backgroundWhite border">            
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
+                <h2 class="text-primary">@(Model.SiteVmObj.SiteItem.SiteID != 0 ? "Update" : "Create") Menu Item</h2>
+            </div>
+            <div class="col-8 pt-3">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteVmObj.SiteItem.SiteNumber"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="SiteVmObj.SiteItem.SiteNumber" />
+                        <span class="text-danger" asp-validation-for="SiteVmObj.SiteItem.SiteNumber"></span>
+                    </div>
+                    @if (Model.SiteVmObj.SiteItem.SiteID != 0)
+                    {
+                        <input type="hidden" asp-for="SiteVmObj.SiteItem.SiteID" />
+                        <input type="hidden" asp-for="SiteVmObj.SiteItem.SiteLastModifiedBy"/>
+                        <input type="hidden" asp-for="SiteVmObj.SiteItem.SiteLastModifiedDate" /> 
+                    }
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteVmObj.SiteItem.SiteLength"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="SiteVmObj.SiteItem.SiteLength" />
+                        <span class="text-danger" asp-validation-for="SiteVmObj.SiteItem.SiteLength"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteVmObj.SiteItem.SiteDescription"></label>
+                    </div>
+                    <div class="col-9">
+                        <textarea id="txtDesc" class="form-control" style="height:200px;" asp-for="SiteVmObj.SiteItem.SiteDescription"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteVmObj.SiteItem.SiteCategoryID"></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownListFor(m => m.SiteVmObj.SiteItem.SiteCategoryID,
+                                                    Model.SiteVmObj.CategoryList,
+                                                    " - Select a category - ",
+                                                    new { @class = "form-control", @id="ddlCategory" })
+                        <span class="text-danger" asp-validation-for="SiteVmObj.SiteItem.SiteCategoryID"></span>
+                    </div>
+                </div>             
+                <div class="form-group row">
+                    <div class="col-9 offset-3">
+                        <div class="row">
+                            <div class="col-6">
+                                @if (Model.SiteVmObj.SiteItem.SiteID != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Update</button> 
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control" onclick="return ValidateInput()">Create</button>
+                                }
+
+                            </div>
+                            <div class="col-6">
+                                <a asp-page="./Sites" class="btn btn-success form-control">Back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>                     
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+<script>
+    tinymce.init({
+        selector: 'textarea',
+        plugins: "list",
+        menubar: "file edit format"
+    });
+
+    function ValidateInput() { 
+
+        if ($('#ddlCategory option:selected').val() == 0) {
+            swal('Error', 'Please Select a Category', 'error')
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
+}
