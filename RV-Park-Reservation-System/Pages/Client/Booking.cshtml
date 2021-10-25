@@ -5,9 +5,160 @@
 }
 
 
-<h3>This is the booking page where Clients Book a Reservation</h3>
 
-<!--TODO: DO WE WANT TO HAVE THE CALENDAR
-    ON THE SAME PAGE AS THE FORM NEEDED FOR RESERVING A SITE?
-    ALSO POSSIBLE CARD PROCESSING PAYMENT ON ANOTHER RAZOR PAGE?
-    -->
+<style>
+    .popover {
+        max-width: 100%;
+    }
+</style>
+<form method="post">
+    <div class="container ">
+        <div class="row border rounded p-3 mt-5 mb-3">
+            <div class="col-4 "> <input type="text" class="pt-1 pb-1 container-fluid" name="name" value="Location" /></div>
+            <div class="col-4">
+                @Html.DropDownListFor(v => v.vehicleType, Model.vehicleTypes,
+            " - Please Select a vehicle type - ", new { @class = "form-control", @id = "ddlVehicletype" })
+            </div>
+            <div class="col-4">
+                <input asp-for="StartDate" class="dates pb-1 pt-1" type="datetime" id="datepicker" />
+                      
+                <input type="datetime" asp-for="EndDate" class="dates pt-1 pb-1" id="datepicker" name="name" value="" />
+                       
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <img src="~/Images/famcampMap.png" class="img-fluid border rounded" />
+            </div>
+
+            <div class="col-4">
+                <div class="row justify-content-center m-2">
+                    <div class="col-12">
+                        @Html.DropDownListFor(s => s.siteid, Model.sites, " - Please Select a Lot - ", new { @class = "form-control", @id = "ddlSites" })
+                    </div>
+                                
+                </div>
+                <br />
+                <div class="row justify-content-center m-2">
+                    <div class="col-12">
+                        <label class="" asp-for="numberOfAdults">Number of adults</label>         
+                        <input class="form-control" asp-for="numberOfAdults" type="number" name="name" max="10" min="1" value="1" />
+                        <span asp-validation-for="numberOfAdults"></span>
+                    </div>
+
+                </div>
+                <br />
+                      <div class="row justify-content-center m-2">
+                          <div class="col-12">
+                              <label class=" " asp-for="numberOfChildren">Number of children</label>
+                              <input class="form-control" asp-for="numberOfChildren" type="number" max="10" min="0" name="name" value="0" />
+                              <span asp-validation-for="numberOfChildren"></span>
+                          </div>
+                      </div>
+                <br />
+
+                <div class="row justify-content-center m-2" id="petsCheckbox">
+                    <div class="col-12">
+                        <span>Do you plan on bringing pets?</span> <input onclick="pets();" type="checkbox"  name="name" value="" />
+                    </div>
+                </div>
+
+                <div style="display: none" class="petWrapper">
+                    <div class="row justify-content-center m-2">
+                        <div class="col-12">
+                            <label class="" asp-for="numberOfPets">Number of pets</label>
+                            <input class="form-control" asp-for="numberOfPets" type="number" max="2" min="0" name="name" value="0" />
+                            <span asp-validation-for="numberOfPets"></span>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center m-2">
+                        <div class="col-9">
+                            <span class=" ">I have read and understand the acceptable pet policy. </span>
+                            <span class="float-right"><a class="border p-1 rounded" data-toggle="modal" data-target="#myModal">pet policy</a></span>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="breedPolicy" type="checkbox" name="name" id="breedPolicyAgreement" value="0" />
+                        </div>
+                    </div>
+                </div>
+                      
+                <br />
+                <div class="row justify-content-center m-2">
+                    <div class="col-12">
+                        <label >Vehicle Length</label>
+                        <select class="form-control" >
+                            <option value="40">less than or equal to 40ft.</option>
+                            <option value="43">less than or equal to 43ft.</option>
+                            <option value="65">less than or equal to 65ft.</option>
+                        </select>
+                        
+                    </div>
+                </div>
+                <br /><br />
+
+                <div class="row justify-content-center m-2">
+                    <div class="col-6">
+                        <button class="btn container-fluid m-1 btn-primary">Continue to Payment</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn container-fluid m-1 btn-dark">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+<div id="calendarContainer">
+    <div id=" menu">
+        <span id="menu-navi">
+
+            <button type="button" class="btn btn-default btn-sm move-day" data-action="move-next">
+                <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>
+            </button>
+        </span>
+        <span id="renderRange" class="render-range"></span>
+    </div>
+    <div class=" p-1" id="calendar"></div>
+</div>
+
+<div class="modal" id="myModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">FamCamp Pet Policy</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Animal waste will be picked up and properly disposed of immediately.</li>
+                    <li>Pets will remain on a leash in control of the owner unless in designated dog park area.</li>
+                    <li>When using the dog park, the pet owner must be present at all times. </li>
+                    <li>Dogs will not be chained outdoors or left unattended at any time.</li>
+                    <li>In consideration of other guests, nuisance pet behavior will not be permitted. 
+                    This is to include but not limited to pets that display aggression and/or excessive barking. </li>
+                    <li>2 pet maximum.</li>
+                    <li>Dogs with any of the following breed lineage are restricted from FamCamp: Pit Bulls, Staffordshire Terriers,
+                    Rottweilers, Chow Chows, Doberman Pinschers, wolf hybrids.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="checkAgreement();" data-dismiss="modal" class="btn btn-success">Agree</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/js/booking.js"></script>
+
+}
