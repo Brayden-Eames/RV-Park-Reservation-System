@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -49,6 +50,12 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
         [BindProperty]
         public InputModel Input { get; set; }
 
+        [BindProperty]
+        public IEnumerable<SelectListItem> lstServiceStatus { get; set; }
+
+        [BindProperty]
+        public IEnumerable<SelectListItem> lstDODAffiliation { get; set; }
+
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
@@ -77,10 +84,16 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
             public string LastName { get; set; }
             [Required]
             public string PhoneNumber { get; set; }
+            [Required]
+            public int ServiceStatusID { get; set; }
+            [Required]
+            public int DODAffiliationID { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            lstServiceStatus = _unitofWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });
+            lstDODAffiliation = _unitofWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -101,7 +114,9 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
                     CustEmail = Input.Email,
                     CustFirstName = Input.FirstName,
                     CustLastName = Input.LastName,
-                    CustPhone = Input.PhoneNumber
+                    CustPhone = Input.PhoneNumber,
+                    ServiceStatusID = Input.ServiceStatusID,
+                    DODAffiliationID = Input.DODAffiliationID
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 //add the roles to the ASPNET Roles table if they do not exist yet
