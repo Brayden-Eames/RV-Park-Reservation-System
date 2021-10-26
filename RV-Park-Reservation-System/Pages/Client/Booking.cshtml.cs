@@ -43,16 +43,11 @@ namespace RV_Park_Reservation_System.Pages.Client
         public string jsonFeed { get; set; }
 
         [BindProperty]
-        [Required]
-        [Range(1,10)]
-        [DefaultValue(1)]
         public int numberOfAdults { get; set; }
         [BindProperty]
-        [Required]
         [Range(0, 10)]
         public int numberOfChildren { get; set; }
         [BindProperty]
-        [Required]
         [Range(0, 2)]
         public int numberOfPets { get; set; }
         [BindProperty]
@@ -65,52 +60,27 @@ namespace RV_Park_Reservation_System.Pages.Client
         public DateTime EndDate { get; set; }
         [BindProperty]
         public int siteid { get; set; }
+        [BindProperty]
+        public bool Error { get; set; } = false;
 
         public Reservation newReservation { get; set; }
 
 
 
-        public class eventClass
+
+
+
+        public void OnGet(bool? error)
         {
-            public string title;
-            public DateTime start;
-            public DateTime end;
-            public string allday = "true";
-           
-
-            public void setTitle(string Title) { title = Title; }
-            public void setStartTime(DateTime time) { start = time; }
-            public void setEndTime(DateTime time) { end = time; }
-            public void setAllDay(string allDay) { allday = allDay; }
-
-        }
-
-
-        public void OnGet()
-        {
-
+            if (error != null)
+            {
+                Error = (bool)error;
+            }
             vehicleTypes = _unitOfWork.Vehicle_Type.List().Select(f => new SelectListItem { Value = f.TypeID.ToString(), Text = f.TypeName + " " + f.TypeDescription });
 
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
 
-            specialEvents = _unitOfWork.Special_Event.List(s =>s.LocationID == 1).ToList();
 
-            eventClass[] lists = new eventClass[specialEvents.Count()];
-
-            for (int i = 0; i < specialEvents.Count(); i++)
-            {
-                eventClass tmp = new eventClass();
-                tmp.setTitle(specialEvents.ElementAt(i).EventDescription);
-                tmp.setStartTime(specialEvents.ElementAt(i).EventStartDate);
-                tmp.setEndTime(specialEvents.ElementAt(i).EventEndDate);
-                tmp.setAllDay("true");
-                
-                lists[i] = tmp;
-            }
-
-            jsonFeed = JsonConvert.SerializeObject(lists);
-            //File.WriteAllText(fileName, jsonString);
-            System.IO.File.WriteAllText(@"wwwroot/JSON/SpecialEvents.json", jsonFeed);
 
         }
 
@@ -130,8 +100,12 @@ namespace RV_Park_Reservation_System.Pages.Client
                 newReservation.ResNumChildren = numberOfChildren;
                 newReservation.ResNumPets = numberOfPets;
                 newReservation.VehicleTypeID = vehicleType;
+                newReservation.Vehicle_Type = _unitOfWork.Vehicle_Type.Get(v=>v.TypeID == vehicleType);
                 newReservation.ResCreatedDate = DateTime.Now;
                 newReservation.SiteID = siteid;
+                newReservation.ResStatusID = 1;
+                newReservation.ResLastModifiedBy = "customer";
+                newReservation.ResVehicleLength = vehicleLength;
 
                 _unitOfWork.Reservation.Add(newReservation);
                 _unitOfWork.Commit(); 
@@ -139,12 +113,13 @@ namespace RV_Park_Reservation_System.Pages.Client
             }
             else
             {
-                return Page();
+                Error = true;
+                return RedirectToPage("/Client/Booking", new { error = Error});
             }
 
 
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Index");
 
         }
 
