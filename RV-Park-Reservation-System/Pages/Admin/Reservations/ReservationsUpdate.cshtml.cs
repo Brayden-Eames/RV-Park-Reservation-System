@@ -27,7 +27,6 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         public Reservation CustomerReservation { get; set; }
 
         [BindProperty]
-
         public Customer CustomerInfo { get; set; }
 
         public int reservationID { get; set; }
@@ -37,6 +36,28 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
             CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
             
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var reservation = _unitOfWork.Reservation.Get(c => c.ResID == CustomerReservation.ResID);
+
+            reservation.SiteID = CustomerReservation.SiteID;
+            reservation.ResStartDate = CustomerReservation.ResStartDate;
+            reservation.ResEndDate = CustomerReservation.ResEndDate;
+            reservation.ResNumAdults = CustomerReservation.ResNumAdults;
+            reservation.ResNumChildren = CustomerReservation.ResNumChildren;
+            reservation.ResNumPets = CustomerReservation.ResNumPets;
+            reservation.ResAcknowledgeValidPets = CustomerReservation.ResAcknowledgeValidPets;
+            reservation.ResComment = CustomerReservation.ResComment;
+            reservation.ResVehicleLength = CustomerReservation.ResVehicleLength;
+            reservation.Vehicle_Type = CustomerReservation.Vehicle_Type;
+            reservation.Reservation_Status = CustomerReservation.Reservation_Status;
+
+             _unitOfWork.Reservation.Update(reservation);
+             _unitOfWork.Commit();
+           
+            return RedirectToPage("./Reservations", new { success = true, message = "Update Successful" });
         }
     }
 }
