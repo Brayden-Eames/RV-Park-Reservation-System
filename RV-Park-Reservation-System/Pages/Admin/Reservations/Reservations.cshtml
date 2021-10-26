@@ -44,9 +44,10 @@
                                     <td>@reservation.Customer.CustPhone</td>
                                     <td>
                                         <form method="post">
-                                            <a class="btn btn-success text-light" asp-page="/Admin/Reservations/ReservationsUpdate" asp-route-id="@reservation.ResID">Update</a>
+                                            <a class="btn btn-success text-light" asp-page="/Admin/Reservations/ReservationsUpdate" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id">Update</a>
                                             <a class="btn btn-danger text-light" asp-page="/Admin/Reservations/Delete" asp-route-id="">Delete</a>
                                             <input type="hidden" value="@reservation.ResID" />
+                                            <input type="hidden" value="@reservation.Customer.Id" />
                                         </form>
                                     </td>
                                 </tr>

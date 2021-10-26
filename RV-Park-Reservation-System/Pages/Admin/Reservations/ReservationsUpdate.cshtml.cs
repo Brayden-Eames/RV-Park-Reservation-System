@@ -26,13 +26,17 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         [BindProperty]
         public Reservation CustomerReservation { get; set; }
 
+        [BindProperty]
+
+        public Customer CustomerInfo { get; set; }
+
         public int reservationID { get; set; }
 
-        public void OnGet(int? id)
+        public void OnGet(int? id, string? userId)
         {
-            //string idCust = Request.Query["id"];
-            //int resId = int.Parse(idCust);  
             CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
+            CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
+            
         }
     }
 }
