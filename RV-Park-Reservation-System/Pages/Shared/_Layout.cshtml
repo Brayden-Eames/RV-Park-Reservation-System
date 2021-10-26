@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.min.css" />
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css" />
 </head>
 <body class="container-fluid mb-0 p-0 d-flex flex-column">
     <header>
@@ -66,7 +66,7 @@
                                     </a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item text-dark" asp-page="/Admin/Manage">Data Tables</a>
-                                        <a class="dropdown-item text-dark" asp-page="/Admin/Sites">Sites</a>
+                                        <a class="dropdown-item text-dark" asp-page="/Admin/Sites/Index">Sites</a>
                                         <a class="dropdown-item text-dark" asp-page="/Admin/Users/Index">Users</a>
                                     </div>
                                 </li>
@@ -119,10 +119,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-
-
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src='~/lib/fullcalendar-5.10.0/lib/main.js'></script>
+    <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
