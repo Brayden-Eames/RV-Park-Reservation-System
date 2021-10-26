@@ -2,15 +2,64 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using RV_Park_Reservation_System.ViewModels;
 
 namespace RV_Park_Reservation_System.Pages.Admin.SiteCategory
 {
     public class UpsertModel : PageModel
     {
-        public void OnGet()
+        private readonly IUnitOfWork _unitOfWork;
+
+        [BindProperty]
+        public SiteCategoryVM SiteCategoryObj { get; set; }
+
+        public UpsertModel(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+
+        public IActionResult OnGet(int ? id)
         {
+            var locations = _unitOfWork.Location.List();
+
+            SiteCategoryObj = new SiteCategoryVM
+            {
+                SiteCategory = new Site_Category(),
+                LocationList = locations.Select(l => new SelectListItem { Value = l.LocationID.ToString(), Text = l.LocationName })
+            };
+
+            if( id != 0)
+            {
+                SiteCategoryObj.SiteCategory = _unitOfWork.Site_Category.Get(c => c.SiteCategory == id, true);
+                if(SiteCategoryObj == null)
+                {
+                    return NotFound();
+                }
+            }
+
+            return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            if(!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            if(SiteCategoryObj.SiteCategory.SiteCategory == 0) //New Site Category
+            {
+                _unitOfWork.Site_Category.Add(SiteCategoryObj.SiteCategory);
+            }
+            else //Update
+            {
+                var objFromDb = _unitOfWork.Site_Category.Get(c => c.SiteCategory == SiteCategoryObj.SiteCategory.SiteCategory, true);
+                _unitOfWork.Site_Category.Update(SiteCategoryObj.SiteCategory);
+            }
+            _unitOfWork.Commit();
+            return RedirectToPage("../Manage");
         }
     }
 }

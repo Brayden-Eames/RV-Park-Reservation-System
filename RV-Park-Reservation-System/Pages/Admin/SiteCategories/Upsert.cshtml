@@ -1,4 +1,86 @@
 ﻿@page
 @model RV_Park_Reservation_System.Pages.Admin.SiteCategory.UpsertModel
 @{
+    ViewData["Title"] = "Manage Site Category";
+}
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <div class="container">
+        <div class="row px-2 mx-2 border">
+            @* All for Model validation and HTML validation *@
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
+                <h2 class="text-primary">@(Model.SiteCategoryObj.SiteCategory.SiteCategory != 0 ? "Update" : "Create") Site Category</h2>
+            </div>
+            <div class="col-8 pt-3">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteCategoryObj.SiteCategory.SiteCategoryName"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="SiteCategoryObj.SiteCategory.SiteCategoryName" />
+                        <span class="text-danger" asp-validation-for="SiteCategoryObj.SiteCategory.SiteCategoryName"></span>
+                    </div>
+                    @if (Model.SiteCategoryObj.SiteCategory.SiteCategory != 0)
+                    {
+                        <input type="hidden" asp-for="SiteCategoryObj.SiteCategory.SiteCategory" />
+                    }
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteCategoryObj.SiteCategory.SiteCategoryDescription"></label>
+                    </div>
+                    <div class="col-9">
+                        <textarea id="txtDesc" class="form-control" style="height:200px;" asp-for="SiteCategoryObj.SiteCategory.SiteCategoryDescription"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteCategoryObj.SiteCategory.LocationID"></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownListFor(l => l.SiteCategoryObj.SiteCategory.LocationID, Model.SiteCategoryObj.LocationList, " - Please select a location - ", new { @class = "form-control", @id = "ddlLocation" })
+                        <span class="text-danger" asp-validation-for="SiteCategoryObj.SiteCategory.LocationID"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-9 offset-3">
+                        <div class="row">
+                            <div class="col-6">
+                                @if (Model.SiteCategoryObj.SiteCategory.SiteCategory != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control"  onclick="return ValidateInput()">Update</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control" onclick="return ValidateInput()">Create</button>
+                                }
+                            </div>
+                            <div class="col-6">
+                                <a asp-page="../Manage" class="btn btn-success form-control">Back to List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: "lists",
+            menubar: "file edit format"
+        });
+
+        function ValidateInput() {
+            if ($('#ddlLocation option:selected').val() == 0 || $('#ddlLocation option:selected').index == 0) {
+                swal('Error', 'Please select a location.', 'error');
+                return false;
+            }
+            return true;
+        }
+    </script>
 }
