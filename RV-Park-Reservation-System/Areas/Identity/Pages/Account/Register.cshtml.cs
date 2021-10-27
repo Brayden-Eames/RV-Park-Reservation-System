@@ -102,7 +102,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
         {
             //retrieve the role from the form
             string role = Request.Form["rdUserRole"].ToString();
-            if (role == "") { role = SD.AdminRole; } //when first account is made, this starts the process of assigning the first account the role of admin, but not for subsequent users.)
+            if (role == "") { role = SD.CustomerRole; } //when first account is made, this starts the process of assigning the first account the role of admin, but not for subsequent users.)
             returnUrl ??= Url.Content("~/"); //null-coalescing assignment operator ??= assigns the value of right-hand operand to its left-hand operand only if the left-hand is nulll
             if (ModelState.IsValid)
             {
