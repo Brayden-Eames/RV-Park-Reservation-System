@@ -118,12 +118,14 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
                     ServiceStatusID = Input.ServiceStatusID,
                     DODAffiliationID = Input.DODAffiliationID
                 };
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var result = await _userManager.CreateAsync(user, Input.Password);                
+
                 //add the roles to the ASPNET Roles table if they do not exist yet
                 if (!await _roleManager.RoleExistsAsync(SD.AdminRole))
                 {
                     _roleManager.CreateAsync(new IdentityRole(SD.AdminRole)).GetAwaiter().GetResult();
                     _roleManager.CreateAsync(new IdentityRole(SD.CustomerRole)).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(SD.EmployeeRole)).GetAwaiter().GetResult();
                 }
                 if (result.Succeeded)
                 //assign role to the user (from the form radio options available after the first manager is created)
@@ -133,10 +135,15 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account
                     {
                         await _userManager.AddToRoleAsync(user, SD.AdminRole);
                     }
-                    else /*(role == SD.CustomerRole)*/ //maybe change to 'else' instead of if 
+                    else if(role == SD.CustomerRole)
                     {
                         await _userManager.AddToRoleAsync(user, SD.CustomerRole);
                     }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.EmployeeRole);
+                    }
+
                     _logger.LogInformation("User created a new account with password.");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
