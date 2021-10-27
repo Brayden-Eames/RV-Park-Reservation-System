@@ -9,8 +9,5 @@ namespace RV_Park_Reservation_System.Pages.Admin
 {
     public class ReportsModel : PageModel
     {
-        public void OnGet()
-        {
-        }
     }
 }
