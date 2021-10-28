@@ -11,6 +11,7 @@ namespace RV_Park_Reservation_System.ViewModels
     {
         public Special_Event SpecialEvent { get; set; }
 
-        public IEnumerable<SelectListItem>  LocationList { get; set; }
+        //Commenting out because we will hard code the location ID for the initial project
+        //public IEnumerable<SelectListItem>  LocationList { get; set; }
     }
 }

@@ -22,12 +22,14 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteCategory
 
         public IActionResult OnGet(int ? id)
         {
-            var locations = _unitOfWork.Location.List();
+            //Commenting out because we will hard code the location ID for the initial project
+            //var locations = _unitOfWork.Location.List();
 
             SiteCategoryObj = new SiteCategoryVM
             {
-                SiteCategory = new Site_Category(),
-                LocationList = locations.Select(l => new SelectListItem { Value = l.LocationID.ToString(), Text = l.LocationName })
+                SiteCategory = new Site_Category()
+                //Commenting out because we will hard code the location ID for the initial project
+                //LocationList = locations.Select(l => new SelectListItem { Value = l.LocationID.ToString(), Text = l.LocationName })
             };
 
             if( id != 0)
@@ -49,7 +51,10 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteCategory
                 return Page();
             }
 
-            if(SiteCategoryObj.SiteCategory.SiteCategory == 0) //New Site Category
+            //Hard coding the location ID for the initial project
+            SiteCategoryObj.SiteCategory.LocationID = 1;
+
+            if (SiteCategoryObj.SiteCategory.SiteCategory == 0) //New Site Category
             {
                 _unitOfWork.Site_Category.Add(SiteCategoryObj.SiteCategory);
             }

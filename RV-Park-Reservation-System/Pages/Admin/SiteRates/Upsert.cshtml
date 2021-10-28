@@ -4,10 +4,11 @@
     ViewData["Title"] = "Manage Site Rate";
 }
 
-<form method="post" autocomplete="off">
+<form method="post"  asp-action="Upsert" autocomplete="off">
     <div class="container">
         <div class="row px-2 mx-2 border">
-
+            @* All for Model validation and HTML validation *@
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
                 <h2 class="text-primary">@(Model.SiteRateObj.SiteRate.RateID != 0 ? "Update" : "Create") Site Rate</h2>
             </div>
