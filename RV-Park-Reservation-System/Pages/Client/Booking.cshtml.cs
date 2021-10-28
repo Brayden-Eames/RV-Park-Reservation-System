@@ -62,6 +62,11 @@ namespace RV_Park_Reservation_System.Pages.Client
         public int siteid { get; set; }
         [BindProperty]
         public bool Error { get; set; } = false;
+        [BindProperty]
+        public bool fullHookups { get; set; }
+
+        [BindProperty]
+        public decimal totalCost { get; set; }
 
         public Reservation newReservation { get; set; }
 
@@ -107,9 +112,34 @@ namespace RV_Park_Reservation_System.Pages.Client
                 newReservation.ResLastModifiedBy = "customer";
                 newReservation.ResVehicleLength = vehicleLength;
 
-                _unitOfWork.Reservation.Add(newReservation);
-                _unitOfWork.Commit(); 
 
+   
+
+
+                _unitOfWork.Reservation.Add(newReservation);
+                _unitOfWork.Commit();
+
+                int thisReservation = _unitOfWork.Reservation.List().Where(r=>r.Id == newReservation.Id).Last().ResID;
+
+
+                Payment thisPayment = new Payment();
+
+                
+
+
+                thisPayment.PayDate = DateTime.Now;
+                thisPayment.PayLastModifiedBy = "Customer";
+                thisPayment.PayLastModifiedDate = DateTime.Now;
+                thisPayment.PayReasonID = 1;
+                thisPayment.PayTypeID = 1;
+                thisPayment.ResID = thisReservation;
+                thisPayment.IsPaid = false;
+                thisPayment.PayTotalCost = totalCost;
+                _unitOfWork.Payment.Add(thisPayment);
+                _unitOfWork.Commit();
+
+                int PaymentID = _unitOfWork.Payment.Get(p => p.ResID == thisReservation).PayID;
+                return RedirectToPage("/Client/PaymentSummary", new { resID = thisReservation, payID = PaymentID});
             }
             else
             {
