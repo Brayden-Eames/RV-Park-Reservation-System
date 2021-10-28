@@ -51,11 +51,14 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteRate
 
             if (SiteRateObj.SiteRate.RateID == 0) //New Site Category
             {
+                SiteRateObj.SiteRate.RateLastModifiedBy = User.Identity.Name;
+                SiteRateObj.SiteRate.RateModifiedDate = DateTime.Now;
                 _unitOfWork.Site_Rate.Add(SiteRateObj.SiteRate);
             }
             else //Update
             {
-                var objFromDb = _unitOfWork.Site_Rate.Get(r => r.RateID == SiteRateObj.SiteRate.RateID, true);
+                SiteRateObj.SiteRate.RateLastModifiedBy = User.Identity.Name;
+                SiteRateObj.SiteRate.RateModifiedDate = DateTime.Now;
                 _unitOfWork.Site_Rate.Update(SiteRateObj.SiteRate);
             }
             _unitOfWork.Commit();

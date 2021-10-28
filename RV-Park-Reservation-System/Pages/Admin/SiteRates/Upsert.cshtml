@@ -3,3 +3,92 @@
 @{
     ViewData["Title"] = "Manage Site Rate";
 }
+
+<form method="post" autocomplete="off">
+    <div class="container">
+        <div class="row px-2 mx-2 border">
+
+            <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
+                <h2 class="text-primary">@(Model.SiteRateObj.SiteRate.RateID != 0 ? "Update" : "Create") Site Rate</h2>
+            </div>
+            <div class="col-8 pt-3">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteRateObj.SiteRate.RateAmount"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="SiteRateObj.SiteRate.RateAmount" />
+                        <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.RateAmount"></span>
+                    </div>
+                    @if (Model.SiteRateObj.SiteRate.RateID != 0)
+                    {
+                        <input type="hidden" asp-for="SiteRateObj.SiteRate.RateID" />
+                    }
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteRateObj.SiteRate.RateStartDate"></label>
+                    </div>
+                    <div class="col-9">
+                        <input asp-for="SiteRateObj.SiteRate.RateStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                        <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.RateStartDate"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteRateObj.SiteRate.RateEndDate"></label>
+                    </div>
+                    <div class="col-9">
+                        <input asp-for="SiteRateObj.SiteRate.RateEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="" />
+                        <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.RateEndDate"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SiteRateObj.SiteRate.SiteCategoryID"></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownListFor(c => c.SiteRateObj.SiteRate.SiteCategoryID, Model.SiteRateObj.SiteCategoryList, " - Please select a category - ", new { @class = "form-control", @id = "ddlCategory" })
+                        <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.SiteCategoryID"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-9 offset-3">
+                        <div class="row">
+                            <div class="col-6">
+                                @if (Model.SiteRateObj.SiteRate.RateID != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control" onclick="return ValidateInput()">Update</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control" onclick="return ValidateInput()">Create</button>
+                                }
+                            </div>
+                            <div class="col-6">
+                                <a asp-page="../Manage" class="btn btn-success form-control">Back to List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({ minDate: 1, maxDate: "+12M" });
+        });
+
+
+        function ValidateInput() {
+            if ($('#ddlCategory option:selected').val() == 0 || $('#ddlCategory option:selected').index == 0) {
+                swal('Error', 'Please select a category.', 'error');
+                return false;
+            }
+            return true;
+        }
+    </script>
+}
