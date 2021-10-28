@@ -12,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RV_Park_Reservation_System.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,11 +107,12 @@ namespace RV_Park_Reservation_System
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseMvc();
+
             //app.UseEndpoints(endpoints =>
             //{
             //    endpoints.MapRazorPages();
             //});
-            app.UseMvc();
         }
     }
 }

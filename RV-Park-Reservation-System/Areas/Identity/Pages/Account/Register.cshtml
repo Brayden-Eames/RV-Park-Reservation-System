@@ -70,10 +70,11 @@
                         </div>
                         @if (User.IsInRole(SD.AdminRole))
                         {
-                            <div class="py-2">
-                                <input type="radio" name="rdUserRole" value="@SD.CustomerRole" /> @SD.CustomerRole
-                                <input type="radio" name="rdUserRole" value="@SD.AdminRole" /> @SD.AdminRole
-                            </div>
+                    <div class="py-2">
+                        <input type="radio" name="rdUserRole" value="@SD.CustomerRole" /> @SD.CustomerRole
+                        <input type="radio" name="rdUserRole" value="@SD.EmployeeRole" /> @SD.EmployeeRole
+                        <input type="radio" name="rdUserRole" value="@SD.AdminRole" /> @SD.AdminRole
+                    </div>
                         }
                         <div class="py-2">
                             <button type="submit" class="btn btn-primary form-control">Register</button>

@@ -1,0 +1,51 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Admin.SitesModel
+@{
+    ViewData["Title"] = "Manage Sites";
+}
+
+<div class="container">
+    <h1 class="display-4 text-center text-primary my-5">MANAGE SITES</h1>
+    <div class="m-lg-5">
+        <div class="row">
+            <div class="col-12 text-right">
+                <a href="/Admin/Sites/Upsert?id=0" class="btn btn-primary text-white text-center " style="cursor:pointer;">
+                    <i class="fas fa-plus"></i>&nbsp;Create New
+                </a>
+            </div>
+        </div>
+        <br />
+        <br />
+        <table id="DT_load" class="table table-bordered table-striped mb-2">
+            <thead>
+                <tr class="text-center">
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Site Number
+                    </th>
+                    <th>
+                        Length
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Last Modified Date
+                    </th>
+                    <th>
+                        Last Modified By
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <br />
+
+    @section Scripts{
+        <script src="~/js/datatables/Sites.js"></script>
+    }
+</div>

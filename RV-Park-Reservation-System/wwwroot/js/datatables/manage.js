@@ -23,9 +23,9 @@ function loadLists() {
                 "render": function (data) {
                     return `<div class="text-center">
                             <a href="/Admin/SiteCategories/Upsert?id=${data}"
-                            class ="btn btn-success text-white style="cursor:pointer; width=100px;"><i class="far fa-edit"></i> Edit</a>
+                            class ="btn btn-success text-white style="cursor:pointer;"><i class="far fa-edit"></i> Edit</a>
                             <a onClick=DeleteCat('/api/siteCategory/'+${data})
-                            class ="btn btn-danger text-white style="cursor:pointer; width=100px;"><i class="far fa-trash-alt"></i> Delete</a>
+                            class ="btn btn-danger text-white style="cursor:pointer;"><i class="far fa-trash-alt"></i> Delete</a>
                     </div>`;
                 }
             }
@@ -43,18 +43,18 @@ function loadLists() {
             "datatype": "json"
         },
         "columns": [
-            { data: "rateAmount", width: "20%" },
-            { data: "rateStartDate", width: "20%" },
-            { data: "rateEndDate", width: "20%" },
+            { data: "rateAmount", width: "20%", "render": function (data) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(data); }  },
+            { data: "rateStartDate", width: "20%", "render": function (data) { return moment(data).format("MM/DD/YYYY, hh:mm a"); } },
+            { data: "rateEndDate", width: "20%", "render": function (data) { return moment(data).format("MM/DD/YYYY, hh:mm a"); } },
             { data: "siteCategoryID", width: "20%" },
             {
                 data: "rateID", width: "20%",
                 "render": function (data) {
                     return `<div class="text-center">
                             <a href="/Admin/SiteRates/Upsert?id=${data}"
-                            class ="btn btn-success text-white style="cursor:pointer; width=100px;"><i class="far fa-edit"></i> Edit</a>
+                            class ="btn btn-success text-white style="cursor:pointer;"><i class="far fa-edit"></i> Edit</a>
                             <a onClick=DeleteSiteRate('/api/site_rate/'+${data})
-                            class ="btn btn-danger text-white style="cursor:pointer; width=100px;"><i class="far fa-trash-alt"></i> Delete</a>
+                            class ="btn btn-danger text-white style="cursor:pointer;"><i class="far fa-trash-alt"></i> Delete</a>
                     </div>`;
                 }
             }
@@ -72,18 +72,20 @@ function loadLists() {
             "datatype": "json"
         },
         "columns": [
-            { data: "eventName", width: "20%" },
-            { data: "eventStartDate", width: "15%" },
-            { data: "eventEndDate", width: "15%" },
-            { data: "eventDescription", width: "25%" },
+            { data: "eventName", width: "10%" },
+            { data: "eventStartDate", width: "10%", "render": function (data) { return moment(data).format("MM/DD/YYYY, hh:mm a"); } },
+            { data: "eventEndDate", width: "10%", "render": function (data) { return moment(data).format("MM/DD/YYYY, hh:mm a"); } },
+            { data: "eventDescription", width: "30%" },
+            { data: "daily_Surcharge", width: "10%", "render": function (data) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(data); } },
+            { data: "weekly_Surcharge", width: "10%", "render": function (data) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(data); } },
             {
-                data: "eventID", width: "25%",
+                data: "eventID", width: "20%",
                 "render": function (data) {
                     return `<div class="text-center">
                             <a href="/Admin/SpecialEvents/Upsert?id=${data}"
-                            class ="btn btn-success text-white style="cursor:pointer; width=100px;"><i class="far fa-edit"></i> Edit</a>
+                            class ="btn btn-success text-white style="cursor:pointer;"><i class="far fa-edit"></i> Edit</a>
                             <a onClick=DeleteSpecialEvent('/api/specialEvent/'+${data})
-                            class ="btn btn-danger text-white style="cursor:pointer; width=100px;"><i class="far fa-trash-alt"></i> Delete</a>
+                            class ="btn btn-danger text-white style="cursor:pointer;"><i class="far fa-trash-alt"></i> Delete</a>
                     </div>`;
                 }
             }
