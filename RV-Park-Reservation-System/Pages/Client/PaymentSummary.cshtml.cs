@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Stripe;
 
 namespace RV_Park_Reservation_System.Pages.Client
 {
@@ -15,19 +16,19 @@ namespace RV_Park_Reservation_System.Pages.Client
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<Customer> _userManager;
+        private readonly UserManager<ApplicationCore.Models.Customer> _userManager;
 
-        public PaymentSummaryModel(IUnitOfWork unitOfWork, UserManager<Customer> userManager)
+        public PaymentSummaryModel(IUnitOfWork unitOfWork, UserManager<ApplicationCore.Models.Customer> userManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
 
         }
 
-        
+        [BindProperty]
         public Reservation newReservation { get; set; }
 
-
+        [BindProperty]
         public Payment paymentObj { get; set; }
 
         [BindProperty]
@@ -53,6 +54,9 @@ namespace RV_Park_Reservation_System.Pages.Client
             }
             else
             {
+                newReservation = _unitOfWork.Reservation.Get(r => r.ResID == 12);
+                paymentObj = _unitOfWork.Payment.Get(p => p.PayID == 1);
+                paymentID = paymentObj.PayID;
                 Error = true;
             }
 
@@ -60,9 +64,38 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost(string stripeToken)
         {
-            Payment thisPayment = _unitOfWork.Payment.Get(p => p.ResID == reservationID);
+            if (paymentID != 0)
+            {
+                paymentObj = _unitOfWork.Payment.Get(p => p.PayID == paymentID);
+            }
+   
+            if (stripeToken != null)
+            {
+                var options = new ChargeCreateOptions
+                {
+                    Amount = Convert.ToInt32(paymentObj.PayTotalCost*100),
+                    Currency = "usd",
+                    Description = "Order Id" + paymentObj.PayID,
+                    Source = stripeToken,
+
+                };
+                var service = new ChargeService();
+                Charge charge = service.Create(options);
+                paymentObj.CCReference = charge.Id;
+                if (charge.Status.ToLower() == "succeeded")
+                {
+                    paymentObj.IsPaid = true;
+                    _unitOfWork.Payment.Update(paymentObj);
+                    _unitOfWork.Commit();
+                }
+                else
+                {
+                    paymentObj.IsPaid = false;
+                }
+
+            }
 
 
 
@@ -71,8 +104,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
 
 
-
-            return RedirectToPage("/PaymentSummary");
+            return RedirectToPage("/Client/PaymentConfirmation");
 
         }
     }
