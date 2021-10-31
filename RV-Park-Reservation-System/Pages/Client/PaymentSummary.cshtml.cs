@@ -83,7 +83,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 };
                 var service = new ChargeService();
                 Charge charge = service.Create(options);
-                paymentObj.CCReference = charge.Id;
+               // paymentObj.CCReference = charge.Id;
                 if (charge.Status.ToLower() == "succeeded")
                 {
                     paymentObj.IsPaid = true;

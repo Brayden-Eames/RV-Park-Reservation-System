@@ -53,7 +53,25 @@
 
                 <div class="row">
                     <div class="col-6">
-                        <button class="btn  container-fluid btn-primary">Submit Payment</button>
+
+                                @{ var OrderTotalForStripe = Math.Round((Model.paymentObj.PayTotalCost * 100), 0); }
+
+
+                                    <script src="https://checkout.stripe.com/checkout.js"
+                                            class="stripe-button"
+                                            data-key="@Stripe.Value.PublishableKey"
+                                            data-amount="@OrderTotalForStripe"
+                                            data-name="FamCamp Reservation"
+                                            data-label="Place Order"
+                                            data-description=""
+                                            data-locale="auto"
+                                            data-allow-remember-me="false"
+                                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"></script>
+
+                                    <script>document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';</script>
+                                    <button type="submit" id="btnPlaceOrder" onclick="return validateInput()" value="Place Order" class="btn container-fluid btn-primary form-control">Place Order</button>
+
+
                     </div>
                     <div class="col-6">
                         <a asp-page="../Index" class="btn container-fluid btn-primary">Cancel</a>
@@ -62,27 +80,7 @@
                 <input type="hidden" asp-for="paymentID" />
                 <input type="hidden" asp-for="reservationID" />
 
-                <div class="card-footer">
-                    <div class="row">
-                        @{ var OrderTotalForStripe = Math.Round((Model.paymentObj.PayTotalCost * 100), 0); }
-
-                        <div class="col-12 col-md-4 offset-md-8">
-                            <script src="https://checkout.stripe.com/checkout.js"
-                                    class="stripe-button"
-                                    data-key="@Stripe.Value.PublishableKey"
-                                    data-amount="@OrderTotalForStripe"
-                                    data-name="FamCamp Reservation"
-                                    data-label="Place Order"
-                                    data-description="Good Food, Delivered Fast."
-                                    data-locale="auto"
-                                    data-allow-remember-me="false"
-                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"></script>
-
-                            <script>document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';</script>
-                            <button type="submit" id="btnPlaceOrder" onclick="return validateInput()" value="Place Order" class="btn btn-primary form-control">Place Order</button>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
