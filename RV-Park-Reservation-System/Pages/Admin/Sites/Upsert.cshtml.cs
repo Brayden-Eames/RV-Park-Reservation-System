@@ -62,7 +62,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.ManageSites
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            string firstname = "FirstName"; //TODO: GET FIRST NAME OF USER using claim.value;
+            string firstname = _unitofWork.Customer.Get(i => i.Id == claim.Value).CustFirstName;
         
 
             SiteVmObj.SiteItem.SiteLastModifiedBy = firstname;

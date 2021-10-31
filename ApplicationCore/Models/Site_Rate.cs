@@ -24,7 +24,7 @@ namespace ApplicationCore.Models
         [Required]
         public DateTime RateEndDate { get; set; }
 
-        [MaxLength(10)]
+        [MaxLength(50)]
         public string RateLastModifiedBy { get; set; }
 
         
