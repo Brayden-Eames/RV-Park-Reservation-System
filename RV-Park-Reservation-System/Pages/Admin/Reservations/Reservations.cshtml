@@ -17,8 +17,8 @@
             </div>
         </div>
         <br /><br />
-        @*<p class="hidden" id="success">@Model.Success.ToString()</p>
-        <p class="hidden" id="message">@Model.Message</p>*@
+        <p class="hidden" id="success">@Model.Success.ToString()</p>
+        <p class="hidden" id="message">@Model.Message</p>
         <table class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
@@ -32,28 +32,43 @@
                 </tr>
             </thead>
             <tbody>
-                @{ 
-                    foreach(var reservation in Model.ReservationList)
+                @{
+                    foreach (var reservation in Model.ReservationList)
                     {
-                                <tr>
-                                    <td>@reservation.ResID</td>
-                                    <td>@reservation.Customer.CustFirstName  @reservation.Customer.CustLastName</td>
-                                    <td>@reservation.SiteID</td>
-                                    <td>@reservation.ResStartDate</td>
-                                    <td>@reservation.ResEndDate</td>
-                                    <td>@reservation.Customer.CustPhone</td>
-                                    <td>
-                                        <form method="post">
-                                            <a class="btn btn-success text-light" asp-page="/Admin/Reservations/ReservationsUpdate" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id">Update</a>
-                                            <a class="btn btn-danger text-light" asp-page="/Admin/Reservations/Delete" asp-route-id="">Delete</a>
-                                            <input type="hidden" value="@reservation.ResID" />
-                                            <input type="hidden" value="@reservation.Customer.Id" />
-                                        </form>
-                                    </td>
-                                </tr>
+                        <tr>
+                            <td>@reservation.ResID</td>
+                            <td>@reservation.Customer.CustFirstName  @reservation.Customer.CustLastName</td>
+                            <td>@reservation.SiteID</td>
+                            <td>@reservation.ResStartDate</td>
+                            <td>@reservation.ResEndDate</td>
+                            <td>@reservation.Customer.CustPhone</td>
+                            <td>
+                                <form method="post">
+                                    <a class="btn btn-success text-light" asp-page="/Admin/Reservations/ReservationsUpdate" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id">Update</a>
+                                    <a class="btn btn-danger text-light" asp-page="/Admin/Reservations/Delete" asp-route-id="">Delete</a>
+                                    <input type="hidden" value="@reservation.ResID" />
+                                    <input type="hidden" value="@reservation.Customer.Id" />
+                                </form>
+                            </td>
+                        </tr>
                     }
                 }
             </tbody>
         </table>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        function alertFunc() {
+            var success = $("#success").html()
+            var message = $("#message").html();
+            console.log(success);
+            console.log(message);
+            if (success == "True") {
+                toastr.success(message);
+            };
+        }
+        window.onload = alertFunc();
+    </script>
+}

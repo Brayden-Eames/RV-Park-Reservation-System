@@ -19,11 +19,15 @@ namespace RV_Park_Reservation_System.Pages.Admin
         public IEnumerable<Reservation> ReservationList { get; set; }
 
         public AdminReservationVM AdminReservationObject { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; }
 
         //We might need to make a ViewModel to allow us to pull from the Reservation, Customer, Service Status Type and DODAffiliation tables. 
-        public void OnGet()
+        public void OnGet(bool success = false, string message = null)
         {
             //need to pull data from Reservation, Customer, DODAffiliation and ServiceStatusType tables. Use the ViewModel to do so
+            Success = success;
+            Message = message;
             ReservationList = _unitofWork.Reservation.List();
             AdminReservationObject = new AdminReservationVM()
             {
@@ -32,9 +36,6 @@ namespace RV_Park_Reservation_System.Pages.Admin
                 DODAffiliationList = _unitofWork.DOD_Affiliation.List(),
                 ServiceStatusTypes = _unitofWork.Service_Status_Type.List()
             };
-
-            //IMPORTANT: NEED TO MAKE LINQ QUERY (Copy admin methodology from JohariWindow) TO DISPLAY PROPER DATA
-            //Possible Idea: use admin vm page object data to populate lists for the LINQ query
         }
 
         public async Task<IActionResult> OnPost(int? id)
