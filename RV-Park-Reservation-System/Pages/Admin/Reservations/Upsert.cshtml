@@ -107,7 +107,6 @@
         </div>
         <button type="submit" class="btn btn-success text-light" asp-route-value="update">Update</button>
         <input type="submit" id="deleteRecord" value="Delete" class="btn btn-danger text-light" asp-route-value="delete"/>
-        @*<input type="button" id="deleteRecord" value="Delete"  class="btn btn-primary" asp-route-value="delete" />*@
     </form>
 </div>
 
@@ -132,9 +131,4 @@
             })
         })
     </script>
-
-    @*// current problem: Same one as before, the swal isn't waiting before sending the page to the delete, but the delete won't work without the asp-page-route.
-    // the fix from before wont' work because the Reservations page itself uses the onPost to route to the update page, so we can't overwrite it to use the OnPost.
-    // need to devise a way to prevent the page from changing but then still allow the page to be routed after selecting an option.
-    // (possibly weird) idea: in Reservation onPost, make it take 2 values, id and direction. Then do if check to determine where to route the page.*@
 }

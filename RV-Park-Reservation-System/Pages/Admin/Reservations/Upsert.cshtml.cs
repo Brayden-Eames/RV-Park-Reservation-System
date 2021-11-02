@@ -56,14 +56,14 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservation.Reservation_Status = CustomerReservation.Reservation_Status;
                 _unitOfWork.Reservation.Update(reservation);
                 _unitOfWork.Commit();
-                return RedirectToPage("./Reservations", new { success = true, message = "Update Successful" });
+                return RedirectToPage("./Index", new { success = true, message = "Update Successful" });
             }
             else
             {
                 var reservation = _unitOfWork.Reservation.Get(c => c.ResID == CustomerReservation.ResID);
                 _unitOfWork.Reservation.Delete(reservation);
                 _unitOfWork.Commit();
-                return RedirectToPage("./Reservations", new { success = true, message = "Delete Successful" });
+                return RedirectToPage("./Index", new { success = true, message = "Delete Successful" });
             }
         }
     }

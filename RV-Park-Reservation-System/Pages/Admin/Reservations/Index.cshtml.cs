@@ -40,7 +40,7 @@ namespace RV_Park_Reservation_System.Pages.Admin
 
         public async Task<IActionResult> OnPost(int? id)
         {
-            return RedirectToPage("./ReservationsUpdate", new { reservationID = id });
+            return RedirectToPage("./Upsert", new { reservationID = id });
         }
     }
 }

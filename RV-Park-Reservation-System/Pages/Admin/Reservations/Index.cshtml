@@ -13,7 +13,7 @@
                 <h2 class="text-primary">Reservations</h2>
             </div>
             <div class="col-6 text-right">
-                <a asp-page="/Admin/Reservations/Reservations" asp-area="Identity" class="btn btn-primary"><i class="fas fa-plus"></i> &nbsp; Create New Reservation</a>
+                <a asp-page="/Admin/Reservations/Index" asp-area="Identity" class="btn btn-primary"><i class="fas fa-plus"></i> &nbsp; Create New Reservation</a>
             </div>
         </div>
         <br /><br />
@@ -44,7 +44,7 @@
                             <td>@reservation.Customer.CustPhone</td>
                             <td>
                                 <form method="post">
-                                    <a class="btn btn-success text-light" asp-page="/Admin/Reservations/ReservationsUpdate" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id">Update Reservation</a>
+                                    <a class="btn btn-success text-light" asp-page="/Admin/Reservations/Upsert" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id">Update Reservation</a>
                                     <input type="hidden" value="@reservation.ResID" />
                                     <input type="hidden" value="@reservation.Customer.Id" />
                                 </form>
