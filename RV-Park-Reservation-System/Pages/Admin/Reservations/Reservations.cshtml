@@ -44,8 +44,7 @@
                             <td>@reservation.Customer.CustPhone</td>
                             <td>
                                 <form method="post">
-                                    <a class="btn btn-success text-light" asp-page="/Admin/Reservations/ReservationsUpdate" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id">Update</a>
-                                    <a class="btn btn-danger text-light" onclick="return deleteRecord(@reservation.ResID, event)" asp-page="/Admin/Reservations/ReservationsDelete" asp-route-id="@reservation.ResID">Delete</a>
+                                    <a class="btn btn-success text-light" asp-page="/Admin/Reservations/ReservationsUpdate" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id">Update Reservation</a>
                                     <input type="hidden" value="@reservation.ResID" />
                                     <input type="hidden" value="@reservation.Customer.Id" />
                                 </form>
@@ -59,30 +58,7 @@
 </div>
 
 @section Scripts{
-    <script type="text/javascript">
-        function deleteRecord(reservation, e) {
-            //e.preventDefault();
-            // current problem: Same one as before, the swal isn't waiting before sending the page to the delete, but the delete won't work without the asp-page-route.
-            // the fix from before wont' work because the Reservations page itself uses the onPost to route to the update page, so we can't overwrite it to use the OnPost.
-            // need to devise a way to prevent the page from changing but then still allow the page to be routed after selecting an option.
-            // (possibly weird) idea: in Reservation onPost, make it take 2 values, id and direction. Then do if check to determine where to route the page. 
-            swal({
-                title: "Are you sure you want to delete?",
-                text: "You will not be able to restore this data!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true
-            }).then(function (willDelete) {
-                if (willDelete) {
-                    //location.href = "/Admin/Reservations/ReservationsDelete?id="${ reservation };
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            })
-        }
-    </script>
+   
 <script>
     function alertFunc() {
                 var success = $("#success").html()
