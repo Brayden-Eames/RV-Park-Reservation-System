@@ -24,10 +24,10 @@ namespace ApplicationCore.Models
         [Required]
         public Boolean IsPaid { get; set; }
 
-        [MaxLength(20)]
+        [MaxLength(40)]
         public string CCReference { get; set; }
 
-        [MaxLength(10)]
+        [MaxLength(30)]
         public string PayLastModifiedBy { get; set; }
 
         public DateTime PayLastModifiedDate { get; set; }

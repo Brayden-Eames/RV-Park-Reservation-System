@@ -1,0 +1,82 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Client.PaymentSummaryModel
+@using Infrastructure.Services
+@using Microsoft.Extensions.Options
+@inject IOptions<Infrastructure.Services.StripeSettings> Stripe
+@{
+}
+
+<form method="post">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6 offset-3  m-5 border rounded">
+                <div class="row">
+                    <div class=" col-12 text-center"><h4>Reservation Summary</h4></div>
+                    <hr />
+
+                </div>
+                <div class="row text-center">
+                    <div class="col-12">
+                        <p>
+                            Start Date: @Model.newReservation.ResStartDate.ToString()
+                            &nbsp;&nbsp; <i class="fas fa-align-center fa-arrow-right"></i> &nbsp;&nbsp;
+                            End Date: @Model.newReservation.ResEndDate.ToString()
+                        </p>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-4">
+                        Adults: @Model.newReservation.ResNumAdults.ToString()
+                    </div>
+                    <div class="col-4">
+                        Children: @Model.newReservation.ResNumChildren.ToString()
+                    </div>
+                    <div class="col-4">
+                        Pets: @Model.newReservation.ResNumPets.ToString()
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-6">
+                        Vehicle type: get vehicle types
+                    </div>
+                    <div class="col-6">
+                        Vehicle length: @Model.newReservation.ResVehicleLength
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-12">
+                        total Cost: @Model.paymentObj.PayTotalCost.ToString()
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        @{ var OrderTotalForStripe = Math.Round((Model.paymentObj.PayTotalCost * 100), 0); }
+                            <script src="https://checkout.stripe.com/checkout.js"
+                                    class="stripe-button"
+                                    data-key="@Stripe.Value.PublishableKey"
+                                    data-amount="@OrderTotalForStripe"
+                                    data-name="FamCamp Reservation"
+                                    data-label="Place Order"
+                                    data-description=""
+                                    data-locale="auto"
+                                    data-allow-remember-me="false"
+                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"></script>
+
+                            <script>document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';</script>
+                            <button type="submit" id="btnPlaceOrder" onclick="return validateInput()" value="Place Order" class="btn container-fluid btn-primary form-control">Place Order</button>
+                    </div>
+                    <div class="col-6">
+                        <a asp-page="../Index" class="btn container-fluid btn-primary">Cancel</a>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="paymentID" />
+                <input type="hidden" asp-for="reservationID" />
+
+                
+            </div>
+        </div>
+    </div>
+</form>
