@@ -7,8 +7,13 @@ $(document).ready(function () {
     loadLists();
 });
 
+
 function loadLists() {
     dtsiteCat = $('#DTsiteCat').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'csv', 'excel', 'pdf', 'print'
+        ],
         "ajax": {
             "url": "/api/siteCategory",
             "type": "GET",
@@ -26,6 +31,8 @@ function loadLists() {
     });
 
     dtsiteRate = $('#DTsiteRate').DataTable({
+        dom: 'Bfrtip',
+        buttons: [ 'csv', 'excel', 'pdf', 'print'],
         "ajax": {
             "url": "/api/site_rate",
             "type": "GET",
@@ -44,6 +51,8 @@ function loadLists() {
     });
 
     dtspecEvent = $('#DTspecEvent').DataTable({
+        dom: 'Bfrtip',
+        buttons: ['csv', 'excel', 'pdf', 'print'],
         "ajax": {
             "url": "/api/specialEvent",
             "type": "GET",
