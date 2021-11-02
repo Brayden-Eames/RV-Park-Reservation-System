@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using RV_Park_Reservation_System.Data;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +32,10 @@ namespace RV_Park_Reservation_System
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
+
             services.AddRazorPages();
 
 
@@ -40,7 +44,7 @@ namespace RV_Park_Reservation_System
                     sqlServerOptions => sqlServerOptions.MigrationsAssembly("Infrastructure")));
 
 
-            services.AddIdentity<Customer, IdentityRole>()
+            services.AddIdentity<ApplicationCore.Models.Customer, IdentityRole>()
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 

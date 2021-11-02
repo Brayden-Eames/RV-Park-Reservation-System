@@ -1,5 +1,4 @@
 ﻿@using Infrastructure.Services
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,7 +52,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link text-light" asp-page="/Admin/Reservations">Reservations</a>
+                                    <a class="nav-link text-light" asp-page="/Admin/Reservations/Index">Reservations</a>
                                 </li>
 
                                 <li class="nav-item">
@@ -111,7 +110,10 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="~/lib/moment/moment.js"></script>
     <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
@@ -135,6 +137,7 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
 <script>
 

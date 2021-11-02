@@ -39,7 +39,7 @@ namespace ApplicationCore.Models
 
         public int ResVehicleLength { get; set; }
 
-        [Required, MaxLength(10)]
+        [Required, MaxLength(40)]
         public string ResLastModifiedBy { get; set; }
 
         public DateTime ResLastModifiedDate { get; set; }

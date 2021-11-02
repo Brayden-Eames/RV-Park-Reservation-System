@@ -1,4 +1,140 @@
 ﻿@page
 @model RV_Park_Reservation_System.Pages.Admin.SpecialEvent.UpsertModel
 @{
+    ViewData["Title"] = "Manage Special Event";
+}
+
+<form method="post" asp-action="Upsert" autocomplete="off">
+    <div class="container">
+        <div class="row px-2 mx-2 border">
+            @* All for Model validation and HTML validation *@
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
+                <h2 class="text-primary">@(Model.SpecialEventObj.SpecialEvent.EventID != 0 ? "Update" : "Create") Special Event</h2>
+            </div>
+            <div class="col-8 pt-3">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SpecialEventObj.SpecialEvent.EventName"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="SpecialEventObj.SpecialEvent.EventName" />
+                        <span class="text-danger" asp-validation-for="SpecialEventObj.SpecialEvent.EventName"></span>
+                    </div>
+                    @if (Model.SpecialEventObj.SpecialEvent.EventID != 0)
+                    {
+                        <input type="hidden" asp-for="SpecialEventObj.SpecialEvent.EventID" />
+                    }
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SpecialEventObj.SpecialEvent.EventDescription"></label>
+                    </div>
+                    <div class="col-9">
+                        <textarea id="txtDesc" class="form-control" style="height:200px;" asp-for="SpecialEventObj.SpecialEvent.EventDescription"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SpecialEventObj.SpecialEvent.EventStartDate"></label>
+                    </div>
+                    <div class="col-9">
+                        @if (Model.SpecialEventObj.SpecialEvent.EventID != 0)
+                        {
+                            <input asp-for="SpecialEventObj.SpecialEvent.EventStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="@Model.SpecialEventObj.SpecialEvent.EventStartDate" />
+                        }
+                        else
+                        {
+                            <input asp-for="SpecialEventObj.SpecialEvent.EventStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                        }
+                        <span class="text-danger" asp-validation-for="SpecialEventObj.SpecialEvent.EventStartDate"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SpecialEventObj.SpecialEvent.EventEndDate"></label>
+                    </div>
+                    <div class="col-9">
+                        @if (Model.SpecialEventObj.SpecialEvent.EventID != 0)
+                        {
+                            <input asp-for="SpecialEventObj.SpecialEvent.EventEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="@Model.SpecialEventObj.SpecialEvent.EventEndDate" />
+                        }
+                        else
+                        {
+                            <input asp-for="SpecialEventObj.SpecialEvent.EventEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="" />
+                        }
+                        <span class="text-danger" asp-validation-for="SpecialEventObj.SpecialEvent.EventEndDate"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SpecialEventObj.SpecialEvent.Daily_Surcharge"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="SpecialEventObj.SpecialEvent.Daily_Surcharge" />
+                        <span class="text-danger" asp-validation-for="SpecialEventObj.SpecialEvent.Daily_Surcharge"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SpecialEventObj.SpecialEvent.Weekly_Surcharge"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="SpecialEventObj.SpecialEvent.Weekly_Surcharge" />
+                        <span class="text-danger" asp-validation-for="SpecialEventObj.SpecialEvent.Weekly_Surcharge"></span>
+                    </div>
+                </div>
+                @*<div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="SpecialEventObj.SpecialEvent.LocationID"></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownListFor(l => l.SpecialEventObj.SpecialEvent.LocationID, Model.SpecialEventObj.LocationList, " - Please select a location - ", new { @class = "form-control", @id = "ddlLocation" })
+                        <span class="text-danger" asp-validation-for="SpecialEventObj.SpecialEvent.LocationID"></span>
+                    </div>
+                </div>*@
+                <div class="form-group row">
+                    <div class="col-9 offset-3">
+                        <div class="row">
+                            <div class="col-6">
+                                @if (Model.SpecialEventObj.SpecialEvent.EventID != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control" onclick="return ValidateInput()">Update</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control" onclick="return ValidateInput()">Create</button>
+                                }
+                            </div>
+                            <div class="col-6">
+                                <a asp-page="../Manage" class="btn btn-success form-control">Back to List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({ minDate: 1, maxDate: "+12M" });
+        });
+
+        tinymce.init({
+            selector: 'textarea',
+            plugins: "lists",
+            menubar: "file edit format"
+        });
+
+        //function ValidateInput() {
+        //    if ($('#ddlLocation option:selected').val() == 0 || $('#ddlLocation option:selected').index == 0) {
+        //        swal('Error', 'Please select a location.', 'error');
+        //        return false;
+        //    }
+        //    return true;
+        //}
+    </script>
 }
