@@ -64,18 +64,18 @@
                                     @{
                                         if (user.LockoutEnd > DateTime.Now)
                                         {
-                                            <button type="submit" class="btn btn-outline-warning" asp-page-handler="lockUnlock" asp-route-id="@user.Id"><i class="fas fa-lock-open"></i> Unlock</button>
+                                            <button type="submit" class="btn btn-warning text-dark" asp-page-handler="lockUnlock" asp-route-id="@user.Id"><i class="fas fa-lock-open"></i> Unlock</button>
                                         }
                                         else
                                         {
-                                            <button type="submit" class="btn btn-outline-warning" asp-page-handler="lockUnlock" asp-route-id="@user.Id"><i class="fas fa-lock"></i> Lock</button>
+                                            <button type="submit" class="btn btn-warning text-dark" asp-page-handler="lockUnlock" asp-route-id="@user.Id"><i class="fas fa-lock"></i> Lock</button>
                                         }
                                     }
                                 </form>
                             </td>
                             <td>
-                                <a class="btn btn-outline-success" asp-page="/Admin/Users/Update" asp-route-id="@user.Id">Update</a>
-                                <a class="btn btn-outline-danger" asp-page="/Admin/Users/Delete" asp-route-id="@user.Id">Delete</a>
+                                <a class="btn btn-success text-light" asp-page="/Admin/Users/Update" asp-route-id="@user.Id">Update</a>
+                                <a class="btn btn-danger text-light" asp-page="/Admin/Users/Delete" asp-route-id="@user.Id">Delete</a>
                             </td>
                         </tr>
                     }
