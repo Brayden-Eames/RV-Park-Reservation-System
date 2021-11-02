@@ -20,9 +20,9 @@ function loadLists() {
             "datatype": "json"
         },
         "columns": [
-            //{ data: "siteCategoryName", width: "20%" },
-            //{ data: "siteCategoryDescription", width: "35%" },
-            //{ data: "locationID", width: "20%" },            
+            { data: "siteCategoryName", width: "20%" },
+            { data: "siteCategoryDescription", width: "35%" },
+            { data: "locationID", width: "20%" },            
         ],
         "language": {
             "emptyTable": "no data found."
