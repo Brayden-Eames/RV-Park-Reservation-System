@@ -9,15 +9,12 @@
     <!--TODO: MANAGE RESERVATIONS-->
     <div class="border backgroundWhite mt-5 p-3">
         <div class="row mt-3">
-            <div class="col-6">
-                <h2 class="text-primary">Reservations</h2>
-            </div>
-            <div class="col-6 text-right">
-                <a asp-page="/Admin/Reservations/Index" asp-area="Identity" class="btn btn-primary"><i class="fas fa-plus"></i> &nbsp; Create New Reservation</a>
+            <div class="col-12 text-right">
+                <a asp-page="/Admin/Reservations/Index" asp-area="Identity" class="btn btn-primary"><i class="fas fa-plus"></i> &nbsp; Add Reservation</a>
             </div>
         </div>
         <br /><br />
-        <p class="hidden" id="success">@Model.Success.ToString()</p>
+        <p style="display: none;" id="success">@Model.Success.ToString()</p>
         <p class="hidden" id="message">@Model.Message</p>
         <table class="table table-striped table-bordered" style="width:100%">
             <thead>
@@ -44,7 +41,7 @@
                             <td>@reservation.Customer.CustPhone</td>
                             <td>
                                 <form method="post">
-                                    <a class="btn btn-success text-light" asp-page="/Admin/Reservations/Upsert" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id">Update Reservation</a>
+                                    <a class="btn btn-success text-light" asp-page="/Admin/Reservations/Upsert" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id"><i class="far fa-edit"></i> Edit</a>
                                     <input type="hidden" value="@reservation.ResID" />
                                     <input type="hidden" value="@reservation.Customer.Id" />
                                 </form>
