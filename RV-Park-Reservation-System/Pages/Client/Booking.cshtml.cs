@@ -109,7 +109,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 newReservation.ResCreatedDate = DateTime.Now;
                 newReservation.SiteID = siteid;
                 newReservation.ResStatusID = 1;
-                newReservation.ResLastModifiedBy = "customer";
+                newReservation.ResLastModifiedBy = User.Identity.Name;
                 newReservation.ResVehicleLength = vehicleLength;
 
 
@@ -128,7 +128,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
 
                 thisPayment.PayDate = DateTime.Now;
-                thisPayment.PayLastModifiedBy = "Customer";
+                thisPayment.PayLastModifiedBy = User.Identity.Name;
                 thisPayment.PayLastModifiedDate = DateTime.Now;
                 thisPayment.PayReasonID = 1;
                 thisPayment.PayTypeID = 1;

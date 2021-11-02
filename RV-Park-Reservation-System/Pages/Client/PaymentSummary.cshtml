@@ -53,25 +53,20 @@
 
                 <div class="row">
                     <div class="col-6">
+                        @{ var OrderTotalForStripe = Math.Round((Model.paymentObj.PayTotalCost * 100), 0); }
+                            <script src="https://checkout.stripe.com/checkout.js"
+                                    class="stripe-button"
+                                    data-key="@Stripe.Value.PublishableKey"
+                                    data-amount="@OrderTotalForStripe"
+                                    data-name="FamCamp Reservation"
+                                    data-label="Place Order"
+                                    data-description=""
+                                    data-locale="auto"
+                                    data-allow-remember-me="false"
+                                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png"></script>
 
-                                @{ var OrderTotalForStripe = Math.Round((Model.paymentObj.PayTotalCost * 100), 0); }
-
-
-                                    <script src="https://checkout.stripe.com/checkout.js"
-                                            class="stripe-button"
-                                            data-key="@Stripe.Value.PublishableKey"
-                                            data-amount="@OrderTotalForStripe"
-                                            data-name="FamCamp Reservation"
-                                            data-label="Place Order"
-                                            data-description=""
-                                            data-locale="auto"
-                                            data-allow-remember-me="false"
-                                            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"></script>
-
-                                    <script>document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';</script>
-                                    <button type="submit" id="btnPlaceOrder" onclick="return validateInput()" value="Place Order" class="btn container-fluid btn-primary form-control">Place Order</button>
-
-
+                            <script>document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';</script>
+                            <button type="submit" id="btnPlaceOrder" onclick="return validateInput()" value="Place Order" class="btn container-fluid btn-primary form-control">Place Order</button>
                     </div>
                     <div class="col-6">
                         <a asp-page="../Index" class="btn container-fluid btn-primary">Cancel</a>

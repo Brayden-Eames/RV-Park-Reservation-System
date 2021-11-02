@@ -54,9 +54,7 @@ namespace RV_Park_Reservation_System.Pages.Client
             }
             else
             {
-                newReservation = _unitOfWork.Reservation.Get(r => r.ResID == 12);
-                paymentObj = _unitOfWork.Payment.Get(p => p.PayID == 1);
-                paymentID = paymentObj.PayID;
+
                 Error = true;
             }
 
@@ -77,13 +75,13 @@ namespace RV_Park_Reservation_System.Pages.Client
                 {
                     Amount = Convert.ToInt32(paymentObj.PayTotalCost*100),
                     Currency = "usd",
-                    Description = "Order Id" + paymentObj.PayID,
+                    Description = "Order Id " + paymentObj.PayID,
                     Source = stripeToken,
 
                 };
                 var service = new ChargeService();
                 Charge charge = service.Create(options);
-               // paymentObj.CCReference = charge.Id;
+                paymentObj.CCReference = charge.Id;
                 if (charge.Status.ToLower() == "succeeded")
                 {
                     paymentObj.IsPaid = true;
