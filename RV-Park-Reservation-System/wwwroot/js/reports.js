@@ -15,14 +15,14 @@ function loadLists() {
             'csv', 'excel', 'pdf', 'print'
         ],
         "ajax": {
-            "url": "/api/siteCategory",
+            "url": "/api/reports",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { data: "siteCategoryName", width: "20%" },
-            { data: "siteCategoryDescription", width: "35%" },
-            { data: "locationID", width: "20%" },            
+            //{ data: "siteCategoryName", width: "20%" },
+            //{ data: "siteCategoryDescription", width: "35%" },
+            //{ data: "locationID", width: "20%" },            
         ],
         "language": {
             "emptyTable": "no data found."
@@ -71,77 +71,5 @@ function loadLists() {
     });
 }
 
-function DeleteCat(url) {
-    swal({
-        title: "Are you sure you want to delete?",
-        text: "You will not be able to restore this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                type: 'DELETE',
-                url: url,
-                success: function (data) {
-                    if (data.success) {
-                        toastr.success(data.message);
-                        dtsiteCat.ajax.reload();
-                    } else {
-                        toastr.error(data.message);
-                    }
-                }
-            })
-        }
-    })
-}
 
-function DeleteSiteRate(url) {
-    swal({
-        title: "Are you sure you want to delete?",
-        text: "You will not be able to restore this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                type: 'DELETE',
-                url: url,
-                success: function (data) {
-                    if (data.success) {
-                        toastr.success(data.message);
-                        dtsiteRate.ajax.reload();
-                    } else {
-                        toastr.error(data.message);
-                    }
-                }
-            })
-        }
-    })
-}
 
-function DeleteSpecialEvent(url) {
-    swal({
-        title: "Are you sure you want to delete?",
-        text: "You will not be able to restore this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                type: 'DELETE',
-                url: url,
-                success: function (data) {
-                    if (data.success) {
-                        toastr.success(data.message);
-                        dtspecEvent.ajax.reload();
-                    } else {
-                        toastr.error(data.message);
-                    }
-                }
-            })
-        }
-    })
-}
