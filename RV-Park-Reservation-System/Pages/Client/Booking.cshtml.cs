@@ -122,8 +122,8 @@ namespace RV_Park_Reservation_System.Pages.Client
 
                 Payment thisPayment = new Payment();
 
-                
 
+                
 
                 thisPayment.PayDate = DateTime.Now;
                 thisPayment.PayLastModifiedBy = User.Identity.Name;

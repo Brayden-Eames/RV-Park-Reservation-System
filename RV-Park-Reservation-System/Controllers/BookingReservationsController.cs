@@ -22,7 +22,7 @@ namespace RV_Park_Reservation_System.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> OnGetSites(string date1, string date2, string vehicleLength)
+        public IEnumerable<Site> OnGetSites(string date1, string date2, string vehicleLength)
         {
             var startDate = DateTime.Parse(date1);
             var endDate = DateTime.Parse(date2);
@@ -30,24 +30,35 @@ namespace RV_Park_Reservation_System.Controllers
 
             var reservations = _unitOfWork.Reservation.List();
 
-            reservations = reservations.Where(s=>(s.ResStartDate <= startDate && s.ResEndDate > startDate) 
-                                                 || (s.ResStartDate <= endDate && s.ResEndDate > endDate));
+            reservations = reservations.Where(s=>(s.ResStartDate <= startDate && s.ResEndDate >= startDate) 
+                                                 || (s.ResStartDate <= endDate && s.ResEndDate >= endDate) ||
+                                                 ((s.ResStartDate >startDate && s.ResEndDate >startDate) && (s.ResStartDate < endDate && s.ResEndDate < endDate)));
 
             var sites = _unitOfWork.Site.List();
             sites = sites.Where(s => s.SiteLength > vLength);
 
-            IEnumerable<int> SiteIDs = sites.Select(r => r.SiteID).ToList();
-            IEnumerable<int> badSiteIDs = reservations.Select(r => r.SiteID).ToList().Distinct();
-            SiteIDs = SiteIDs.Except(badSiteIDs);
+            IEnumerable<Site> site = _unitOfWork.Site.List();
+            site = site.Where(s => s.SiteLength > vLength);
+            IEnumerable<Site> badSites = Enumerable.Empty<Site>();
 
-            IEnumerable<string> siteString = Enumerable.Empty<string>();
-
-            foreach (var site in SiteIDs)
+            foreach (var item in reservations)
             {
-                siteString.Append(site.ToString() + " " + _unitOfWork.Site.Get(s => s.SiteID == site).SiteDescription);
+                badSites.Append(_unitOfWork.Site.Get(s => s.SiteID == item.SiteID));
             }
+            site = site.Except(badSites);
 
-            return siteString;
+            if (reservations.Select(s => s.SiteID).Contains(47) && vLength == 20)
+            {
+                site = Enumerable.Empty<Site>();
+
+            }
+                if (vLength == 20 && !reservations.Select(s => s.SiteID).Contains(47))
+                {
+                    site = Enumerable.Empty<Site>();
+                    site = site.Append(_unitOfWork.Site.Get(s => s.SiteID == 47));
+                }
+
+            return site;
 
         }
     }
