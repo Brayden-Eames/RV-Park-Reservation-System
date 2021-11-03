@@ -22,7 +22,7 @@ namespace RV_Park_Reservation_System.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<int> OnGetSites(string date1, string date2, string vehicleLength)
+        public IEnumerable<string> OnGetSites(string date1, string date2, string vehicleLength)
         {
             var startDate = DateTime.Parse(date1);
             var endDate = DateTime.Parse(date2);
@@ -40,7 +40,14 @@ namespace RV_Park_Reservation_System.Controllers
             IEnumerable<int> badSiteIDs = reservations.Select(r => r.SiteID).ToList().Distinct();
             SiteIDs = SiteIDs.Except(badSiteIDs);
 
-            return SiteIDs;
+            IEnumerable<string> siteString = Enumerable.Empty<string>();
+
+            foreach (var site in SiteIDs)
+            {
+                siteString.Append(site.ToString() + " " + _unitOfWork.Site.Get(s => s.SiteID == site).SiteDescription);
+            }
+
+            return siteString;
 
         }
     }

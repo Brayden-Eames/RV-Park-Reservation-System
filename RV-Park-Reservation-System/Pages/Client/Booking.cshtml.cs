@@ -62,8 +62,6 @@ namespace RV_Park_Reservation_System.Pages.Client
         public int siteid { get; set; }
         [BindProperty]
         public bool Error { get; set; } = false;
-        [BindProperty]
-        public bool fullHookups { get; set; }
 
         [BindProperty]
         public decimal totalCost { get; set; }
@@ -81,7 +79,7 @@ namespace RV_Park_Reservation_System.Pages.Client
             {
                 Error = (bool)error;
             }
-            vehicleTypes = _unitOfWork.Vehicle_Type.List().Select(f => new SelectListItem { Value = f.TypeID.ToString(), Text = f.TypeName + " " + f.TypeDescription });
+            vehicleTypes = _unitOfWork.Vehicle_Type.List().Select(f => new SelectListItem { Value = f.TypeID.ToString(), Text = f.TypeName });
 
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
 

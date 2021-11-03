@@ -19,7 +19,7 @@
         <div class="container">
             <div class="row border rounded pt-3 pb-3 mt-2 mb-3">
                 <input type="hidden" asp-for="Error" id="error" />
-                <input type="hidden" asp-for="totalCost" id="totalCost"/>
+
                 <div class="col-2">
 
                     <h5 class="form-control">Hill AFB FamCamp</h5>
@@ -27,12 +27,13 @@
                 <div class="col-3">
 
                     @Html.DropDownListFor(v => v.vehicleType, Model.vehicleTypes,
-                " - Please Select a vehicle type - ", new { @class = "form-control form-select", @id = "ddlVehicletype" })
+                " - Please Select a vehicle type - ", new { @class = "form-control", @id = "ddlVehicleType", @onchange= "VehicleSelected()" })
                 </div>
                 <div class="col-3">
 
-                    <select asp-for="vehicleLength" id="ddlVehicleLength" class="form-select form-control">
-                        <option value="0">- Please Select a vehicle length - </option>
+                    <select asp-for="vehicleLength" id="ddlVehicleLength" class="form-control">
+                        <option value="20">- Please Select a vehicle length - </option>
+                        
                         <option value="40">less than or equal to 40ft.</option>
                         <option value="43">less than or equal to 43ft.</option>
                         <option value="65">less than or equal to 65ft.</option>
@@ -42,7 +43,7 @@
                 <div class="col-2">
 
 
-                    <input asp-for="StartDate" onchange="checkDates();" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                    <input asp-for="StartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="StartDate"></span>
 
 
@@ -112,24 +113,13 @@
                     </div>
                 </div>
                 <div style="display: none" id="ddlSitesDiv" class="row justify-content-center m-2">
-                    <div class="row">
-                        <div class="col-12">
-                            <label>Campsite location</label>
-                            <select onchange="continuePayment();" asp-for="siteid" id="ddlSites" class="form-select form-control">
-                                <option value="0">- Please Select a camp site - </option>
+                    <div class="col-12">
+                        <label>Campsite location</label>
+                        <select onchange="continuePayment();" asp-for="siteid" id="ddlSites" class="form-control">
+                            <option value="0">- Please Select a camp site - </option>
 
-                            </select>
-                        </div>
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="col-10">
-                            <label>Will you need access to full hookups?</label>
-                        </div>
-                        <div class="col-2">
-                            <input asp-for="fullHookups" class="form-check-input" />
-                        </div>
-                    </div>
-
 
                 </div>
                 <br /><br />
@@ -163,6 +153,12 @@
             </div>
             <div class="modal-body">
                 <ul>
+                    <li>
+                        Dogs with any of the following breed lineage are restricted from FamCamp: <strong>
+                            Pit Bulls, Staffordshire Terriers,
+                            Rottweilers, Chow Chows, Doberman Pinschers, wolf hybrids.
+                        </strong>
+                    </li>
                     <li>Animal waste will be picked up and properly disposed of immediately.</li>
                     <li>Pets will remain on a leash in control of the owner unless in designated dog park area.</li>
                     <li>When using the dog park, the pet owner must be present at all times. </li>
@@ -172,10 +168,7 @@
                         This is to include but not limited to pets that display aggression and/or excessive barking.
                     </li>
                     <li>2 pet maximum.</li>
-                    <li>
-                        Dogs with any of the following breed lineage are restricted from FamCamp: Pit Bulls, Staffordshire Terriers,
-                        Rottweilers, Chow Chows, Doberman Pinschers, wolf hybrids.
-                    </li>
+
                 </ul>
             </div>
             <div class="modal-footer">
