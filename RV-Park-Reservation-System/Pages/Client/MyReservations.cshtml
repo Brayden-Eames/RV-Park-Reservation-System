@@ -4,45 +4,45 @@
     ViewData["Title"] = "Reservations";
 }
 
-<div class="border backgroundWhite container">
-    <div class="row">
-        <div class="col-6 ">
-            <h2 class="text-primary">Category List</h2>
+<div class="container">
+    <h1 class="display-4 text-center text-primary my-5">MY RESERVATIONS</h1>
+    <div class="border backgroundWhite mt-5 p-3">
+        <div class="row">
+            <div class="col-12 text-right">
+                <a asp-page="Upsert" asp-route-id="0" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>&nbsp;Create New
+                </a>
+            </div>
         </div>
-        <div class="col-6 text-right">
-            <a asp-page="Upsert" asp-route-id="0" class="btn btn-primary">
-                <i class="fas fa-plus"></i>&nbsp;Create New
-            </a>
-        </div>
+        <br /><br />
+        <table id="DT_load" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Vehicle Length
+                    </th>
+                    <th>
+                        Adults
+                    </th>
+                    <th>
+                        Children
+                    </th>
+                    <th>
+                        Pets
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
     </div>
-    <br /><br />
-    <table id="DT_load" class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>
-                    Start Date
-                </th>
-                <th>
-                    End Date
-                </th>
-                <th>
-                    Vehicle Length
-                </th>
-                <th>
-                    Adults
-                </th>
-                <th>
-                    Children
-                </th>
-                <th>
-                    Pets
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-    </table>
 </div>
 
-@section Scripts{
-    <script src="~/js/clientReservation.js"></script>
-}
+    @section Scripts{
+        <script src="~/js/clientReservation.js"></script>
+    }
