@@ -147,7 +147,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
 
 
-            return RedirectToPage("/Index");
+          
 
         }
 

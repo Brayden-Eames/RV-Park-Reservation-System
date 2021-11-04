@@ -43,7 +43,7 @@
                 <div class="col-2">
 
 
-                    <input asp-for="StartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                    <input asp-for="StartDate"  onchange="checkDates();" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="StartDate"></span>
 
 

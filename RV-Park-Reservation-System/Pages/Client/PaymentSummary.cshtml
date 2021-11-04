@@ -64,7 +64,7 @@
                                 data-locale="auto"
                                 data-allow-remember-me="false"
                                 data-image="https://img.icons8.com/external-justicon-flat-justicon/100/000000/external-tent-landscape-justicon-flat-justicon.png"></script>
-                        
+
                         <script>document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';</script>
                         <button type="submit" id="btnPlaceOrder" onclick="return validateInput()" value="Place Order" class="btn container-fluid btn-primary form-control">Place Order</button>
                     </div>
@@ -75,8 +75,13 @@
                 <input type="hidden" asp-for="paymentID" />
                 <input type="hidden" asp-for="reservationID" />
 
-                
+
             </div>
         </div>
     </div>
 </form>
+
+@section Scripts{
+    <script src="~/js/PaymentSummary.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

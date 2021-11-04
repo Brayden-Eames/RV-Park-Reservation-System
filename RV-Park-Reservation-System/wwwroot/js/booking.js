@@ -36,6 +36,7 @@ function checkDates() {
         var totalCost = (dayDiff * 25);
         document.getElementById('totalCost').value = totalCost;
         console.log(totalCost);
+    }
 }
 function loadReservations() {
 
