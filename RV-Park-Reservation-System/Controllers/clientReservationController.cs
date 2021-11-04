@@ -41,8 +41,8 @@ namespace RV_Park_Reservation_System.Controllers
             var refunds = new RefundService();
             var refundOptions = new RefundCreateOptions
             {
-                Charge = payObj.CCReference, // needs to be fixed; 
-
+                Charge = payObj.CCReference,
+                /*Amount = (payObj.PayTotalCost * 100)*/
             };
             var refund = refunds.Create(refundOptions);
 

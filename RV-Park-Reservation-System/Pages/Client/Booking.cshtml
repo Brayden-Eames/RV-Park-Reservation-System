@@ -17,21 +17,21 @@
         </div>
         }
         <div class="container">
-            <div class="row border rounded pt-3 pb-3 mt-2 mb-3">
+            <div class="row border rounded pt-3 pb-3  mt-2 mb-3">
                 <input type="hidden" asp-for="Error" id="error" />
                 <input type="hidden" id="totalCost" asp-for="totalCost" />
-                <div class="col-2">
+                <div class="col-md-2">
 
-                    <h5 class="form-control">Hill AFB FamCamp</h5>
+                    <h5 class="form-control">FamCamp</h5>
                 </div>
-                <div class="col-3">
+                <div class="col-md-3">
 
                     @Html.DropDownListFor(v => v.vehicleType, Model.vehicleTypes,
-                " - Please Select a vehicle type - ", new { @class = "form-control", @id = "ddlVehicleType", @onchange= "VehicleSelected()" })
+                " - Please Select a vehicle type - ", new { @class = "mb-2 form-control", @id = "ddlVehicleType", @onchange= "VehicleSelected()" })
                 </div>
-                <div class="col-3">
+                <div class="col-md-3">
 
-                    <select asp-for="vehicleLength" id="ddlVehicleLength" class="form-control">
+                    <select asp-for="vehicleLength" id="ddlVehicleLength" class=" mb-2 form-control">
                         <option value="20">- Please Select a vehicle length - </option>
                         
                         <option value="40">less than or equal to 40ft.</option>
@@ -39,18 +39,20 @@
                         <option value="65">less than or equal to 65ft.</option>
                     </select>
                 </div>
+                
 
-                <div class="col-2">
+                
+                <div class="mb-2 col-md-2">
 
 
-                    <input asp-for="StartDate"  onchange="checkDates();" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                    <input asp-for="StartDate"  onchange="checkDates();" class="datepicker container-fluid pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="StartDate"></span>
 
 
                 </div>
-                <div class="col-2">
+                <div class="mb-2 col-md-2">
 
-                    <input asp-for="EndDate" onchange="checkDates();" class="datepicker pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
+                    <input asp-for="EndDate" onchange="checkDates();" class="datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="EndDate"></span>
                 </div>
 
@@ -58,11 +60,11 @@
         </div>
 
         <div class="row">
-            <div class="col-8">
+            <div class="d-md-block d-none col-md-8">
                 <img src="~/Images/famcampMap.png" class="img-fluid border rounded" />
             </div>
 
-            <div class="col-4">
+            <div class="col-md-4">
 
                 <br />
                 <div class="row justify-content-center m-2">
@@ -119,6 +121,10 @@
                             <option value="0">- Please Select a camp site - </option>
 
                         </select>
+                        <div class="d-md-none">
+                            Click <a class="text-info" data-toggle="modal" data-target="#siteMap">here </a> to view the site map.
+                        </div>
+
                     </div>
 
                 </div>
@@ -140,6 +146,26 @@
     </div>
 
 </form>
+
+<div class="modal" id="siteMap" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Site Map</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="~/Images/famcampMap.png" class="img-fluid border rounded" />
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="modal" id="myModal" tabindex="-1" role="dialog">

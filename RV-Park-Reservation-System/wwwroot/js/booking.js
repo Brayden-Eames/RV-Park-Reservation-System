@@ -46,8 +46,7 @@ function loadReservations() {
         swal('Error', 'Please select a start date, end date, and vehicle type to see available resevations', 'error')
         return false;
 	}
-    $('#btnSeeReservations').css('display', 'none');
-    $('#ddlSitesDiv').css('display', 'block');
+
 
 
     var dates = { date1: document.getElementById('startDate').value, date2: document.getElementById('endDate').value, vehicleLength: document.getElementById('ddlVehicleLength').value};
@@ -59,9 +58,11 @@ function loadReservations() {
         if (count == 0) {
             $('#btnSeeReservations').css('display', 'block');
             $('#ddlSitesDiv').css('display', 'none');
-            swal('Error', 'No Reservations', 'error')
+            swal('Error', 'No reservations available for the selected dates and vehicle length.', 'error')
             return false;
-		}
+        }
+        $('#btnSeeReservations').css('display', 'none');
+        $('#ddlSitesDiv').css('display', 'block');
         /* Remove all options from the select list */
         $('#ddlSites').empty();
         $('#ddlSites').append($('<option></option>').val(0).html("- Please select a Lot -"));
