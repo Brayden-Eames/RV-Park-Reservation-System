@@ -22,6 +22,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteRate
 
         public IActionResult OnGet(int? id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/SiteRates/Upsert" });
+            }
+
             var categories = _unitOfWork.Site_Category.List();
 
             SiteRateObj = new SiteRateVM

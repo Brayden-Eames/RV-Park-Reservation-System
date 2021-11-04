@@ -23,8 +23,13 @@ namespace RV_Park_Reservation_System.Pages.Admin
         public string Message { get; set; }
 
         //We might need to make a ViewModel to allow us to pull from the Reservation, Customer, Service Status Type and DODAffiliation tables. 
-        public void OnGet(bool success = false, string message = null)
+        public IActionResult OnGet(bool success = false, string message = null)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Index" });
+            }
+
             //need to pull data from Reservation, Customer, DODAffiliation and ServiceStatusType tables. Use the ViewModel to do so
             Success = success;
             Message = message;
@@ -36,6 +41,8 @@ namespace RV_Park_Reservation_System.Pages.Admin
                 DODAffiliationList = _unitofWork.DOD_Affiliation.List(),
                 ServiceStatusTypes = _unitofWork.Service_Status_Type.List()
             };
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPost(int? id)

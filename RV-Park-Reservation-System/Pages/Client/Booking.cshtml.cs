@@ -37,9 +37,7 @@ namespace RV_Park_Reservation_System.Pages.Client
         public int vehicleType { get; set; }
 
         public List<Special_Event> specialEvents { get; set; }
-
         
-
         public string jsonFeed { get; set; }
 
         [BindProperty]
@@ -71,12 +69,13 @@ namespace RV_Park_Reservation_System.Pages.Client
         public Reservation newReservation { get; set; }
 
 
-
-
-
-
-        public void OnGet(bool? error)
+        public IActionResult OnGet(bool? error)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Client/Booking" });
+            }
+
             if (error != null)
             {
                 Error = (bool)error;
@@ -86,13 +85,12 @@ namespace RV_Park_Reservation_System.Pages.Client
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
 
 
-
+            return Page();
         }
 
 
         public async Task<IActionResult> OnPost()
         {
-
             if (ModelState.IsValid)
             {
                 newReservation = new Reservation();
@@ -110,11 +108,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 newReservation.SiteID = siteid;
                 newReservation.ResStatusID = 1;
                 newReservation.ResLastModifiedBy = User.Identity.Name;
-                newReservation.ResVehicleLength = vehicleLength;
-
-
-   
-
+                newReservation.ResVehicleLength = vehicleLength;   
 
                 _unitOfWork.Reservation.Add(newReservation);
                 _unitOfWork.Commit();
@@ -122,10 +116,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 int thisReservation = _unitOfWork.Reservation.List().Where(r=>r.Id == newReservation.Id).Last().ResID;
 
 
-                Payment thisPayment = new Payment();
-
-                
-
+                Payment thisPayment = new Payment();                
 
                 thisPayment.PayDate = DateTime.Now;
                 thisPayment.PayLastModifiedBy = User.Identity.Name;
@@ -147,13 +138,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 return RedirectToPage("/Client/Booking", new { error = Error});
             }
 
-
-
             return RedirectToPage("/Index");
-
-        }
-
-       
-
+        }       
     }
 }
