@@ -28,7 +28,7 @@ namespace RV_Park_Reservation_System.Pages.Admin
             //need to pull data from Reservation, Customer, DODAffiliation and ServiceStatusType tables. Use the ViewModel to do so
             Success = success;
             Message = message;
-            ReservationList = _unitofWork.Reservation.List();
+            ReservationList = _unitofWork.Reservation.List(r => r.ResStatusID == 1 || r.ResStatusID == 4); //1 for scheduled 4 for On Going
             AdminReservationObject = new AdminReservationVM()
             {
                 Reservations = _unitofWork.Reservation.List(),
