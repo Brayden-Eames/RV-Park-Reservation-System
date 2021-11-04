@@ -37,6 +37,9 @@ namespace RV_Park_Reservation_System.Pages.Client
         [BindProperty]
         public int paymentID { get; set; }
 
+        [BindProperty]
+        public string  vehicleType { get; set; }
+
         public bool Error { get; set; } = false;
 
 
@@ -46,11 +49,15 @@ namespace RV_Park_Reservation_System.Pages.Client
             {
                 reservationID = (int)resID;
                 newReservation = _unitOfWork.Reservation.Get(r => r.ResID == resID);
+                vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.VehicleTypeID).TypeName;
+
             }
             if (payID!= null)
             {
                 paymentID = (int)payID;
                 paymentObj = _unitOfWork.Payment.Get(p => p.PayID == paymentID);
+
+              
             }
             else
             {
@@ -62,39 +69,33 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         }
 
-        public IActionResult OnPost(string stripeToken)
+        public IActionResult OnPost()
         {
             if (paymentID != 0)
             {
                 paymentObj = _unitOfWork.Payment.Get(p => p.PayID == paymentID);
             }
-   
-            if (stripeToken != null)
-            {
-                var options = new ChargeCreateOptions
-                {
-                    Amount = Convert.ToInt32(paymentObj.PayTotalCost*100),
-                    Currency = "usd",
-                    Description = "Order Id " + paymentObj.PayID,
-                    Source = stripeToken,
 
-                };
-                var service = new ChargeService();
-                Charge charge = service.Create(options);
-                paymentObj.CCReference = charge.Id;
-                if (charge.Status.ToLower() == "succeeded")
-                {
-                    paymentObj.IsPaid = true;
-                    _unitOfWork.Payment.Update(paymentObj);
-                    _unitOfWork.Commit();
-                }
-                else
-                {
-                    paymentObj.IsPaid = false;
-                }
+            var service = new PaymentIntentService();
+            var paymentIntent =  service.Get(paymentObj.CCReference);
+
+
+            if (paymentIntent.Status.ToLower() == "succeeded")
+            {
+                paymentObj.IsPaid = true;
+                _unitOfWork.Payment.Update(paymentObj);
+                _unitOfWork.Commit();
+                return RedirectToPage("/Client/PaymentConfirmation");
+            }
+            else
+            {
+                paymentObj.IsPaid = false;
 
             }
             return RedirectToPage("/Client/PaymentConfirmation");
+
+
+
 
         }
     }

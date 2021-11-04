@@ -38,10 +38,13 @@ namespace RV_Park_Reservation_System.Controllers
             
             StripeConfiguration.ApiKey = _stripe.Value.SecretKey;
 
+            var intent = new Stripe.PaymentIntentService();
+            var payment = intent.Get(payObj.CCReference);
+
             var refunds = new RefundService();
             var refundOptions = new RefundCreateOptions
             {
-                Charge = payObj.CCReference,
+                Charge = payment.Charges.Data[0].Id,
                 /*Amount = (payObj.PayTotalCost * 100)*/
             };
             var refund = refunds.Create(refundOptions);
