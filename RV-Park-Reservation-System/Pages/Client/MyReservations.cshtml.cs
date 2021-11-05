@@ -9,8 +9,14 @@ namespace RV_Park_Reservation_System.Pages.Client
 {
     public class MyReservationsModel : PageModel
     {
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Client/MyReservations" });
+            }
+
+            return Page();
         }
     }
 }

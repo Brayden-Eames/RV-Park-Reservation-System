@@ -31,11 +31,17 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
         public int reservationID { get; set; }
 
-        public void OnGet(int? id, string? userId)
+        public IActionResult OnGet(int? id, string? userId)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Upsert" });
+            }
+
             CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
             CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
-            
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string value)

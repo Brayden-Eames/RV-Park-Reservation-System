@@ -40,8 +40,13 @@ namespace RV_Park_Reservation_System.Pages.Client
         public bool Error { get; set; } = false;
 
 
-        public void OnGet(int? resID, int? payID)
+        public IActionResult OnGet(int? resID, int? payID)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Client/PaymentSummary" });
+            }
+
             if (resID != null)
             {
                 reservationID = (int)resID;
@@ -59,7 +64,7 @@ namespace RV_Park_Reservation_System.Pages.Client
             }
 
 
-
+            return Page();
         }
 
         public IActionResult OnPost(string stripeToken)
