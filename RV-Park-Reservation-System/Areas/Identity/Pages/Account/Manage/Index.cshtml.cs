@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,7 +32,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            var userValue = _unitofWork.Customer.Get(u => u.Id == claim.Value, true);
+            var userValue = _unitofWork.Customer.Get(u => u.Id == claim.Value);
             var listDOD = _unitofWork.DOD_Affiliation.List();
             var listSST = _unitofWork.Service_Status_Type.List();
    
@@ -50,14 +51,21 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
         {
             if (!ModelState.IsValid)
             {
+                var listDOD = _unitofWork.DOD_Affiliation.List();
+                var listSST = _unitofWork.Service_Status_Type.List();
+
+                userAccountVM.DODAffiliationList = listDOD.Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
+                userAccountVM.ServiceStatusTypesList = listSST.Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });
+                
                 return Page();
-            }
+            }           
 
             userAccountVM.user.CustLastModifiedBy = userAccountVM.user.CustFirstName + " " + userAccountVM.user.CustLastName;
-            userAccountVM.user.CustLastModifiedDate = DateTime.Now;
+            userAccountVM.user.CustLastModifiedDate = DateTime.Now;            
 
             _unitofWork.Customer.Update(userAccountVM.user);
 
+            _unitofWork.Commit();
 
             return Page();
         }

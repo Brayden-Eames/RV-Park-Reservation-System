@@ -10,7 +10,7 @@
         <div class="row">
 
             <form method="post">
-                <input type="hidden" asp-for="@Model.userAccountVM.user.Id" />
+                <input type="hidden" asp-for="@Model.userAccountVM.user.Id" value="@Model.userAccountVM.user.Id" />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="@Model.userAccountVM.user.CustFirstName">First Name</label>
@@ -23,14 +23,14 @@
                     <span asp-validation-for="@Model.userAccountVM.user.CustLastName" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.userAccountVM.user.Email">Email</label>
-                    <input value="@Model.userAccountVM.user.Email" type="email" asp-for="@Model.userAccountVM.user.Email" class="form-control" />
-                    <span asp-validation-for="@Model.userAccountVM.user.Email" class="text-danger"></span>
+                    <label asp-for="@Model.userAccountVM.user.CustEmail">Email</label>
+                    <input value="@Model.userAccountVM.user.CustEmail" type="text" asp-for="@Model.userAccountVM.user.CustEmail" class="form-control" />
+                    <span asp-validation-for="@Model.userAccountVM.user.CustEmail" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="@Model.userAccountVM.user.PhoneNumber">Phone Number</label>
-                    <input value="@Model.userAccountVM.user.PhoneNumber" type="tel" asp-for="@Model.userAccountVM.user.PhoneNumber" class="form-control" />
-                    <span asp-validation-for="@Model.userAccountVM.user.PhoneNumber" class="text-danger"></span>
+                    <label asp-for="@Model.userAccountVM.user.CustPhone">Phone Number</label>
+                    <input value="@Model.userAccountVM.user.CustPhone" type="text" asp-for="@Model.userAccountVM.user.CustPhone" class="form-control" />
+                    <span asp-validation-for="@Model.userAccountVM.user.CustPhone" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="@Model.userAccountVM.user.DODAffiliationID">DOD Affiliation</label>
