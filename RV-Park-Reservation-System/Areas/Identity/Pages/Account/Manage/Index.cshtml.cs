@@ -65,6 +65,8 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
 
             _unitofWork.Customer.Update(userAccountVM.user);
 
+            //TODO: ITS NOT UPDATING PROPERLY!
+
             _unitofWork.Commit();
 
             return Page();
