@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ApplicationCore.Models;
 using ApplicationCore.Interfaces;
+using Infrastructure.Services;
 
 namespace RV_Park_Reservation_System.Pages.Admin.User
 {
@@ -26,8 +27,13 @@ namespace RV_Park_Reservation_System.Pages.Admin.User
         public bool Success { get; set; }
         public string Message { get; set; }
 
-        public async Task OnGetAsync(bool success = false, string message = null)
+        public async Task<IActionResult> OnGetAsync(bool success = false, string message = null)
         {
+            if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole) || User.IsInRole(SD.EmployeeRole))
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Users/Index" });
+            }
+
             Success = success;
             Message = message;
             UserRoles = new Dictionary<string, List<string>>();
@@ -37,6 +43,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.User
                 var userRole = await _userManager.GetRolesAsync(user);
                 UserRoles.Add(user.Id, userRole.ToList());
             }
+
+            return Page();
         }
         public async Task<IActionResult> OnPostLockUnlock(string id)
         {

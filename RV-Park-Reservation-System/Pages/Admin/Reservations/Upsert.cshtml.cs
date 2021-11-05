@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -33,7 +34,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
         public IActionResult OnGet(int? id, string? userId)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole))
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Upsert" });
             }
