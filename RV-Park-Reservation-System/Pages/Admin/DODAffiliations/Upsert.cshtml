@@ -1,0 +1,51 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Admin.DODAffiliations.UpsertModel
+@{
+    ViewData["Title"] = "Manage DOD Affiliation";
+}
+
+<form method="post" asp-action="Upsert" autocomplete="off">
+    <div class="container">
+        <div class="row px-2 mx-2 border">
+            @* All for Model validation and HTML validation *@
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
+                <h2 class="text-primary">@(Model.DODAffiliationObj.DODAffiliationID != 0 ? "Update" : "Create") DOD Affiliation</h2>
+            </div>
+            <div class="col-8 pt-3">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="DODAffiliationObj.DODAffiliationType"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="DODAffiliationObj.DODAffiliationType" />
+                        <span class="text-danger" asp-validation-for="DODAffiliationObj.DODAffiliationType"></span>
+                    </div>
+                    @if (Model.DODAffiliationObj.DODAffiliationID != 0)
+                    {
+                        <input type="hidden" asp-for="DODAffiliationObj.DODAffiliationID" />
+                    }
+                </div>
+                <div class="form-group row">
+                    <div class="col-9 offset-3">
+                        <div class="row">
+                            <div class="col-6">
+                                @if (Model.DODAffiliationObj.DODAffiliationID != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                                }
+                            </div>
+                            <div class="col-6">
+                                <a asp-page="../Manage" class="btn btn-success form-control">Back to List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

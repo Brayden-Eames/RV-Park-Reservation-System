@@ -11,7 +11,7 @@ namespace RV_Park_Reservation_System.Pages.Client
     {
         public IActionResult OnGet()
         {
-            if (!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated && !User.IsInRole("Customer"))
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Client/MyReservations" });
             }

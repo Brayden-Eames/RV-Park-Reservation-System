@@ -7,6 +7,7 @@ using ApplicationCore.Models;
 using RV_Park_Reservation_System.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Infrastructure.Services;
 
 namespace RV_Park_Reservation_System.Pages.Admin
 {
@@ -25,10 +26,11 @@ namespace RV_Park_Reservation_System.Pages.Admin
         //We might need to make a ViewModel to allow us to pull from the Reservation, Customer, Service Status Type and DODAffiliation tables. 
         public IActionResult OnGet(bool success = false, string message = null)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (!User.IsInRole(SD.AdminRole) && !User.Identity.IsAuthenticated)
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Index" });
             }
+            
 
             //need to pull data from Reservation, Customer, DODAffiliation and ServiceStatusType tables. Use the ViewModel to do so
             Success = success;

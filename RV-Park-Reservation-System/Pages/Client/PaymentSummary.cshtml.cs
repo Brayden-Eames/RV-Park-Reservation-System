@@ -42,7 +42,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         public IActionResult OnGet(int? resID, int? payID)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated && !User.IsInRole("Customer"))
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Client/PaymentSummary" });
             }
