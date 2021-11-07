@@ -1,7 +1,7 @@
 ﻿@page
-@model RV_Park_Reservation_System.Pages.Admin.SitesModel
+@model RV_Park_Reservation_System.Pages.Admin.SiteCategories.IndexModel
 @{
-    ViewData["Title"] = "Manage Sites";
+    ViewData["Title"] = "Manage Site Categories";
 }
 
 <div class="container mb-4">
@@ -15,9 +15,9 @@
             <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/ReservationStatuses/Index">Reservation Statuses</a>
             <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/SecurityQuestions/Index">Security Questions</a>
             <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/ServiceStatuses/Index">Service Statuses</a>
-            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/SiteCategories/Index">Site Categories</a>
+            <a class="btn btn-primary w-100 py-2 text-left" asp-page="/Admin/SiteCategories/Index">Site Categories <i class="fas fa-angle-right"></i></a>
             <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/SiteRates/Index">Site Rates</a>
-            <a class="btn btn-primary w-100 py-2 text-left" asp-page="/Admin/Sites/Index">Sites <i class="fas fa-angle-right"></i></a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/Sites/Index">Sites</a>
             <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/SpecialEvents/Index">Special Events</a>
             <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/VehicleTypes/Index">Vehicle Types</a>
         </div>
@@ -25,39 +25,30 @@
             <div class="border backgroundWhite container p-3">
                 <div class="row">
                     <div class="col-6">
-                        <h4>Sites</h4>
+                        <h4>Site Categories</h4>
                     </div>
                     <div class="col-6 text-right">
-                        <a asp-page="Sites/Upsert" asp-route-id="0" class="btn btn-primary">
+                        <a asp-page="SiteCategories/Upsert" asp-route-id="0" class="btn btn-primary">
                             <i class="fas fa-plus"></i>&nbsp;Create New
                         </a>
                     </div>
                 </div>
                 <br />
                 <br />
-                <table id="DTsites" class="table table-striped table-bordered mx-0 w-100">
+                <table id="DTsiteCat" class="table table-striped table-bordered mx-0 w-100">
                     <thead>
                         <tr>
                             <th>
                                 ID
                             </th>
                             <th>
-                                Category
-                            </th>
-                            <th>
-                                Number
-                            </th>
-                            <th>
-                                Length
+                                Name
                             </th>
                             <th>
                                 Description
                             </th>
                             <th>
-                                Modified Date
-                            </th>
-                            <th>
-                                Modified By
+                                Location ID
                             </th>
                             <th></th>
                         </tr>
@@ -70,35 +61,32 @@
 
 @section Scripts {
     <script>
-        var dtsite;
+        var dtsiteCat;
 
         $(document).ready(function () {
             loadLists();
         });
 
         function loadLists() {
-            dtsite = $('#DTsites').DataTable({
+            dtsiteCat = $('#DTsiteCat').DataTable({
                 "ajax": {
-                    "url": "/api/sites",
+                    "url": "/api/siteCategory",
                     "type": "GET",
                     "datatype": "json"
                 },
                 "columns": [
-                    { data: "siteID", width: "5%" },
-                    { data: "site_Category.siteCategoryName", width: "15%" },
-                    { data: "siteNumber", width: "5%" },
-                    { data: "siteLength", width: "5%" },
-                    { data: "siteDescription", width: "20%" },
-                    { data: "siteLastModifiedDate", width: "12%", "render": function (data) { return moment(data).format("MM/DD/YYYY, hh:mm a"); }  },
-                    { data: "siteLastModifiedBy", width: "12%" },
+                    { data: "siteCategory", width: "5%" },
+                    { data: "siteCategoryName", width: "20%" },
+                    { data: "siteCategoryDescription", width: "35%" },
+                    { data: "locationID", width: "15%" },
                     {
-                        data: "siteID", width: "25%",
+                        data: "siteCategory", width: "35%",
                         "render": function (data) {
                             return `<div class="text-center">
-                            <a href="/Admin/Sites/Upsert?id=${data}"
-                            class ="btn btn-success text-white style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i> Edit</a>                            
-                            <a onClick=DeleteSite('/api/sites/'+${data})
-                            class ="btn btn-danger text-white style="cursor:pointer; width=100px;"> <i class="far fa-trash-alt"></i> Delete</a>
+                            <a href="/Admin/SiteCategories/Upsert?id=${data}"
+                            class ="btn btn-success text-white style="cursor:pointer;"><i class="far fa-edit"></i> Edit</a>
+                            <a onClick=DeleteCat('/api/siteCategory/'+${data})
+                            class ="btn btn-danger text-white style="cursor:pointer;"><i class="far fa-trash-alt"></i> Delete</a>
                     </div>`;
                         }
                     }
@@ -109,7 +97,7 @@
             });
         }
 
-        function DeleteSite(url) {
+        function DeleteCat(url) {
             swal({
                 title: "Are you sure you want to delete?",
                 text: "You will not be able to restore this data!",
@@ -124,10 +112,10 @@
                         success: function (data) {
                             if (data.success) {
                                 toastr.success(data.message);
-                                dtsite.ajax.reload();
-                            }
-                            else
+                                dtsiteCat.ajax.reload();
+                            } else {
                                 toastr.error(data.message);
+                            }
                         }
                     })
                 }
