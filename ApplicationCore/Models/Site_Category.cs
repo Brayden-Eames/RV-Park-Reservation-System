@@ -11,14 +11,18 @@ namespace ApplicationCore.Models
     public class Site_Category
     {
         [Key]
+        [Display(Name = "ID")]
         public int SiteCategory { get; set; }
 
         [Required, MaxLength(50)]
+        [Display(Name = "Name")]
         public string SiteCategoryName { get; set; }
 
+        [Display(Name = "Description")]
         public string SiteCategoryDescription { get; set; }
 
         [Required]
+        [Display(Name = "Location ID")]
         public int LocationID { get; set; }
 
         [ForeignKey("LocationID")]
