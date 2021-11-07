@@ -41,11 +41,11 @@
                     <div class="col-9">
                         @if (Model.SpecialEventObj.SpecialEvent.EventID != 0)
                         {
-                            <input asp-for="SpecialEventObj.SpecialEvent.EventStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="@Model.SpecialEventObj.SpecialEvent.EventStartDate" />
+                            <input asp-for="SpecialEventObj.SpecialEvent.EventStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="@Model.SpecialEventObj.SpecialEvent.EventStartDate"  onchange="checkDates();"/>
                         }
                         else
                         {
-                            <input asp-for="SpecialEventObj.SpecialEvent.EventStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                            <input asp-for="SpecialEventObj.SpecialEvent.EventStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" onchange="checkDates();" />
                         }
                         <span class="text-danger" asp-validation-for="SpecialEventObj.SpecialEvent.EventStartDate"></span>
                     </div>
@@ -57,11 +57,11 @@
                     <div class="col-9">
                         @if (Model.SpecialEventObj.SpecialEvent.EventID != 0)
                         {
-                            <input asp-for="SpecialEventObj.SpecialEvent.EventEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="@Model.SpecialEventObj.SpecialEvent.EventEndDate" />
+                            <input asp-for="SpecialEventObj.SpecialEvent.EventEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="@Model.SpecialEventObj.SpecialEvent.EventEndDate"  onchange="checkDates();"/>
                         }
                         else
                         {
-                            <input asp-for="SpecialEventObj.SpecialEvent.EventEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="" />
+                            <input asp-for="SpecialEventObj.SpecialEvent.EventEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="" onchange="checkDates();" />
                         }
                         <span class="text-danger" asp-validation-for="SpecialEventObj.SpecialEvent.EventEndDate"></span>
                     </div>
@@ -129,12 +129,15 @@
             menubar: "file edit format"
         });
 
-        //function ValidateInput() {
-        //    if ($('#ddlLocation option:selected').val() == 0 || $('#ddlLocation option:selected').index == 0) {
-        //        swal('Error', 'Please select a location.', 'error');
-        //        return false;
-        //    }
-        //    return true;
-        //}
+        function checkDates() {
+            var startDate = new Date(document.getElementById('startDate').value);
+            var endDate = new Date(document.getElementById('endDate').value);
+            if (startDate != "" && endDate != "") {
+                if (startDate > endDate) {
+                    swal('Error', 'Please select an end date that is equal to or past the start date for this special event', 'error')
+                    return false;
+                }
+            }
+        }
     </script>
 }

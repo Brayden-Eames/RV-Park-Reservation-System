@@ -68,7 +68,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SpecialEvent
                 _unitOfWork.Special_Event.Update(SpecialEventObj.SpecialEvent);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

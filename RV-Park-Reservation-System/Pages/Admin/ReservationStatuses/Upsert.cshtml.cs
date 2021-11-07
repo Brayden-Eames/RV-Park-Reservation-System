@@ -59,7 +59,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.ReservationStatuses
                 _unitOfWork.Reservation_Status.Update(ReservationStatusObj);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

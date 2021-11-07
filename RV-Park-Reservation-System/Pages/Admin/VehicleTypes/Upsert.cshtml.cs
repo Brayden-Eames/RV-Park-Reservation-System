@@ -59,7 +59,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.VehicleTypes
                 _unitOfWork.Vehicle_Type.Update(VehicleTypeObj);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

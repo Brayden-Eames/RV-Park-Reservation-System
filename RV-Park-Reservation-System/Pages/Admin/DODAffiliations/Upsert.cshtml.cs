@@ -58,7 +58,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.DODAffiliations
                 _unitOfWork.DOD_Affiliation.Update(DODAffiliationObj);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

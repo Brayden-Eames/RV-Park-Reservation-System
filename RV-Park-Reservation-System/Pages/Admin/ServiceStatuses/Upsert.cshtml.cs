@@ -58,7 +58,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.ServiceStatuses
                 _unitOfWork.Service_Status_Type.Update(ServiceStatusTypeObj);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

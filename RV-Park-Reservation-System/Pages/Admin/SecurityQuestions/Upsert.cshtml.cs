@@ -58,7 +58,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SecurityQuestions
                 _unitOfWork.Security_Question.Update(SecurityQuestionObj);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

@@ -67,7 +67,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteRate
                 _unitOfWork.Site_Rate.Update(SiteRateObj.SiteRate);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }
