@@ -58,7 +58,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.PaymentTypes
                 _unitOfWork.Payment_Type.Update(PaymentTypeObj);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

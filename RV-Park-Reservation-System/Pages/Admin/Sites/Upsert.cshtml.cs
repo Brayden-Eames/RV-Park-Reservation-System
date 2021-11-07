@@ -83,7 +83,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.ManageSites
             }
             _unitofWork.Commit();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("Index");
         }
 
 

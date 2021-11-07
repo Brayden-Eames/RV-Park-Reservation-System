@@ -69,7 +69,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteCategory
                 _unitOfWork.Site_Category.Update(SiteCategoryObj.SiteCategory);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }
