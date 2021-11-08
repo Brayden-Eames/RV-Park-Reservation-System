@@ -3,21 +3,16 @@
 const stripe = Stripe('pk_test_51JhX39C1OcDeDQ0XknryEu26l0Sh687xS7zBdQ6dFnw2Og5NI52bMrinthhk1S5cU8PhRkwJspsSQ1UmXmUfFwUV00kNdmAsJ0');
 var host = window.location.protocol + "//" + window.location.host;
 (async () => {
-    console.log(document.getElementById('paymentIntent').value);
-
-
     const appearance = {
         theme: 'night',
         labels: 'floating'
 
 
     };
-    var paymentID = {
-        payID: document.getElementById('paymentIntent').value
-    };
+
     
-    $.getJSON("/api/Payment", paymentID, function (payment) {
-        console.log(payment);
+    $.getJSON("/api/Payment", function (payment) {
+        
         const { client_secret: clientSecret } = payment;
         const elements = stripe.elements({ clientSecret, appearance });
         const paymentElement = elements.create('payment');
@@ -59,17 +54,13 @@ var host = window.location.protocol + "//" + window.location.host;
 
 
 	
-	// Render the Payment Element using the clientSecret
+
 
 })();
 
 
 
-// Pass the appearance object to the Elements instance
 
-
-
-// Create and mount the Payment Element
 
 
 

@@ -44,7 +44,7 @@ namespace ApplicationCore.Models
 
         public DateTime ResLastModifiedDate { get; set; }
 
-        public int VehicleTypeID { get; set; }
+        public int TypeID { get; set; }
 
         [ForeignKey("TypeID")]
         [Required]

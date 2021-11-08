@@ -52,11 +52,11 @@ namespace RV_Park_Reservation_System.Controllers
                 site = Enumerable.Empty<Site>();
 
             }
-                if (vLength == 20 && !reservations.Select(s => s.SiteID).Contains(47))
-                {
-                    site = Enumerable.Empty<Site>();
-                    site = site.Append(_unitOfWork.Site.Get(s => s.SiteID == 47));
-                }
+            if (vLength == 20 && !reservations.Select(s => s.SiteID).Contains(47))
+            {
+                site = Enumerable.Empty<Site>();
+                site = site.Append(_unitOfWork.Site.Get(s => s.SiteID == 47));
+            }
 
             return site;
 

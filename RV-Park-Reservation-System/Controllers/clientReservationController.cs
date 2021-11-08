@@ -35,17 +35,31 @@ namespace RV_Park_Reservation_System.Controllers
         {
             var objFromDb = _unitOfWork.Reservation.Get(c => c.ResID == id);
             var payObj = _unitOfWork.Payment.Get(p => p.ResID == id);
-            
+            if (payObj.IsPaid == false)
+            {
+                return Json(new { success = false, message = "Reservation is not paid." });
+            }
             StripeConfiguration.ApiKey = _stripe.Value.SecretKey;
 
             var intent = new Stripe.PaymentIntentService();
             var payment = intent.Get(payObj.CCReference);
+            int refundAmount = 0 ;
+
+            if ((objFromDb.ResStartDate - DateTime.Now).TotalDays >= 4)
+            {
+                refundAmount = (int)(payObj.PayTotalCost * 100) - 1000;
+            }
+            else if ((objFromDb.ResStartDate -DateTime.Now  ).TotalDays < 4)
+            {
+                refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
+            }
+          
 
             var refunds = new RefundService();
             var refundOptions = new RefundCreateOptions
             {
                 Charge = payment.Charges.Data[0].Id,
-                /*Amount = (payObj.PayTotalCost * 100)*/
+                Amount = refundAmount,
             };
             var refund = refunds.Create(refundOptions);
 

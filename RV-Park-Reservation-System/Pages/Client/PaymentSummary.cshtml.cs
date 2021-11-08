@@ -4,10 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Infrastructure.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RV_Park_Reservation_System.ViewModels;
 using Stripe;
 
 namespace RV_Park_Reservation_System.Pages.Client
@@ -42,22 +45,21 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         public bool Error { get; set; } = false;
 
+        public ReservationVM reservationVM { get; set; }
 
-        public void OnGet(int? resID, int? payID)
+        public void OnGet(bool? error)
         {
-            if (resID != null)
-            {
-                reservationID = (int)resID;
-                newReservation = _unitOfWork.Reservation.Get(r => r.ResID == resID);
-                vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.VehicleTypeID).TypeName;
+            if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
+            {   if (error!= null)
+                {
+                    Error = true;
+                }
+                reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
 
-            }
-            if (payID!= null)
-            {
-                paymentID = (int)payID;
-                paymentObj = _unitOfWork.Payment.Get(p => p.PayID == paymentID);
+                newReservation = reservationVM.reservationObj;
+                paymentObj = reservationVM.paymentObj;
+                vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
 
-              
             }
             else
             {
@@ -71,28 +73,36 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         public IActionResult OnPost()
         {
-            if (paymentID != 0)
+            if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
             {
-                paymentObj = _unitOfWork.Payment.Get(p => p.PayID == paymentID);
+               reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
             }
 
             var service = new PaymentIntentService();
-            var paymentIntent =  service.Get(paymentObj.CCReference);
+            var paymentIntent =  service.Get(reservationVM.paymentObj.CCReference);
 
 
             if (paymentIntent.Status.ToLower() == "succeeded")
             {
-                paymentObj.IsPaid = true;
-                _unitOfWork.Payment.Update(paymentObj);
+                ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
+                reservationVM.reservationObj.Id = customer.Id;
+                _unitOfWork.Reservation.Add(reservationVM.reservationObj);
                 _unitOfWork.Commit();
+
+                var reservations = _unitOfWork.Reservation.List().Where(r=> r.Customer == customer).Last();
+                reservationVM.paymentObj.ResID = reservations.ResID;
+                reservationVM.paymentObj.IsPaid = true;
+                _unitOfWork.Payment.Add(reservationVM.paymentObj);
+                _unitOfWork.Commit();
+                HttpContext.Session.Clear();
                 return RedirectToPage("/Client/PaymentConfirmation");
             }
             else
             {
-                paymentObj.IsPaid = false;
+                return RedirectToPage("/Client/PaymentSummary", new { error = true });
 
             }
-            return RedirectToPage("/Client/PaymentConfirmation");
+
 
 
 

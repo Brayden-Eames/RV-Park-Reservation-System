@@ -7,10 +7,19 @@
 }
 
 <div class="container ">
-
+    @if (Model.Error == true)
+    {
+        <div class="alert text-center alert-danger alert-dismissible fade show" role="alert">
+            <span class="">There was an issue with payment, Please try again or call us at ###</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
 
     <div class="row  align-items-center vh-100">
         <div class="col-md-12">
+
             <div class="row  border rounded">
                 <div class="col-md-6 pt-3  ">
                     <div class="row">
@@ -56,7 +65,7 @@
                     <form method="post" class="p-2" id="payment-form">
 
                         <input type="hidden" id="paymentIntent" asp-for="paymentID" />
-                        <div class="pt-4 pb-4" id="payment-element">
+                        <div class="mb-5" id="payment-element">
                             <!-- Elements will create form elements here -->
                         </div>
                         <div class="row list-group-horizontal">
@@ -78,13 +87,13 @@
                 </div>
             </div>
         </div>
-   
 
-       
-     
+
+
+
     </div>
 
- </div>
+</div>
     
 @section Scripts{
     <script src="~/js/PaymentSummary.js"></script>

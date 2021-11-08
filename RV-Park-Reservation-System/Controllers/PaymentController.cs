@@ -1,6 +1,10 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Infrastructure.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RV_Park_Reservation_System.Pages.Client;
+using RV_Park_Reservation_System.ViewModels;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -20,12 +24,14 @@ namespace RV_Park_Reservation_System.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpGet]
-        public ActionResult Get(int payID)
+        public ActionResult Get()
         {
-            if (payID != 0)
+            if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null )
             {
-                int paymentID = (int)payID;
-                Payment paymentObj = _unitOfWork.Payment.Get(p => p.PayID == paymentID);
+
+                ReservationVM reservationVM = new ReservationVM();
+                reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
+                Payment paymentObj = reservationVM.paymentObj;
                 if (paymentObj.CCReference == null )
                 {
                     var options = new PaymentIntentCreateOptions
@@ -41,8 +47,9 @@ namespace RV_Park_Reservation_System.Controllers
                     var service = new PaymentIntentService();
                     var paymentIntent = service.Create(options);
                     paymentObj.CCReference = paymentIntent.Id;
-                    _unitOfWork.Payment.Update(paymentObj);
-                    _unitOfWork.Commit();
+                    reservationVM.paymentObj = paymentObj;
+                    HttpContext.Session.Set(SD.ReservationSession, reservationVM);
+
                     var intent = new Stripe.PaymentIntentService();
                     var payment = intent.Get(paymentIntent.Id);
                     return Json(new { client_secret = payment.ClientSecret });
