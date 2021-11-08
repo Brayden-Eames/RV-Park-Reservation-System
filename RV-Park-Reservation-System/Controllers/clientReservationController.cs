@@ -1,11 +1,16 @@
 ﻿using ApplicationCore.Interfaces;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace RV_Park_Reservation_System.Controllers
@@ -16,9 +21,16 @@ namespace RV_Park_Reservation_System.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<Infrastructure.Services.StripeSettings> _stripe;
-        public clientReservationController(IUnitOfWork unitOfWork, IOptions<Infrastructure.Services.StripeSettings> stripe) {
+        private readonly UserManager<ApplicationCore.Models.Customer> _userManager;
+        private readonly IEmailSender _emailSender;
+
+
+
+        public clientReservationController(IUnitOfWork unitOfWork, IOptions<Infrastructure.Services.StripeSettings> stripe, UserManager<ApplicationCore.Models.Customer> userManager, IEmailSender emailSender) {
             _unitOfWork = unitOfWork;
             _stripe = stripe;
+            _userManager = userManager;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -31,7 +43,7 @@ namespace RV_Park_Reservation_System.Controllers
 
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async  Task<IActionResult> Delete(int id)
         {
             var objFromDb = _unitOfWork.Reservation.Get(c => c.ResID == id);
             var payObj = _unitOfWork.Payment.Get(p => p.ResID == id);
@@ -81,6 +93,22 @@ namespace RV_Park_Reservation_System.Controllers
             }
             _unitOfWork.Reservation.Delete(objFromDb);
             _unitOfWork.Commit();
+
+            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = Url.Page(
+                "/Client/MyReservations",
+                pageHandler: null,
+                values: new { area = "", code },
+                protocol: Request.Scheme);
+
+            await _emailSender.SendEmailAsync(
+                user.CustEmail,
+                "FamCamp Reservation Cancel Confirmation",
+                $"This is a confirmation that your reservation is canceled and refunded. ");
+
+
             return Json(new { success = true, message = "Delete Successful" });
         }
     }
