@@ -10,9 +10,11 @@ namespace ApplicationCore.Models
     public class Payment_Reason
     {
         [Key]
+        [Display(Name = "ID")]
         public int PayReasonID { get; set; }
 
         [Required, MaxLength(20)]
+        [Display(Name = "Payment Reason")]
         public string PayReasonName { get; set; }
     }
 

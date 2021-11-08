@@ -30,6 +30,7 @@ namespace RV_Park_Reservation_System.Pages.Admin
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Index" });
             }
+            
 
             //need to pull data from Reservation, Customer, DODAffiliation and ServiceStatusType tables. Use the ViewModel to do so
             Success = success;

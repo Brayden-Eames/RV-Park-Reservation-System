@@ -11,12 +11,15 @@ namespace ApplicationCore.Models
     {
         [Key]
         [Required]
+        [Display(Name = "ID")]
         public int ResStatusID { get; set; }
 
         [Required, MaxLength(50)]
+        [Display(Name = "Name")]
         public string ResStatusName { get; set; }
 
         [MaxLength(100)]
+        [Display(Name = "Description")]
         public string ResStatusDescription { get; set; }
     }
 

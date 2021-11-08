@@ -10,11 +10,14 @@ namespace ApplicationCore.Models
     public class Vehicle_Type
     {
         [Key]
+        [Display(Name = "ID")]
         public int TypeID { get; set; }
 
         [Required, MaxLength(50)]
+        [Display(Name = "Name")]
         public string TypeName { get; set; }
 
+        [Display(Name = "Description")]
         public string TypeDescription { get; set; }
     }
 }
