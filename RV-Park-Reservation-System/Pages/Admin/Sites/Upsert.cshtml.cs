@@ -29,6 +29,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.ManageSites
 
         public IActionResult OnGet(int? id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Sites/Upsert" });
+            }
+        
             var siteCategories = _unitofWork.Site_Category.List();
 
             SiteVmObj = new SitesVM()
@@ -78,7 +83,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.ManageSites
             }
             _unitofWork.Commit();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("Index");
         }
 
 

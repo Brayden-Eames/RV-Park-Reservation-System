@@ -57,7 +57,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         public List<Special_Event> specialEvents { get; set; }
 
-
+        
 
         public string jsonFeed { get; set; }
 
@@ -88,12 +88,13 @@ namespace RV_Park_Reservation_System.Pages.Client
         public Reservation newReservation { get; set; }
 
 
-        public ReservationVM reservationVM { get; set; }
-
-
-
-        public void OnGet(bool? error)
+        public IActionResult OnGet(bool? error)
         {
+            if (!User.Identity.IsAuthenticated && !User.IsInRole("Customer"))
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Client/Booking" });
+            }
+
             if (error != null)
             {
                 Error = (bool)error;
@@ -103,7 +104,7 @@ namespace RV_Park_Reservation_System.Pages.Client
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
 
 
-
+            return Page();
         }
 
 
@@ -156,13 +157,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 return RedirectToPage("/Client/Booking", new { error = Error});
             }
 
-
-
-          
-
-        }
-
-       
-
+            return RedirectToPage("/Index");
+        }       
     }
 }

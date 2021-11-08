@@ -11,25 +11,33 @@ namespace ApplicationCore.Models
     public class Special_Event
     {
         [Key]
+        [Display(Name = "ID")]
         public int EventID { get; set; }
 
         [Required, MaxLength(50)]
+        [Display(Name = "Name")]
         public string EventName { get; set; }
 
         [Required]
+        [Display(Name = "Start Date")]
         public DateTime EventStartDate { get; set; }
 
         [Required]
+        [Display(Name = "End Date")]
         public DateTime EventEndDate { get; set; }
 
+        [Display(Name = "Description")]
         public string EventDescription { get; set; }
 
+        [Display(Name = "Daily Surcharge")]
         public int Daily_Surcharge { get; set; }
 
+        [Display(Name = "Weekly Surcharge")]
         public int Weekly_Surcharge { get; set; }
        
 
         [Required]
+        [Display(Name = "Location ID")]
         public int LocationID { get; set; }
 
         [ForeignKey("LocationID")]

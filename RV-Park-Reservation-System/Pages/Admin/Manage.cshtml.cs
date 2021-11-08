@@ -9,5 +9,14 @@ namespace RV_Park_Reservation_System.Pages.Admin
 {
     public class ManageModel : PageModel
     {
+        public IActionResult OnGet()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Manage" });
+            }
+
+            return Page();
+        }
     }
 }

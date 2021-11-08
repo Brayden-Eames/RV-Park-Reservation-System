@@ -60,6 +60,20 @@ namespace RV_Park_Reservation_System.Pages.Client
                 paymentObj = reservationVM.paymentObj;
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
 
+            if (!User.Identity.IsAuthenticated && !User.IsInRole("Customer"))
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Client/PaymentSummary" });
+            }
+
+            if (resID != null)
+            {
+                reservationID = (int)resID;
+                newReservation = _unitOfWork.Reservation.Get(r => r.ResID == resID);
+            }
+            if (payID!= null)
+            {
+                paymentID = (int)payID;
+                paymentObj = _unitOfWork.Payment.Get(p => p.PayID == paymentID);
             }
             else
             {

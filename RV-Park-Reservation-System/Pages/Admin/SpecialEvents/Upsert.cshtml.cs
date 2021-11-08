@@ -22,6 +22,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.SpecialEvent
 
         public IActionResult OnGet(int? id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/SpecialEvents/Upsert" });
+            }
+
             //Commenting out because we will hard code the location ID for the initial project
             //var locations = _unitOfWork.Location.List();
 
@@ -63,7 +68,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SpecialEvent
                 _unitOfWork.Special_Event.Update(SpecialEventObj.SpecialEvent);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

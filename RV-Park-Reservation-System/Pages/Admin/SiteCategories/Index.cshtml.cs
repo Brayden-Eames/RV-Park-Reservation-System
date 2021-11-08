@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace RV_Park_Reservation_System.Pages.Admin
+namespace RV_Park_Reservation_System.Pages.Admin.SiteCategories
 {
-    public class BillingModel : PageModel
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {

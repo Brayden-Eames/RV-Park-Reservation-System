@@ -28,11 +28,14 @@ namespace ApplicationCore.Models
         [Display(Name ="Phone Number")]
         public string CustPhone { get; set; }
 
+        [Display(Name = "Modified By")]
         public string CustLastModifiedBy { get; set; }
 
+        [Display(Name = "Modified Date")]
         public DateTime CustLastModifiedDate { get; set; }
 
         [Required]
+        [Display(Name = "Service Status")]
         public int ServiceStatusID { get; set; }
 
 
@@ -40,6 +43,7 @@ namespace ApplicationCore.Models
         public virtual Service_Status_Type Service_Status_Type { get; set; }
 
         [Required]
+        [Display(Name = "DOD Affiliation")]
         public int DODAffiliationID { get; set; }
 
 
