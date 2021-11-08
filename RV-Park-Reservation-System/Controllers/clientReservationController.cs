@@ -53,6 +53,18 @@ namespace RV_Park_Reservation_System.Controllers
             {
                 refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
             }
+            var specialEvents = _unitOfWork.Special_Event.List();
+            
+            foreach (var events in specialEvents )
+            {
+                if ((objFromDb.ResStartDate <= events.EventStartDate && objFromDb.ResEndDate >= events.EventStartDate)
+                                     || (objFromDb.ResStartDate <= events.EventEndDate && objFromDb.ResEndDate >= events.EventEndDate) ||
+                                     ((objFromDb.ResStartDate > events.EventStartDate && objFromDb.ResEndDate > events.EventStartDate) 
+                                     && (objFromDb.ResStartDate < events.EventEndDate && objFromDb.ResEndDate < events.EventEndDate)))
+                {
+                    refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
+                }
+            }
           
 
             var refunds = new RefundService();

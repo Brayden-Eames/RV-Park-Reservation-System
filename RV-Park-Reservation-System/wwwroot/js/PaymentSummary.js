@@ -2,6 +2,7 @@
 // See your keys here: https://dashboard.stripe.com/apikeys
 const stripe = Stripe('pk_test_51JhX39C1OcDeDQ0XknryEu26l0Sh687xS7zBdQ6dFnw2Og5NI52bMrinthhk1S5cU8PhRkwJspsSQ1UmXmUfFwUV00kNdmAsJ0');
 var host = window.location.protocol + "//" + window.location.host;
+
 (async () => {
     const appearance = {
         theme: 'night',
@@ -26,8 +27,9 @@ var host = window.location.protocol + "//" + window.location.host;
             const { error } = await stripe.confirmPayment({
                 //`Elements` instance that was used to create the Payment Element
                 elements,
-               
+                redirect: "if_required",
                 confirmParams: {
+                    
                     return_url: host + "/Client/PaymentConfirmation"
                 },
             });
@@ -36,16 +38,18 @@ var host = window.location.protocol + "//" + window.location.host;
                 // This point will only be reached if there is an immediate error when
                 // confirming the payment. Show error to your customer (e.g., payment
                 // details incomplete)
-                console.log(host);
+                console.log(error);
                 const messageContainer = document.querySelector('#error-message');
                 messageContainer.textContent = error.message;
             } else {
-                
+                console.log("success");
+                //code before the pause
+
                 // Your customer will be redirected to your `return_url`. For some payment
                 // methods like iDEAL, your customer will be redirected to an intermediate
                 // site first to authorize the payment, then redirected to the `return_url`.
             }
-            console.log(clientSecret);
+           
 
         });
 

@@ -19,6 +19,7 @@ using Infrastructure.Services;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+using Stripe;
 
 namespace RV_Park_Reservation_System.Pages.Client
 {
@@ -39,9 +40,9 @@ namespace RV_Park_Reservation_System.Pages.Client
     public class BookingModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<Customer> _userManager;
+        private readonly UserManager<ApplicationCore.Models.Customer> _userManager;
 
-        public BookingModel(IUnitOfWork unitOfWork, UserManager<Customer> userManager) 
+        public BookingModel(IUnitOfWork unitOfWork, UserManager<ApplicationCore.Models.Customer> userManager) 
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -87,6 +88,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         public Reservation newReservation { get; set; }
 
+        public ReservationVM reservationVM { get; set; }
 
         public IActionResult OnGet(bool? error)
         {
@@ -120,7 +122,11 @@ namespace RV_Park_Reservation_System.Pages.Client
 
             if (ModelState.IsValid)
             {
-     
+                TimeSpan startTime = new TimeSpan(13, 0, 0);
+                StartDate = StartDate.Date + startTime;
+                TimeSpan EndTime = new TimeSpan(12, 0, 0);
+                EndDate = EndDate.Date + EndTime;
+
 
                 reservationVM.reservationObj.ResAcknowledgeValidPets = breedPolicy;
                 reservationVM.reservationObj.ResStartDate = StartDate;
@@ -129,25 +135,42 @@ namespace RV_Park_Reservation_System.Pages.Client
                 reservationVM.reservationObj.ResNumChildren = numberOfChildren;
                 reservationVM.reservationObj.ResNumPets = numberOfPets;
                 reservationVM.reservationObj.TypeID = vehicleType;
-                //reservationVM.reservationObj.Vehicle_Type = _unitOfWork.Vehicle_Type.Get(v=>v.TypeID == vehicleType);
                 reservationVM.reservationObj.ResCreatedDate = DateTime.Now;
                 reservationVM.reservationObj.SiteID = siteid;
                 reservationVM.reservationObj.ResStatusID = 1;
                 reservationVM.reservationObj.ResLastModifiedBy = User.Identity.Name;
                 reservationVM.reservationObj.ResVehicleLength = vehicleLength;
 
+
                 reservationVM.paymentObj.PayDate = DateTime.Now;
                 reservationVM.paymentObj.PayLastModifiedBy = User.Identity.Name;
                 reservationVM.paymentObj.PayLastModifiedDate = DateTime.Now;
                 reservationVM.paymentObj.PayReasonID = 1;
                 reservationVM.paymentObj.PayTypeID = 1;
-                //reservationVM.paymentObj.ResID = 0;
                 reservationVM.paymentObj.IsPaid = false;
                 reservationVM.paymentObj.PayTotalCost = totalCost;
 
-                HttpContext.Session.Set(SD.ReservationSession, reservationVM);
 
-                var reservationVMtest = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
+                if (reservationVM.paymentObj.CCReference == null)
+                {
+                    var options = new PaymentIntentCreateOptions
+                    {
+                        Amount = Convert.ToInt32(reservationVM.paymentObj.PayTotalCost * 100),
+                        Currency = "usd",
+
+                        PaymentMethodTypes = new List<string>
+                        {
+                          "card",
+                        },
+                    };
+
+                    var service = new PaymentIntentService();
+                    var paymentIntent = service.Create(options);
+                    reservationVM.paymentObj.CCReference = paymentIntent.Id;
+                }
+                    HttpContext.Session.Set(SD.ReservationSession, reservationVM);
+
+                
                 
                 return RedirectToPage("/Client/PaymentSummary");
             }

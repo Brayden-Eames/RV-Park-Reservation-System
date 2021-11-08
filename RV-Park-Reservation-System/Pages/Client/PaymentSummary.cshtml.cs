@@ -14,7 +14,7 @@ using RV_Park_Reservation_System.ViewModels;
 using Stripe;
 
 namespace RV_Park_Reservation_System.Pages.Client
-{
+{   
     public class PaymentSummaryModel : PageModel
     {
 
@@ -47,10 +47,16 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         public ReservationVM reservationVM { get; set; }
 
-        public void OnGet(bool? error)
+        public IActionResult OnGet(bool? error)
         {
+
+            if (!User.Identity.IsAuthenticated && !User.IsInRole("Customer"))
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Client/PaymentSummary" });
+            }
+
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
-            {   if (error!= null)
+            { if (error != null)
                 {
                     Error = true;
                 }
@@ -60,31 +66,15 @@ namespace RV_Park_Reservation_System.Pages.Client
                 paymentObj = reservationVM.paymentObj;
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
 
-            if (!User.Identity.IsAuthenticated && !User.IsInRole("Customer"))
-            {
-                return RedirectToPage("/Shared/Prohibited", new { path = "/Client/PaymentSummary" });
-            }
-
-            if (resID != null)
-            {
-                reservationID = (int)resID;
-                newReservation = _unitOfWork.Reservation.Get(r => r.ResID == resID);
-            }
-            if (payID!= null)
-            {
-                paymentID = (int)payID;
-                paymentObj = _unitOfWork.Payment.Get(p => p.PayID == paymentID);
             }
             else
             {
 
                 Error = true;
+
             }
-
-
-
+            return Page();
         }
-
         public IActionResult OnPost()
         {
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
@@ -92,6 +82,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
             }
 
+            System.Threading.Thread.Sleep(2000);
             var service = new PaymentIntentService();
             var paymentIntent =  service.Get(reservationVM.paymentObj.CCReference);
 

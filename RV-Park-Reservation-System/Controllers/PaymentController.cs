@@ -32,16 +32,17 @@ namespace RV_Park_Reservation_System.Controllers
                 ReservationVM reservationVM = new ReservationVM();
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
                 Payment paymentObj = reservationVM.paymentObj;
-                if (paymentObj.CCReference == null )
+                if (reservationVM.paymentObj.CCReference == null )
                 {
                     var options = new PaymentIntentCreateOptions
                     {
                         Amount = Convert.ToInt32(paymentObj.PayTotalCost * 100),
                         Currency = "usd",
+                        
                         PaymentMethodTypes = new List<string>
-                    {
-                      "card",
-                    },
+                        {
+                          "card",
+                        },
                     };
 
                     var service = new PaymentIntentService();
@@ -57,7 +58,7 @@ namespace RV_Park_Reservation_System.Controllers
                 else
                 {
                     var intent = new Stripe.PaymentIntentService();
-                    var payment = intent.Get(paymentObj.CCReference);
+                    var payment = intent.Get(reservationVM.paymentObj.CCReference);
                     return Json(new { client_secret = payment.ClientSecret });
                 }
 
