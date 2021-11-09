@@ -38,7 +38,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            var userValue = await _userManager.FindByIdAsync(claim.Value); /* _unitofWork.Customer.Get(u => u.Id == claim.Value, true);*/
+            var userValue = await _userManager.FindByIdAsync(claim.Value); 
             var listDOD = _unitofWork.DOD_Affiliation.List();
             var listSST = _unitofWork.Service_Status_Type.List();
             
