@@ -2,7 +2,7 @@
 
 
 $(document).ready(function () {
-    console.log("ready!");
+
    
     $('.alert').alert()
     $(".datepicker").datepicker({ minDate: 1, maxDate: "+6m" })
@@ -36,32 +36,40 @@ function checkDates() {
         var totalCost = (dayDiff * 25);
         document.getElementById('totalCost').value = totalCost;
         console.log(totalCost);
-
-
-	}
-
-
-
-   
+    }
 }
 function loadReservations() {
-    if (document.getElementById('endDate').value == null || document.getElementById('startDate').value == null || document.getElementById('ddlVehicleLength').value == 0) {
+
+    if (document.getElementById('endDate').value == '' || document.getElementById('startDate').value == ''
+        || (document.getElementById('ddlVehicleLength').value == 20 && document.getElementById('ddlVehicleType').value != 7))
+    {
         swal('Error', 'Please select a start date, end date, and vehicle type to see available resevations', 'error')
         return false;
 	}
-    $('#btnSeeReservations').css('display', 'none');
-    $('#ddlSitesDiv').css('display', 'block');
+
 
 
     var dates = { date1: document.getElementById('startDate').value, date2: document.getElementById('endDate').value, vehicleLength: document.getElementById('ddlVehicleLength').value};
-
+  
     $.getJSON("/api/BookingReservations", dates, function (sites) {
+        console.log(sites);
+        var count = Object.keys(sites).length;
+        console.log(count);
+        if (count == 0) {
+            $('#btnSeeReservations').css('display', 'block');
+            $('#ddlSitesDiv').css('display', 'none');
+            swal('Error', 'No reservations available for the selected dates and vehicle length.', 'error')
+            return false;
+        }
+        $('#btnSeeReservations').css('display', 'none');
+        $('#ddlSitesDiv').css('display', 'block');
         /* Remove all options from the select list */
         $('#ddlSites').empty();
         $('#ddlSites').append($('<option></option>').val(0).html("- Please select a Lot -"));
         /* Insert the new ones from the array above */
         $.each(sites, function (i, p) {
-            $('#ddlSites').append($('<option></option>').val(p).html("Lot " + p));
+            console.log(i + " " + p['siteID']);
+            $('#ddlSites').append($('<option></option>').val(p['siteID']).html("Site: " + p['siteNumber'] + " Type: " + p['siteDescription'] + " Price: 25.00$/Night" ));
         });
 
     });
@@ -75,6 +83,16 @@ function checkAgreement() {
     $('#breedPolicyAgreement').prop("checked", true);
 }
 
+function VehicleSelected() {
+    console.log($('#ddlVehicleType').val())
+	if ($('#ddlVehicleType').val() == 7) {
+        $('#ddlVehicleLength').css('display', 'none');
+        $('#ddlVehicleLength').val(20).change() ;
+    }
+	else {
+        $('#ddlVehicleLength').css('display', 'block');
+	}
+}
 function pets() {
 
         $('.petWrapper').css('display', 'block');

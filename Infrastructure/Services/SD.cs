@@ -10,7 +10,9 @@ namespace Infrastructure.Services
     {    
         public const string AdminRole = "Administrator"; //Admin role
         public const string CustomerRole = "Customer"; //client role
-        public const string EmployeeRole = "Employee"; 
+        public const string EmployeeRole = "Employee";
+
+        public const string ReservationSession = "Reservation";
     }
 
 }
