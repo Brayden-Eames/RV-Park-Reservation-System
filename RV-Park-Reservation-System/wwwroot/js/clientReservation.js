@@ -22,7 +22,7 @@ function loadList() {
 				data: "resID", width: "30%",
 				"render": function (data) {
 					return `<div class="text-center">
-                            <a href="/Admin/Categories/Upsert?id=${data}"
+                            <a href="/Client/Upsert?id=${data}"
                             class ="btn btn-success text-white style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i>Edit</a>
                             <a onClick=Delete('/api/clientReservation/'+${data})
                             class ="btn btn-danger text-white style="cursor:pointer; width=100px;"> <i class="far fa-trash-alt"></i>Cancel</a>
