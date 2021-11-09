@@ -165,6 +165,18 @@ a.nav-link, a.navbar-brand, .btn-link {
         border-color: var(--dark-blue) !important;
     }
 
+a.btn-primary-outline {
+    color: var(--primary) !important;
+    background-color: var(--white) !important;
+    border-color: var(--primary) !important;
+}
+
+    a.btn-primary-outline:hover {
+        color: var(--light) !important;
+        background-color: var(--white) !important;
+        border-color: var(--light) !important;
+    }
+
 a.btn.btn-success {
     color: var(--white) !important;
     background-color: var(--success) !important;

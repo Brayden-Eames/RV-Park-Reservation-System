@@ -242,9 +242,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("TypeID")
                         .HasColumnType("int");
 
-                    b.Property<int>("VehicleTypeID")
-                        .HasColumnType("int");
-
                     b.HasKey("ResID");
 
                     b.HasIndex("Id");

@@ -33,7 +33,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (!User.Identity.IsAuthenticated || (User.Identity.IsAuthenticated && User.IsInRole(SD.CustomerRole)))
+                        @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-page="/Index">Home</a>
@@ -41,7 +41,7 @@
                         }
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @if (User.IsInRole(SD.AdminRole))
+                            @if (User.IsInRole(SD.AdminRole) || User.IsInRole(SD.EmployeeRole))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-page="/Admin/Index">Dashboard</a>
@@ -55,23 +55,21 @@
                                     <a class="nav-link text-light" asp-page="/Admin/Reservations/Index">Reservations</a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link text-light" asp-page="/Admin/Billing">Billing</a>
-                                </li>
-
+                            }
+                            @if (User.IsInRole(SD.AdminRole))
+                            {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link text-light dropdown-toggle" href="#" data-toggle="dropdown">
                                         Manage
                                     </a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item text-dark" asp-page="/Admin/Manage">Data Tables</a>
+                                        <a class="dropdown-item text-dark" asp-page="/Admin/DODAffiliations/Index">Data Tables</a>
                                         <a class="dropdown-item text-dark" asp-page="/Admin/Sites/Index">Sites</a>
                                         <a class="dropdown-item text-dark" asp-page="/Admin/Users/Index">Users</a>
                                     </div>
                                 </li>
-
                             }
-                            @if (User.IsInRole(SD.CustomerRole) && !User.IsInRole(SD.AdminRole))
+                            @if (User.IsInRole(SD.CustomerRole))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-light" asp-page="/Client/Booking">Reserve a Site</a>
@@ -133,6 +131,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.2/vfs_fonts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-buttons/2.0.1/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-buttons/2.0.1/js/buttons.print.min.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
 
 
     @await RenderSectionAsync("Scripts", required: false)

@@ -1,0 +1,117 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Admin.PaymentTypes.IndexModel
+@{
+    ViewData["Title"] = "Manage Payment Types";
+}
+
+<div class="container mb-4">
+    <h1 class="display-4 text-center text-primary my-5">DATABASE TABLES</h1>
+
+    <div class="row">
+        <div class="col-3 col-md-2 d-flex flex-column text-left">
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/DODAffiliations/Index">DOD Affiliations</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/PaymentReasons/Index">Payment Reasons</a>
+            <a class="btn btn-primary w-100 py-2 text-left" asp-page="/Admin/PaymentTypes/Index">Payment Types <i class="fas fa-angle-right"></i></a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/ReservationStatuses/Index">Reservation Statuses</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/SecurityQuestions/Index">Security Questions</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/ServiceStatuses/Index">Service Statuses</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/SiteCategories/Index">Site Categories</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/SiteRates/Index">Site Rates</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/Sites/Index">Sites</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/SpecialEvents/Index">Special Events</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/VehicleTypes/Index">Vehicle Types</a>
+        </div>
+        <div class="col-10 px-0">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-6">
+                        <h4>Payment Types</h4>
+                    </div>
+                    <div class="col-6 text-right">
+                        <a asp-page="Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTpaymentType" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                Pay Type
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var dtpaymentType;
+
+        $(document).ready(function () {
+            loadLists();
+        });
+
+        function loadLists() {
+            dtpaymentType = $('#DTpaymentType').DataTable({
+                "ajax": {
+                    "url": "/api/paymentType",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { data: "payTypeID", width: "5%" },
+                    { data: "payType", width: "75%" },
+                    {
+                        data: "payTypeID", width: "20%",
+                        "render": function (data) {
+                            return `<div class="text-center">
+                            <a href="/Admin/PaymentTypes/Upsert?id=${data}"
+                            class ="btn btn-success text-white style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i> Edit</a>                            
+                            <a onClick=DeletePaymentType('/api/paymentType/'+${data})
+                            class ="btn btn-danger text-white style="cursor:pointer; width=100px;"> <i class="far fa-trash-alt"></i> Delete</a>
+                    </div>`;
+                        }
+                    }
+                ],
+                "language": {
+                    "emptyTable": "no data found."
+                }
+            });
+        }
+
+        function DeletePaymentType(url) {
+            swal({
+                title: "Are you sure you want to delete?",
+                text: "You will not be able to restore this data!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: url,
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                dtpaymentType.ajax.reload();
+                            }
+                            else
+                                toastr.error(data.message);
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+}

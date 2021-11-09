@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,6 +23,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteRate
 
         public IActionResult OnGet(int? id)
         {
+            if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole))
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/SiteRates/Upsert" });
+            }
+
             var categories = _unitOfWork.Site_Category.List();
 
             SiteRateObj = new SiteRateVM
@@ -62,7 +68,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteRate
                 _unitOfWork.Site_Rate.Update(SiteRateObj.SiteRate);
             }
             _unitOfWork.Commit();
-            return RedirectToPage("../Manage");
+            return RedirectToPage("Index");
         }
     }
 }

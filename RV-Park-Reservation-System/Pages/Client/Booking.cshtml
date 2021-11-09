@@ -17,39 +17,42 @@
         </div>
         }
         <div class="container">
-            <div class="row border rounded pt-3 pb-3 mt-2 mb-3">
+            <div class="row border rounded pt-3 pb-3  mt-2 mb-3">
                 <input type="hidden" asp-for="Error" id="error" />
-                <input type="hidden" asp-for="totalCost" id="totalCost"/>
-                <div class="col-2">
+                <input type="hidden" id="totalCost" asp-for="totalCost" />
+                <div class="col-md-2">
 
-                    <h5 class="form-control">Hill AFB FamCamp</h5>
+                    <h5 class="form-control">FamCamp</h5>
                 </div>
-                <div class="col-3">
+                <div class="col-md-3">
 
                     @Html.DropDownListFor(v => v.vehicleType, Model.vehicleTypes,
-                " - Please Select a vehicle type - ", new { @class = "form-control form-select", @id = "ddlVehicletype" })
+                " - Please Select a vehicle type - ", new { @class = "mb-2 form-control", @id = "ddlVehicleType", @onchange= "VehicleSelected()" })
                 </div>
-                <div class="col-3">
+                <div class="col-md-3">
 
-                    <select asp-for="vehicleLength" id="ddlVehicleLength" class="form-select form-control">
-                        <option value="0">- Please Select a vehicle length - </option>
-                        <option value="40">less than or equal to 40ft.</option>
-                        <option value="43">less than or equal to 43ft.</option>
-                        <option value="65">less than or equal to 65ft.</option>
+                    <select asp-for="vehicleLength" id="ddlVehicleLength" class=" mb-2 form-control">
+                        <option value="20">- Please Select a vehicle length - </option>
+                        
+                        <option value="40">< = 40ft.</option>
+                        <option value="43">< = 43ft.</option>
+                        <option value="64">< = 65ft.</option>
                     </select>
                 </div>
+                
 
-                <div class="col-2">
+                
+                <div class="mb-2 col-md-2">
 
 
-                    <input asp-for="StartDate" onchange="checkDates();" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                    <input asp-for="StartDate"  onchange="checkDates();" class="datepicker container-fluid pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="StartDate"></span>
 
 
                 </div>
-                <div class="col-2">
+                <div class="mb-2 col-md-2">
 
-                    <input asp-for="EndDate" onchange="checkDates();" class="datepicker pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
+                    <input asp-for="EndDate" onchange="checkDates();" class="datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="EndDate"></span>
                 </div>
 
@@ -57,11 +60,11 @@
         </div>
 
         <div class="row">
-            <div class="col-8">
+            <div class="d-md-block d-none col-md-8">
                 <img src="~/Images/famcampMap.png" class="img-fluid border rounded" />
             </div>
 
-            <div class="col-4">
+            <div class="col-md-4">
 
                 <br />
                 <div class="row justify-content-center m-2">
@@ -112,24 +115,17 @@
                     </div>
                 </div>
                 <div style="display: none" id="ddlSitesDiv" class="row justify-content-center m-2">
-                    <div class="row">
-                        <div class="col-12">
-                            <label>Campsite location</label>
-                            <select onchange="continuePayment();" asp-for="siteid" id="ddlSites" class="form-select form-control">
-                                <option value="0">- Please Select a camp site - </option>
+                    <div class="col-12">
+                        <label>Campsite location</label>
+                        <select onchange="continuePayment();" asp-for="siteid" id="ddlSites" class="form-control">
+                            <option value="0">- Please Select a camp site - </option>
 
-                            </select>
+                        </select>
+                        <div class="d-md-none">
+                            Click <a class="text-info" data-toggle="modal" data-target="#siteMap">here </a> to view the site map.
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-10">
-                            <label>Will you need access to full hookups?</label>
-                        </div>
-                        <div class="col-2">
-                            <input asp-for="fullHookups" class="form-check-input" />
-                        </div>
-                    </div>
 
+                    </div>
 
                 </div>
                 <br /><br />
@@ -151,6 +147,26 @@
 
 </form>
 
+<div class="modal" id="siteMap" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Site Map</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="~/Images/famcampMap.png" class="img-fluid border rounded" />
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Exit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal" id="myModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -163,6 +179,12 @@
             </div>
             <div class="modal-body">
                 <ul>
+                    <li>
+                        Dogs with any of the following breed lineage are restricted from FamCamp: <strong>
+                            Pit Bulls, Staffordshire Terriers,
+                            Rottweilers, Chow Chows, Doberman Pinschers, wolf hybrids.
+                        </strong>
+                    </li>
                     <li>Animal waste will be picked up and properly disposed of immediately.</li>
                     <li>Pets will remain on a leash in control of the owner unless in designated dog park area.</li>
                     <li>When using the dog park, the pet owner must be present at all times. </li>
@@ -172,10 +194,7 @@
                         This is to include but not limited to pets that display aggression and/or excessive barking.
                     </li>
                     <li>2 pet maximum.</li>
-                    <li>
-                        Dogs with any of the following breed lineage are restricted from FamCamp: Pit Bulls, Staffordshire Terriers,
-                        Rottweilers, Chow Chows, Doberman Pinschers, wolf hybrids.
-                    </li>
+
                 </ul>
             </div>
             <div class="modal-footer">

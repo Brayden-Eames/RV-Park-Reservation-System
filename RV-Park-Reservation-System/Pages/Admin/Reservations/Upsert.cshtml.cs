@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -31,11 +32,17 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
         public int reservationID { get; set; }
 
-        public void OnGet(int? id, string? userId)
+        public IActionResult OnGet(int? id, string? userId)
         {
+            if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole))
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Upsert" });
+            }
+
             CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
             CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
-            
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string value)

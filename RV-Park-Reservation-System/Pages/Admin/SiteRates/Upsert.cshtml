@@ -31,7 +31,14 @@
                         <label asp-for="SiteRateObj.SiteRate.RateStartDate"></label>
                     </div>
                     <div class="col-9">
-                        <input asp-for="SiteRateObj.SiteRate.RateStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                        @if (Model.SiteRateObj.SiteRate.RateID != 0)
+                        {
+                            <input asp-for="SiteRateObj.SiteRate.RateStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="@Model.SiteRateObj.SiteRate.RateStartDate" onchange="checkDates();" />
+                        }
+                        else
+                        {
+                            <input asp-for="SiteRateObj.SiteRate.RateStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" onchange="checkDates();" />
+                        }
                         <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.RateStartDate"></span>
                     </div>
                 </div>
@@ -40,7 +47,14 @@
                         <label asp-for="SiteRateObj.SiteRate.RateEndDate"></label>
                     </div>
                     <div class="col-9">
-                        <input asp-for="SiteRateObj.SiteRate.RateEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="" />
+                        @if (Model.SiteRateObj.SiteRate.RateID != 0)
+                        {
+                            <input asp-for="SiteRateObj.SiteRate.RateEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="@Model.SiteRateObj.SiteRate.RateEndDate" onchange="checkDates();" />
+                        }
+                        else
+                        {
+                            <input asp-for="SiteRateObj.SiteRate.RateEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="" onchange="checkDates();" />
+                        }
                         <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.RateEndDate"></span>
                     </div>
                 </div>
@@ -83,6 +97,16 @@
             $(".datepicker").datepicker({ minDate: 1, maxDate: "+12M" });
         });
 
+        function checkDates() {
+            var startDate = new Date(document.getElementById('startDate').value);
+            var endDate = new Date(document.getElementById('endDate').value);
+            if (startDate != "" && endDate != "") {
+                if (startDate > endDate) {
+                    swal('Error', 'Please select an end date that is equal to or past the start date for this special event', 'error')
+                    return false;
+                }
+            }
+        }
 
         function ValidateInput() {
             if ($('#ddlCategory option:selected').val() == 0 || $('#ddlCategory option:selected').index == 0) {

@@ -1,0 +1,25 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Shared.ProhibitedModel
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="container text-center">
+    <div class="pt-5">
+        <h2>Access Denied</h2>
+    </div>
+    <hr />
+    <div class="pt-4">
+        <div class="pb-1 pt-6 text-center">
+            <h4>You do not have access to this page.</h4>
+            <h5>Try logging in or creating an account.</h5>
+        </div>
+        <div class="text-center pt-4">
+            <a class="btn btn-primary btn-square"
+               asp-route-returnUrl="@Model.UrlPath"
+               asp-area="Identity"
+               asp-page="/Account/Login">Go To Login</a>
+
+        </div>
+    </div>
+</div>

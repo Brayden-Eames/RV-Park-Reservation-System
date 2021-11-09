@@ -10,19 +10,184 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="site-categories-tab" data-bs-toggle="tab" data-bs-target="#site-categories" type="button" role="tab" aria-controls="site-categories" aria-selected="true">Site Categories</button>
+            <button class="nav-link active" id="dod-affiliation-tab" data-bs-toggle="tab" data-bs-target="#dod-affiliation" type="button" role="tab" aria-controls="dod-affiliation" aria-selected="true">DOD Affiliations</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="payment-reason-tab" data-bs-toggle="tab" data-bs-target="#payment-reason" type="button" role="tab" aria-controls="payment-reason" aria-selected="true">Payment Reasons</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="payment-type-tab" data-bs-toggle="tab" data-bs-target="#payment-type" type="button" role="tab" aria-controls="payment-type" aria-selected="true">Payment Types</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="reservation-status-tab" data-bs-toggle="tab" data-bs-target="#reservation-status" type="button" role="tab" aria-controls="reservation-status" aria-selected="true">Reservation Statuses</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="security-question-tab" data-bs-toggle="tab" data-bs-target="#security-question" type="button" role="tab" aria-controls="security-question" aria-selected="true">Security Questions</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="service-status-tab" data-bs-toggle="tab" data-bs-target="#service-status" type="button" role="tab" aria-controls="service-status" aria-selected="true">Service Statuses</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="site-categories-tab" data-bs-toggle="tab" data-bs-target="#site-categories" type="button" role="tab" aria-controls="site-categories" aria-selected="false">Site Categories</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="site-rates-tab" data-bs-toggle="tab" data-bs-target="#site-rates" type="button" role="tab" aria-controls="site-rates" aria-selected="false">Site Rates</button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link" id="sites-tab" data-bs-toggle="tab" data-bs-target="#sites" type="button" role="tab" aria-controls="sites" aria-selected="true">Sites</button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link" id="special-events-tab" data-bs-toggle="tab" data-bs-target="#special-events" type="button" role="tab" aria-controls="special-events" aria-selected="false">Special Events</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="vehicle-types-tab" data-bs-toggle="tab" data-bs-target="#vehicle-types" type="button" role="tab" aria-controls="vehicle-types" aria-selected="false">Vehicle Types</button>
         </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane active" id="site-categories" role="tabpanel" aria-labelledby="site-categories-tab">
+        <div class="tab-pane active" id="dod-affiliation" role="tabpanel" aria-labelledby="dod-affiliation-tab">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="DODAffiliations/Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTdodAffiliation" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                DOD Affiliation Type
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="payment-reason" role="tabpanel" aria-labelledby="payment-reason-tab">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="PaymentReasons/Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTpaymentReason" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                Payment Reason
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="payment-type" role="tabpanel" aria-labelledby="payment-type-tab">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="PaymentTypes/Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTpaymentType" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                Pay Type
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="reservation-status" role="tabpanel" aria-labelledby="reservation-status-tab">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="ReservationStatuses/Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTreservationStatus" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="security-question" role="tabpanel" aria-labelledby="security-question-tab">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="SecurityQuestions/Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTsecurityQuestion" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                Question
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="service-status" role="tabpanel" aria-labelledby="service-status-tab">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="ServiceStatuses/Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTserviceStatus" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                Service Status Type
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="site-categories" role="tabpanel" aria-labelledby="site-categories-tab">
             <div class="border backgroundWhite container p-3">
                 <div class="row">
                     <div class="col-12 text-right">
@@ -83,6 +248,44 @@
                 </table>
             </div>
         </div>
+        <div class="tab-pane" id="sites" role="tabpanel" aria-labelledby="sites-tab">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="Sites/Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTsites" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                Category
+                            </th>
+                            <th>
+                                Number
+                            </th>
+                            <th>
+                                Length
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Modified Date
+                            </th>
+                            <th>
+                                Modified By
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
         <div class="tab-pane" id="special-events" role="tabpanel" aria-labelledby="special-events-tab">
             <div class="border backgroundWhite container p-3">
                 <div class="row">
@@ -114,6 +317,32 @@
                             </th>
                             <th>
                                 Weekly Surcharge
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="vehicle-types" role="tabpanel" aria-labelledby="vehicle-types-tab">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-12 text-right">
+                        <a asp-page="VehicleTypes/Upsert" asp-route-id="0" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>&nbsp;Create New
+                        </a>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTvehicleType" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Description
                             </th>
                             <th></th>
                         </tr>

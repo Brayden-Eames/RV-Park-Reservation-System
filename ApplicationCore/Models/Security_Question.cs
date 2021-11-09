@@ -10,9 +10,11 @@ namespace ApplicationCore.Models
     public class Security_Question
     {
         [Key]
+        [Display(Name = "ID")]
         public int QuestionID { get; set; }
 
         [Required, MaxLength(200)]
+        [Display(Name = "Question")]
         public string QuestionText { get; set; }
     }
 }
