@@ -26,7 +26,7 @@ namespace RV_Park_Reservation_System.Pages.Admin
         //We might need to make a ViewModel to allow us to pull from the Reservation, Customer, Service Status Type and DODAffiliation tables. 
         public IActionResult OnGet(bool success = false, string message = null)
         {
-            if (!User.IsInRole(SD.AdminRole) && !User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole))
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Index" });
             }

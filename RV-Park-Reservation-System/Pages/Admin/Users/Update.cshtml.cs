@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ApplicationCore.Interfaces;
+using Infrastructure.Services;
 
 namespace RV_Park_Reservation_System.Pages.Admin.User
 {
@@ -29,13 +30,20 @@ namespace RV_Park_Reservation_System.Pages.Admin.User
         public List<string> AllRoles { get; set; }
 
         public List<string> OldRoles { get; set; }
-        public async Task OnGetAsync(string id)
+        public async Task<IActionResult> OnGetAsync(string id)
         {
+            if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole) || User.IsInRole(SD.EmployeeRole))
+            {
+                return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Users/Index" });
+            }
+
             AppUser = _unitOfWork.Customer.Get(u => u.Id == id); //gets the user from the ASPNetUser table (single row) and places in object AppUser
             var roles = await _userManager.GetRolesAsync(AppUser); //this retrieves the roles from the ASPNetUserRoles table (single row) and places them in roles object. 
             UsersRoles = roles.ToList(); //cast roles object to string list
             OldRoles = roles.ToList(); //cast roles object to string list
             AllRoles = _roleManager.Roles.Select(r => r.Name).ToList(); //gets all possible roles and stores them in string list
+
+            return Page();
         }
         public async Task<IActionResult> OnPostAsync()
         {

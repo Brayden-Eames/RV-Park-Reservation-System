@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,7 +23,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteCategory
 
         public IActionResult OnGet(int ? id)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole))
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/SiteCategories/Upsert" });
             }
