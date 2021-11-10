@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 namespace RV_Park_Reservation_System.ViewModels
 {
     public class ReportsVM
-    {
-        public Reservation reservationItem { get; set; }
-
+    {     
+        public IEnumerable<SelectListItem> reservationItem { get; set; }
         public IEnumerable<SelectListItem> siteList { get; set; }
         public IEnumerable<SelectListItem> categoryList { get; set; }
         public IEnumerable<SelectListItem> priceList { get; set; }

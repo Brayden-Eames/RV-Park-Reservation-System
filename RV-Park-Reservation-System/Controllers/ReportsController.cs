@@ -24,8 +24,22 @@ namespace RV_Park_Reservation_System.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Json(new { data = _unitofWork.Reservation.List(null, null, "Site,Site_Category,Site_Rate,Customer,Reservation_Status")});
+            //NEED TO DO SOME TABLE JOINING TO GET THIS DATA CORRECT.
+            //FIRST MAKE A QUERY TO GET ALL THE NEEDED DATA
+            //GET RESULTS AND TURN IT INTO A LIST
+            //CONVERT LIST TO JSON DATA.
+
+            return Json(new { data = _unitofWork.Reservation.List(null, null, "Site,Customer") });
+
+            //"Site,Site_Category,Site_Rate,Customer,Reservation_Status"
+
+            /*
+             VACANCY REPORT:
+
+             SELECT SITENUMBER  FROM RESERVATION
+             
+             */
         }
-   
+
     }
 }
