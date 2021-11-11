@@ -74,21 +74,30 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
 
             var updatedUser = await _userManager.FindByIdAsync(userAccountVM.user.Id);
 
+            updatedUser.Id = userAccountVM.user.Id;
             updatedUser.CustFirstName = userAccountVM.user.CustFirstName;
             updatedUser.CustLastName = userAccountVM.user.CustLastName;
             updatedUser.CustEmail = userAccountVM.user.CustEmail;
+            updatedUser.UserName = userAccountVM.user.CustEmail;
+            updatedUser.Email = userAccountVM.user.CustEmail;
+            updatedUser.NormalizedUserName = userAccountVM.user.CustEmail.ToUpper();
+            updatedUser.NormalizedEmail = userAccountVM.user.CustEmail.ToUpper();
             updatedUser.CustPhone = userAccountVM.user.CustPhone;
-            updatedUser.DODAffiliationID = userAccountVM.user.DODAffiliationID;
-            updatedUser.DOD_Affiliation = userAccountVM.user.DOD_Affiliation;
-            updatedUser.ServiceStatusID = userAccountVM.user.ServiceStatusID;
-            updatedUser.Service_Status_Type = userAccountVM.user.Service_Status_Type;
+            updatedUser.DODAffiliationID = userAccountVM.user.DODAffiliationID;         
+            updatedUser.ServiceStatusID = userAccountVM.user.ServiceStatusID;           
             updatedUser.CustLastModifiedBy = userAccountVM.user.CustFirstName + " " + userAccountVM.user.CustLastName;
             updatedUser.CustLastModifiedDate = DateTime.Now;       
 
+            await _userManager.UpdateNormalizedEmailAsync(updatedUser);
+            await _userManager.UpdateNormalizedUserNameAsync(updatedUser);
             var result = await _userManager.UpdateAsync(updatedUser);
-        
 
-            return RedirectToPage("/Index");
+            if (result.Succeeded)
+            {
+                return RedirectToPage("/Index");
+            }
+
+            return Page();
         }
     }
 }
