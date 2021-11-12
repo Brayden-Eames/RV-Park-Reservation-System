@@ -22,7 +22,7 @@
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane active" id="current-reservations" role="tabpanel" aria-labelledby="current-reservations-tab">
+        @*<div class="tab-pane active" id="current-reservations" role="tabpanel" aria-labelledby="current-reservations-tab">
             <div class="border backgroundWhite container p-3">                
                 <br />
                 <br />
@@ -73,27 +73,33 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div>*@
         <div class="tab-pane" id="tomorrow-activity" role="tabpanel" aria-labelledby="tomorrow-activity-tab">
             <div class="border backgroundWhite container p-3">         
                 <br />
                 <br />
                 <div id="content3">
-                    <table id="DTspecEvent" class="table table-striped table-bordered mx-0 w-100">
+                    <table id="DTActivity" class="table table-striped table-bordered mx-0 w-100">
                         <thead>
-                            <tr>
+                            <tr>                              
+                                <th>
+                                    Site
+                                </th>
                                 <th>
                                     Name
                                 </th>
                                 <th>
-                                    Site #
+                                    Nights
                                 </th>
                                 <th>
-                                    # Nights
+                                    Check In
+                                </th>
+                                <th>
+                                   Check Out
                                 </th>
                                 <th>
                                     Status
-                                </th>                             
+                                </th>
                             </tr>
                         </thead>
                     </table>
