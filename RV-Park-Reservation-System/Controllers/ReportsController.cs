@@ -64,9 +64,9 @@ namespace RV_Park_Reservation_System.Controllers
 
 
             foreach (var v in reservationQuery)
-            {               
-                //if (v.checkIn >= startDate && v.checkOut <= endDate && v.status != "Cancelled" && v.status != "Completed") 
-                //{
+            {
+                if (v.status != "Cancelled" && v.status != "Completed")
+                {
                     TimeSpan nightSpan = new TimeSpan(v.nights); //converts ticks to a timespan                    
                     
                     ActivityReportVM row = new ActivityReportVM();
@@ -79,19 +79,11 @@ namespace RV_Park_Reservation_System.Controllers
                     row.status = v.status;
 
                     reservationActivityList.Add(row);
-               // }
-                
+                }
+
             }
-                               
-           
-
-
-            return Json(new { data = reservationActivityList});
-
-            //"Site,Site_Category,Site_Rate,Customer,Reservation_Status"
-
-          
-
+                                          
+            return Json(new { data = reservationActivityList});                     
         }
 
     }

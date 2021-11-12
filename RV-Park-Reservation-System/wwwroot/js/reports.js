@@ -58,7 +58,6 @@ function loadLists() {
         fixedHeader: true,
         initComplete: function () {
             var api = this.api();
-
             // For each column
             api.columns().eq(0).each(function (colIdx) {
                     // Set the header cell to contain the input element
@@ -66,7 +65,8 @@ function loadLists() {
                         $(api.column(colIdx).header()).index()
                     );
                     var title = $(cell).text().trim();
-                    $(cell).html('<input class="w-100" type="text" placeholder="Sort: '+title+'" />');
+                    var inputId = title.replace(/ /g, '');
+                    $(cell).html('<input id="'+inputId+'" class="w-100" type="text" placeholder="Sort: '+title+'" />');
 
                     // On every keypress in this input
                     $(
