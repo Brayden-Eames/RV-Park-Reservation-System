@@ -98,3 +98,13 @@ function pets() {
         $('.petWrapper').css('display', 'block');
     $('#petsCheckbox').css('display', 'none');
 }
+
+function showCreateNew() { 
+    $('.createAccount').css('display', 'block');
+    $('.genericAccount').css('display', 'none');
+}
+
+function showGenericAcct() {
+    $('.genericAccount').css('display', 'block');
+    $('.createAccount').css('display', 'none');
+}

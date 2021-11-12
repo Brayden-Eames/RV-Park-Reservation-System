@@ -1,5 +1,7 @@
 ﻿@page
 @model RV_Park_Reservation_System.Pages.Admin.Reservations.AdminBookingModel
+@using Infrastructure.Services
+@using Microsoft.Extensions.Options
 @{
     ViewData["Title"] = "Admin Booking";
 }
@@ -26,7 +28,7 @@
                 <div class="col-md-3">
 
                     @Html.DropDownListFor(v => v.vehicleType, Model.vehicleTypes,
-                " - Please Select a vehicle type - ", new { @class = "mb-2 form-control", @id = "ddlVehicleType", @onchange = "VehicleSelected()" })
+                    " - Please Select a vehicle type - ", new { @class = "mb-2 form-control", @id = "ddlVehicleType", @onchange = "VehicleSelected()" })
                 </div>
                 <div class="col-md-3">
 
@@ -39,119 +41,158 @@
                     </select>
                 </div>
 
-
-
                 <div class="mb-2 col-md-2">
-
-
                     <input asp-for=" StartDate" onchange="checkDates();" class="datepicker container-fluid pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="StartDate"></span>
-
-
                 </div>
-                <div class="mb-2 col-md-2">
 
+                <div class="mb-2 col-md-2">
                     <input asp-for="EndDate" onchange="checkDates();" class="datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="EndDate"></span>
+
                 </div>
 
-                <div class="row justify-content-center m-2">
+                <div class="row m-2">
                     <div class="col-12">
-                        <label class="">Account</label>
-                        <input class="form-control" asp-for="numberOfAdults" />
-                        <span asp-validation-for="numberOfAdults"></span>
+                        <label class="">Pick Account</label>
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="Input.accountOption" type="radio" name="radioOptions" id="newAccountOption" value="newUser" onclick="showCreateNew()">
+                            <label class="form-check-label" >
+                                Create New Customer Account for Reservation
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input"  asp-for="Input.accountOption" type="radio" name="radioOptions" id="genericAccountOption" value="genericUser" onclick="showGenericAcct()">
+                            <label class="form-check-label" >
+                                Use Walk-up/Weekend Generic Account
+                            </label>
+                        </div>
                     </div>
-
                 </div>
-
+                <div class="createAccount" style="display: none">
+                    <div class="row m-2">
+                        <div class="col-md-3">
+                            <input type="text" asp-for="Input.firstName" autocomplete="off" placeholder="First Name" class="form-control" />
+                            <span asp-validation-for="Input.firstName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" asp-for="Input.lastName" autocomplete="off" placeholder="Last Name" class="form-control" />
+                             <span asp-validation-for="Input.lastName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" asp-for="Input.emailAddress" autocomplete="off" placeholder="Email Address" class="form-control" />
+                            <span asp-validation-for="Input.emailAddress" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" asp-for="Input.phoneNumber" autocomplete="off" placeholder="Phone Number" class="form-control" />
+                            <span asp-validation-for="Input.phoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row m-2">
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(s => s.Input.DODAffiliationID, Model.lstDODAffiliation, "- Please select a DOD Affiliation - ", new {@class = "mb-2 form-control", @id = "ddlDODAffiliation"})
+                            <span class="text-danger" asp-validation-for="Input.DODAffiliationID"></span>
+                         </div>
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(s => s.Input.serviceStatusType, Model.lstServiceStatus, " - Please Select a Service Status - ", new { @class = "mb-2 form-control", @id = "ddlServiceStatusType" })
+                            <span class="text-danger" asp-validation-for="Input.serviceStatusType"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="">*A temporary password will be generated and emailed to customer.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="genericAccount" style="display: none">
+                    <h5 class="form-control col-md-5 text-center"> - This Reservation will be booked under the Generic Account - </h5>
+                </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="d-md-block d-none col-md-8">
-                <img src="~/Images/famcampMap.png" class="img-fluid border rounded" />
+<div class="row">
+    <div class="d-md-block d-none col-md-8">
+        <img src="~/Images/famcampMap.png" class="img-fluid border rounded" />
+    </div>
+
+    <div class="col-md-4">
+ 
+        <br />
+        <div class="row justify-content-center m-2">
+            <div class="col-12">
+                <label class="">Number of adults</label>
+                <input class="form-control" asp-for="numberOfAdults" />
+                <span asp-validation-for="numberOfAdults"></span>
             </div>
 
-            <div class="col-md-4">
+        </div>
+        <br />
+        <div class="row justify-content-center m-2">
+            <div class="col-12">
+                <label>Number of children</label>
+                <input class="form-control" asp-for="numberOfChildren" />
+                <span asp-validation-for="numberOfChildren"></span>
+            </div>
+        </div>
+        <br />
 
-                <br />
-                <div class="row justify-content-center m-2">
-                    <div class="col-12">
-                        <label class="">Number of adults</label>
-                        <input class="form-control" asp-for="numberOfAdults" />
-                        <span asp-validation-for="numberOfAdults"></span>
-                    </div>
+        <div class="row justify-content-center m-2" id="petsCheckbox">
+            <div class="col-12">
+                <span>Do you plan on bringing pets?</span> <input onclick="pets();" type="checkbox" name="name" value="" />
+            </div>
+        </div>
 
+        <div style="display: none" class="petWrapper">
+            <div class="row justify-content-center m-2">
+                <div class="col-12">
+                    <label class="">Number of pets</label>
+                    <input class="form-control" asp-for="numberOfPets" />
+                    <span asp-validation-for="numberOfPets"></span>
                 </div>
-                <br />
-                <div class="row justify-content-center m-2">
-                    <div class="col-12">
-                        <label>Number of children</label>
-                        <input class="form-control" asp-for="numberOfChildren" />
-                        <span asp-validation-for="numberOfChildren"></span>
-                    </div>
+            </div>
+
+            <div class="row m-2">
+                <div class="col-12">
+                    <label class="">I have read and understood the <a class="text-info" data-toggle="modal" data-target="#myModal">pet poilicy </a>for Hill AFB FamCamp.</label>
+                    <input asp-for="breedPolicy" class="form-check-input" id="breedPolicyAgreement" />
                 </div>
-                <br />
+            </div>
+        </div>
 
-                <div class="row justify-content-center m-2" id="petsCheckbox">
-                    <div class="col-12">
-                        <span>Do you plan on bringing pets?</span> <input onclick="pets();" type="checkbox" name="name" value="" />
-                    </div>
-                </div>
+        <br />
+        <div class="row justify-content-center m-2" id="btnSeeReservations">
+            <div class="col-12">
+                <button onclick="loadReservations();" type="button" class="btn container-fluid btn-primary">See Available Lots</button>
+            </div>
+        </div>
+        <div style="display: none" id="ddlSitesDiv" class="row justify-content-center m-2">
+            <div class="col-12">
+                <label>Campsite location</label>
+                <select onchange="continuePayment();" asp-fo r="siteid" id="ddlSites" class="form-control">
+                    <option value="0">- Please Select a camp site - </option>
 
-                <div style="display: none" class="petWrapper">
-                    <div class="row justify-content-center m-2">
-                        <div class="col-12">
-                            <label class="">Number of pets</label>
-                            <input class="form-control" asp-for="numberOfPets" />
-                            <span asp-validation-for="numberOfPets"></span>
-                        </div>
-                    </div>
-
-                    <div class="row m-2">
-                        <div class="col-12">
-                            <label class="">I have read and understood the <a class="text-info" data-toggle="modal" data-target="#myModal">pet poilicy </a>for Hill AFB FamCamp.</label>
-                            <input asp-for="breedPolicy" class="form-check-input" id="breedPolicyAgreement" />
-                        </div>
-                    </div>
-                </div>
-
-                <br />
-                <div class="row justify-content-center m-2" id="btnSeeReservations">
-                    <div class="col-12">
-                        <button onclick="loadReservations();" type="button" class="btn container-fluid btn-primary">See Available Lots</button>
-                    </div>
-                </div>
-                <div style="display: none" id="ddlSitesDiv" class="row justify-content-center m-2">
-                    <div class="col-12">
-                        <label>Campsite location</label>
-                        <select onchange="continuePayment();" asp-fo r="siteid" id="ddlSites" class="form-control">
-                            <option value="0">- Please Select a camp site - </option>
-
-                        </select>
-                        <div class="d-md-none">
-                            Click <a class="text-info" data-toggle="modal" data-target="#siteMap">here </a> to view the site map.
-                        </div>
-
-                    </div>
-
-                </div>
-                <br /><br />
-
-                <div class="row justify-content-center m-2">
-                    <div class="col-6" style="display: none" id="btnPayment">
-                        <button class="btn container-fluid m-1 btn-primary">Continue to Payment</button>
-                    </div>
-                    <div class="col-6">
-                        <a asp-page="/Index" type="button" class="btn container-fluid m-1 btn-primary">Cancel</a>
-                    </div>
+                </select>
+                <div class="d-md-none">
+                    Click <a class="text-info" data-toggle="modal" data-target="#siteMap">here </a> to view the site map.
                 </div>
 
             </div>
 
+        </div>
+        <br /><br />
+
+        <div class="row justify-content-center m-2">
+            <div class="col-6" style="display: none" id="btnPayment">
+                <button class="btn container-fluid m-1 btn-primary">Continue to Payment</button>
+            </div>
+            <div class="col-6">
+                <a asp-page="/Index" type="button" class="btn container-fluid m-1 btn-primary">Cancel</a>
+            </div>
         </div>
 
     </div>
+
+</div>
+
+</div>
 
 </form>
 
@@ -211,14 +252,15 @@
             </div>
         </div>
     </div>
-    </div>
-
+</div>
 
 
 
 @section Scripts {
-        <script src="~/js/booking.js"></script>
-        <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/booking.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+
 
 
     }
