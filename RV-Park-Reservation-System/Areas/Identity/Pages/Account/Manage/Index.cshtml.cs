@@ -17,10 +17,12 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
     {
         private readonly IUnitOfWork _unitofWork;
         private readonly UserManager<Customer> _userManager;
-        public IndexModel(IUnitOfWork unitofWork, UserManager<Customer> userManager)
+        private readonly SignInManager<Customer> _signInManager;
+        public IndexModel(IUnitOfWork unitofWork, UserManager<Customer> userManager, SignInManager<Customer> signInManager)
         {
             _userManager = userManager;
             _unitofWork = unitofWork;
+            _signInManager = signInManager;
         }
         
         [BindProperty]
@@ -90,7 +92,9 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
 
             await _userManager.UpdateNormalizedEmailAsync(updatedUser);
             await _userManager.UpdateNormalizedUserNameAsync(updatedUser);
-            var result = await _userManager.UpdateAsync(updatedUser);
+            var result = await _userManager.UpdateAsync(updatedUser);                     
+
+            await _signInManager.RefreshSignInAsync(updatedUser);
 
             if (result.Succeeded)
             {
