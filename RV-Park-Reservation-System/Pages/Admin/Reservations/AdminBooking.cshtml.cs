@@ -192,7 +192,9 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 }
                 else
                 {
-                    //maybe set the generic account info here? Not sure yet. 
+                    reservationVM.customerObj.CustFirstName = "Generic";
+                    reservationVM.customerObj.CustLastName = "Account";
+                    reservationVM.accountChoice = Input.accountOption;
                 }
 
                 reservationVM.reservationObj.ResAcknowledgeValidPets = breedPolicy;
@@ -217,35 +219,42 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservationVM.paymentObj.IsPaid = false;
                 reservationVM.paymentObj.PayTotalCost = totalCost;
 
-                //if check to set payment intent to either card or cash. 
 
-                if (reservationVM.paymentObj.CCReference == null)
+
+                if(Input.accountOption == "newUser")
                 {
-                    var options = new PaymentIntentCreateOptions
+                    if (reservationVM.paymentObj.CCReference == null)
                     {
-                        Amount = Convert.ToInt32(reservationVM.paymentObj.PayTotalCost * 100),
-                        Currency = "usd",
-
-                        PaymentMethodTypes = new List<string>
+                        var options = new PaymentIntentCreateOptions
                         {
-                        "card",
-                        },
-                    };
+                            Amount = Convert.ToInt32(reservationVM.paymentObj.PayTotalCost * 100),
+                            Currency = "usd",
 
-                    var service = new PaymentIntentService();
-                    var paymentIntent = service.Create(options);
-                    reservationVM.paymentObj.CCReference = paymentIntent.Id;
+                            PaymentMethodTypes = new List<string>
+                            {
+                                "card",
+                            },
+                        };
+
+                        var service = new PaymentIntentService();
+                        var paymentIntent = service.Create(options);
+                        reservationVM.paymentObj.CCReference = paymentIntent.Id;
+                    }
+                    HttpContext.Session.Set(SD.ReservationSession, reservationVM);
+
+                    return RedirectToPage("/Admin/Reservations/AdminPaymentSummary");
                 }
-                HttpContext.Session.Set(SD.ReservationSession, reservationVM);
-
-
-
-                return RedirectToPage("/Client/PaymentSummary");
+                else //if the 'generic user' option is picked
+                {
+                    HttpContext.Session.Set(SD.ReservationSession, reservationVM);
+                    return RedirectToPage("/Admin/Reservations/AdminPaymentSummary");
+                }
+             
             }
             else
             {
                 Error = true;
-                return RedirectToPage("/Client/Booking", new { error = Error });
+                return RedirectToPage("/Admin/Reservations/AdminBooking", new { error = Error });
             }
 
             return RedirectToPage("/Index");
