@@ -105,6 +105,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
 
+            deletePendingReservations();
 
             return Page();
         }
@@ -140,6 +141,11 @@ namespace RV_Park_Reservation_System.Pages.Client
                 reservationVM.reservationObj.ResStatusID = 1;
                 reservationVM.reservationObj.ResLastModifiedBy = User.Identity.Name;
                 reservationVM.reservationObj.ResVehicleLength = vehicleLength;
+                ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
+                reservationVM.reservationObj.Id = customer.Id;
+                _unitOfWork.Reservation.Add(reservationVM.reservationObj);
+                _unitOfWork.Commit();
+
 
 
                 reservationVM.paymentObj.PayDate = DateTime.Now;
@@ -182,5 +188,14 @@ namespace RV_Park_Reservation_System.Pages.Client
 
             return RedirectToPage("/Index");
         }       
+
+
+        public void deletePendingReservations()
+        {
+            var reservations = _unitOfWork.Reservation.List();
+            reservations = reservations.Where(r => r.ResStatusID == 1 && (DateTime.Now - r.ResCreatedDate).TotalMinutes > 15);
+            _unitOfWork.Reservation.Delete(reservations);
+        }
+
     }
 }

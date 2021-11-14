@@ -88,7 +88,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
             }
 
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(4000);
             var service = new PaymentIntentService();
             var paymentIntent =  service.Get(reservationVM.paymentObj.CCReference);
 
@@ -96,15 +96,19 @@ namespace RV_Park_Reservation_System.Pages.Client
             if (paymentIntent.Status.ToLower() == "succeeded")
             {
                 ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
-                reservationVM.reservationObj.Id = customer.Id;
-                _unitOfWork.Reservation.Add(reservationVM.reservationObj);
-                _unitOfWork.Commit();
+
 
                 var reservations = _unitOfWork.Reservation.List().Where(r=> r.Customer == customer).Last();
                 reservationVM.paymentObj.ResID = reservations.ResID;
                 reservationVM.paymentObj.IsPaid = true;
                 _unitOfWork.Payment.Add(reservationVM.paymentObj);
                 _unitOfWork.Commit();
+
+                reservations.ResStatusID = 9;
+                _unitOfWork.Reservation.Update(reservations);
+                _unitOfWork.Commit();
+
+
                 HttpContext.Session.Clear();
 
                 var user = await _userManager.FindByEmailAsync(User.Identity.Name);
