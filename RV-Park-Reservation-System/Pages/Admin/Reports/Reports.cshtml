@@ -13,16 +13,16 @@
             <button class="nav-link active" id="current-reservations-tab" data-bs-toggle="tab" data-bs-target="#current-reservations" type="button" role="tab" aria-controls="current-reservations" aria-selected="true">Current Reservations</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="current-availability-tab" data-bs-toggle="tab" data-bs-target="#current-availability" type="button" role="tab" aria-controls="current-availability" aria-selected="false">Current Availability</button>
+            <button class="nav-link" id="current-availability-tab" data-bs-toggle="tab" data-bs-target="#current-availability" type="button" role="tab" aria-controls="current-availability" aria-selected="false">Vacant Sites</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="tomorrow-activity-tab" data-bs-toggle="tab" data-bs-target="#tomorrow-activity" type="button" role="tab" aria-controls="tomorrow-activity" aria-selected="false">Tomorrow's Activity</button>
+            <button class="nav-link" id="tomorrow-activity-tab" data-bs-toggle="tab" data-bs-target="#tomorrow-activity" type="button" role="tab" aria-controls="tomorrow-activity" aria-selected="false">Upcoming Activity</button>
         </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane active" id="current-reservations" role="tabpanel" aria-labelledby="current-reservations-tab">
+        @*<div class="tab-pane active" id="current-reservations" role="tabpanel" aria-labelledby="current-reservations-tab">
             <div class="border backgroundWhite container p-3">                
                 <br />
                 <br />
@@ -73,27 +73,40 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div>*@
         <div class="tab-pane" id="tomorrow-activity" role="tabpanel" aria-labelledby="tomorrow-activity-tab">
-            <div class="border backgroundWhite container p-3">         
+            <div class="border backgroundWhite container p-3">
                 <br />
+                <span class="row">
+                    <span class="text-right">                        
+                        <button id="btn_today" class="btn btn-primary mb-1" onclick="setCheckInDay(0)">Today</button>
+                        <button id="btn_tomorrow" class="btn btn-primary mb-1" onclick="setCheckInDay(1)">Tomorrow</button>
+                        <button id="btn_three" class="btn btn-primary mb-1" onclick="setCheckInDay(2)">3 Days</button>
+                    </span>
+                </span>
                 <br />
                 <div id="content3">
-                    <table id="DTspecEvent" class="table table-striped table-bordered mx-0 w-100">
+                    <table id="DTActivity" class="table table-striped table-bordered mx-0 w-100">
                         <thead>
                             <tr>
+                                <th>
+                                    Site
+                                </th>
                                 <th>
                                     Name
                                 </th>
                                 <th>
-                                    Site #
+                                    Nights
                                 </th>
                                 <th>
-                                    # Nights
+                                    Check In
+                                </th>
+                                <th>
+                                    Check Out
                                 </th>
                                 <th>
                                     Status
-                                </th>                             
+                                </th>
                             </tr>
                         </thead>
                     </table>
@@ -114,6 +127,43 @@
             tabTrigger.show()
         })
     })
+
+            
+       
+        function setCheckInDay(plusDays) {
+            let checkIn = document.getElementById('CheckIn');
+            let checkOut = document.getElementById('CheckOut');
+            let thisDay = new Date();
+            let nextDay = new Date();            
+            let enterEvent = new CustomEvent('keyup');
+            enterEvent.which = 13; //13 is to trigger enter key event
+            enterEvent.keyCode = 13;
+
+            if (plusDays === 1) {
+                thisDay.setDate(thisDay.getDate() + plusDays);
+            }
+            checkIn.value = thisDay.getMonth() + 1 + '/' + thisDay.getDate() + '/' + thisDay.getFullYear();
+            if (plusDays < 2) {
+                checkOut.value = '';
+                checkOut.focus();
+                checkOut.dispatchEvent(enterEvent);
+            }
+            checkIn.focus();
+            checkIn.dispatchEvent(enterEvent);
+
+            if (plusDays > 1) {
+                nextDay.setDate(nextDay.getDate() + plusDays);
+                checkOut.value = nextDay.getMonth() + 1 + '/' + nextDay.getDate() + '/' + nextDay.getFullYear();
+                checkOut.focus();
+                checkOut.dispatchEvent(enterEvent);
+            }
+                                
+            
+        }
+
+       
+     
+
     </script>  
 
 }
