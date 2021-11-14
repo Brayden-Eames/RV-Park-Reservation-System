@@ -156,7 +156,6 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             lstServiceStatus = _unitOfWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });
             lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
 
-
             return Page();
         }
 
@@ -218,6 +217,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservationVM.paymentObj.IsPaid = false;
                 reservationVM.paymentObj.PayTotalCost = totalCost;
 
+                //if check to set payment intent to either card or cash. 
 
                 if (reservationVM.paymentObj.CCReference == null)
                 {
@@ -227,9 +227,9 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                         Currency = "usd",
 
                         PaymentMethodTypes = new List<string>
-                      {
+                        {
                         "card",
-                      },
+                        },
                     };
 
                     var service = new PaymentIntentService();

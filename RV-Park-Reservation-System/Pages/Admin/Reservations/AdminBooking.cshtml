@@ -17,96 +17,84 @@
                 </button>
             </div>
         }
-        <div class="container">
-            <div class="row border rounded pt-3 pb-3  mt-2 mb-3">
-                <input type="hidden" asp-for="Error" id="error" />
-                <input type="hidden" id="totalCost" asp-for="totalCost" />
-                <div class="col-md-2">
+    <div class="container">
+        <div class="row border rounded pt-3 pb-2  mt-2 mb-2">
+            <input type="hidden" asp-for="Error" id="error" />
+            <input type="hidden" id="totalCost" asp-for="totalCost" />
+            <div class="col-md-2">
 
-                    <h5 class="form-control">FamCamp</h5>
-                </div>
-                <div class="col-md-3">
-
-                    @Html.DropDownListFor(v => v.vehicleType, Model.vehicleTypes,
-                    " - Please Select a vehicle type - ", new { @class = "mb-2 form-control", @id = "ddlVehicleType", @onchange = "VehicleSelected()" })
-                </div>
-                <div class="col-md-3">
-
-                    <select asp-for="vehicleLength" id="ddlVehicleLength" class=" mb-2 form-control">
-                        <option value="20">- Please Select a vehicle length - </option>
-
-                        <option value="40">< = 40ft.</option>
-                        <option value="43">< = 43ft.</option>
-                        <option value="64">< = 65ft.</option>
-                    </select>
-                </div>
-
-                <div class="mb-2 col-md-2">
-                    <input asp-for=" StartDate" onchange="checkDates();" class="datepicker container-fluid pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
-                    <span class="text-danger" asp-validation-for="StartDate"></span>
-                </div>
-
-                <div class="mb-2 col-md-2">
-                    <input asp-for="EndDate" onchange="checkDates();" class="datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
-                    <span class="text-danger" asp-validation-for="EndDate"></span>
-
-                </div>
-
-                <div class="row m-2">
-                    <div class="col-12">
-                        <label class="">Pick Account</label>
-                        <div class="form-check">
-                            <input class="form-check-input" asp-for="Input.accountOption" type="radio" name="radioOptions" id="newAccountOption" value="newUser" onclick="showCreateNew()">
-                            <label class="form-check-label" >
-                                Create New Customer Account for Reservation
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input"  asp-for="Input.accountOption" type="radio" name="radioOptions" id="genericAccountOption" value="genericUser" onclick="showGenericAcct()">
-                            <label class="form-check-label" >
-                                Use Walk-up/Weekend Generic Account
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="createAccount" style="display: none">
-                    <div class="row m-2">
-                        <div class="col-md-3">
-                            <input type="text" asp-for="Input.firstName" autocomplete="off" placeholder="First Name" class="form-control" />
-                            <span asp-validation-for="Input.firstName" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" asp-for="Input.lastName" autocomplete="off" placeholder="Last Name" class="form-control" />
-                             <span asp-validation-for="Input.lastName" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" asp-for="Input.emailAddress" autocomplete="off" placeholder="Email Address" class="form-control" />
-                            <span asp-validation-for="Input.emailAddress" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" asp-for="Input.phoneNumber" autocomplete="off" placeholder="Phone Number" class="form-control" />
-                            <span asp-validation-for="Input.phoneNumber" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row m-2">
-                        <div class="col-md-3">
-                            @Html.DropDownListFor(s => s.Input.DODAffiliationID, Model.lstDODAffiliation, "- Please select a DOD Affiliation - ", new {@class = "mb-2 form-control", @id = "ddlDODAffiliation"})
-                            <span class="text-danger" asp-validation-for="Input.DODAffiliationID"></span>
-                         </div>
-                        <div class="col-md-3">
-                            @Html.DropDownListFor(s => s.Input.serviceStatusType, Model.lstServiceStatus, " - Please Select a Service Status - ", new { @class = "mb-2 form-control", @id = "ddlServiceStatusType" })
-                            <span class="text-danger" asp-validation-for="Input.serviceStatusType"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="">*A temporary password will be generated and emailed to customer.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="genericAccount" style="display: none">
-                    <h5 class="form-control col-md-5 text-center"> - This Reservation will be booked under the Generic Account - </h5>
-                </div>
+                <h5 class="form-control">FamCamp</h5>
             </div>
-        </div>
+            <div class="col-md-3">
+
+                @Html.DropDownListFor(v => v.vehicleType, Model.vehicleTypes,
+                " - Please Select a vehicle type - ", new { @class = "mb-2 form-control", @id = "ddlVehicleType", @onchange = "VehicleSelected()" })
+            </div>
+            <div class="col-md-3">
+
+                <select asp-for="vehicleLength" id="ddlVehicleLength" class=" mb-2 form-control">
+                    <option value="20">- Please Select a vehicle length - </option>
+
+                    <option value="40">< = 40ft.</option>
+                    <option value="43">< = 43ft.</option>
+                    <option value="64">< = 65ft.</option>
+                </select>
+            </div>
+
+            <div class="mb-2 col-md-2">
+                <input asp-for=" StartDate" onchange="checkDates();" class="datepicker container-fluid pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                <span class="text-danger" asp-validation-for="StartDate"></span>
+            </div>
+
+            <div class="mb-2 col-md-2">
+                <input asp-for="EndDate" onchange="checkDates();" class="datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
+                <span class="text-danger" asp-validation-for="EndDate"></span>
+
+            </div>
+            <div class="col-md-12 mt-2 mb-1">
+                    <select asp-for="Input.accountOption" id="ddlAccountOption" class="col-3 mb-2  form-control btn-primary" onchange="checkChange(this.value)">
+                        <option class="btn-light" value="chooseDefault">- Choose Account for Reservation -</option>
+                        <option class="btn-light" value="newUser">New Account for Reservation</option>
+                        <option class="btn-light" value="genericUser">Walk-up / Weekend Generic Account</option>
+                    </select>
+             </div>
+          <div class="createAccount" style="display: none">
+              <div class="row">
+                  <div class="col-md-3">
+                      <input type="text" asp-for="Input.firstName" autocomplete="off" placeholder="First Name" class="form-control" />
+                      <span asp-validation-for="Input.firstName" class="text-danger"></span>
+                  </div>
+                  <div class="col-md-3">
+                      <input type="text" asp-for="Input.lastName" autocomplete="off" placeholder="Last Name" class="form-control" />
+                       <span asp-validation-for="Input.lastName" class="text-danger"></span>
+                  </div>
+                  <div class="col-md-3">
+                      <input type="text" asp-for="Input.emailAddress" autocomplete="off" placeholder="Email Address" class="form-control" />
+                      <span asp-validation-for="Input.emailAddress" class="text-danger"></span>
+                  </div>
+                  <div class="col-md-3">
+                      <input type="text" asp-for="Input.phoneNumber" autocomplete="off" placeholder="Phone Number" class="form-control" />
+                      <span asp-validation-for="Input.phoneNumber" class="text-danger"></span>
+                  </div>
+              </div>
+              <div class="row pt-3">
+                  <div class="col-md-3">
+                      @Html.DropDownListFor(s => s.Input.DODAffiliationID, Model.lstDODAffiliation, "- Please select a DOD Affiliation - ", new {@class = "mb-2 form-control", @id = "ddlDODAffiliation"})
+                      <span class="text-danger" asp-validation-for="Input.DODAffiliationID"></span>
+                   </div>
+                  <div class="col-md-3">
+                      @Html.DropDownListFor(s => s.Input.serviceStatusType, Model.lstServiceStatus, " - Please Select a Service Status - ", new { @class = "mb-2 form-control", @id = "ddlServiceStatusType" })
+                      <span class="text-danger" asp-validation-for="Input.serviceStatusType"></span>
+                  </div>
+                  <div class="col-md-6">
+                      <p class="">*A temporary password will be generated and emailed to customer.</p>
+                  </div>
+              </div>
+          </div>
+                  <div class="genericAccount" style="display: none">
+                      <h5 class="form-control col-md-5 "> - Reservation will be booked under the Generic Account - </h5>
+                  </div>
+     </div>
 
 <div class="row">
     <div class="d-md-block d-none col-md-8">

@@ -99,12 +99,18 @@ function pets() {
     $('#petsCheckbox').css('display', 'none');
 }
 
-function showCreateNew() { 
-    $('.createAccount').css('display', 'block');
-    $('.genericAccount').css('display', 'none');
-}
 
-function showGenericAcct() {
-    $('.genericAccount').css('display', 'block');
-    $('.createAccount').css('display', 'none');
+function checkChange(option) {
+    if (option == 'newUser') {
+        $('.createAccount').css('display', 'block');
+        $('.genericAccount').css('display', 'none');
+    }
+    if (option == 'genericUser') {
+        $('.genericAccount').css('display', 'block');
+        $('.createAccount').css('display', 'none');
+    }
+    if (option == 'chooseDefault') {
+        $('.genericAccount').css('display', 'none');
+        $('.createAccount').css('display', 'none');
+    }
 }
