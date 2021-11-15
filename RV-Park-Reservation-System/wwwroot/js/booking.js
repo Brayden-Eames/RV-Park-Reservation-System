@@ -14,6 +14,8 @@ $('#myModal').on('shown.bs.modal', function () {
 })
 
 function checkDates() {
+
+
     var startDate = new Date(document.getElementById('startDate').value);
     var endDate = new Date(document.getElementById('endDate').value);
     console.log(document.getElementById('endDate').value);
@@ -32,10 +34,6 @@ function checkDates() {
 
         }
 
-
-        var totalCost = (dayDiff * 25);
-        document.getElementById('totalCost').value = totalCost;
-        console.log(totalCost);
     }
 }
 function loadReservations() {
@@ -81,6 +79,11 @@ function continuePayment() {
 }
 function checkAgreement() {
     $('#breedPolicyAgreement').prop("checked", true);
+}
+function hideLots() {
+    $('#btnPayment').css('display', 'none');
+    $('#ddlSitesDiv').css('display', 'none');
+    $('#btnSeeReservations').css('display', 'block');
 }
 
 function VehicleSelected() {
