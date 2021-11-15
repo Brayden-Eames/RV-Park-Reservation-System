@@ -88,57 +88,54 @@ namespace RV_Park_Reservation_System.Pages.Client
                reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
             }
 
-            System.Threading.Thread.Sleep(4000);
             var service = new PaymentIntentService();
-            var paymentIntent =  service.Get(reservationVM.paymentObj.CCReference);
+            PaymentIntent paymentIntent; 
 
-
-            if (paymentIntent.Status.ToLower() == "succeeded")
+            for (int i = 0; i < 5; i++)
             {
-                ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
+                System.Threading.Thread.Sleep(1000);
+                paymentIntent = service.Get(reservationVM.paymentObj.CCReference);
+                if (paymentIntent.Status.ToLower() == "succeeded")
+                {
+                    ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
 
 
-                var reservations = _unitOfWork.Reservation.List().Where(r=> r.Customer == customer).Last();
-                reservationVM.paymentObj.ResID = reservations.ResID;
-                reservationVM.paymentObj.IsPaid = true;
-                _unitOfWork.Payment.Add(reservationVM.paymentObj);
-                _unitOfWork.Commit();
+                    var reservations = _unitOfWork.Reservation.List().Where(r => r.Customer == customer).Last();
+                    reservationVM.paymentObj.ResID = reservations.ResID;
+                    reservationVM.paymentObj.IsPaid = true;
+                    _unitOfWork.Payment.Add(reservationVM.paymentObj);
+                    _unitOfWork.Commit();
 
-                reservations.ResStatusID = 9;
-                _unitOfWork.Reservation.Update(reservations);
-                _unitOfWork.Commit();
-
-
-                HttpContext.Session.Clear();
-
-                var user = await _userManager.FindByEmailAsync(User.Identity.Name);
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                var callbackUrl = Url.Page(
-                    "/Client/MyReservations",
-                    pageHandler: null,
-                    values: new { area = "", code },
-                    protocol: Request.Scheme);
-
-                await _emailSender.SendEmailAsync(
-                    user.CustEmail,
-                    "FamCamp Reservation Confirmation",
-                    $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account.  " +
-                    $" <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    reservations.ResStatusID = 9;
+                    _unitOfWork.Reservation.Update(reservations);
+                    _unitOfWork.Commit();
 
 
+                    HttpContext.Session.Clear();
 
-                return RedirectToPage("/Client/PaymentConfirmation");
+                    var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+                    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = Url.Page(
+                        "/Client/MyReservations",
+                        pageHandler: null,
+                        values: new { area = "", code },
+                        protocol: Request.Scheme);
+
+                    await _emailSender.SendEmailAsync(
+                        user.CustEmail,
+                        "FamCamp Reservation Confirmation",
+                        $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account.  " +
+                        $" <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+
+
+                    return RedirectToPage("/Client/PaymentConfirmation");
+                }
+
+
             }
-            else
-            {
-                return RedirectToPage("/Client/PaymentSummary", new { error = true });
-
-            }
-
-
-
-
+            return RedirectToPage("/Client/PaymentSummary", new { error = true });
 
         }
     }
