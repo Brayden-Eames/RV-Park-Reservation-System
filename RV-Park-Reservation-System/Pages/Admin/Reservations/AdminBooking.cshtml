@@ -52,28 +52,31 @@
 
             </div>
             <div class="col-md-12 mt-2 mb-1">
-                    <select asp-for="Input.accountOption" id="ddlAccountOption" class="col-3 mb-2  form-control btn-primary" onchange="checkChange(this.value)">
+                    <select asp-for="Input.accountOption" id="ddlAccountOption" class="col-3 mb-2  form-control btn-primary" onchange="checkChange(this)">
                         <option class="btn-light" value="chooseDefault">- Choose Account for Reservation -</option>
                         <option class="btn-light" value="newUser">New Account for Reservation</option>
                         <option class="btn-light" value="genericUser">Walk-up / Weekend Generic Account</option>
                     </select>
              </div>
+            @{
+            
+            }
           <div class="createAccount" style="display: none">
               <div class="row">
                   <div class="col-md-3">
-                      <input type="text" asp-for="Input.firstName" autocomplete="off" placeholder="First Name" class="form-control" />
+                      <input type="text" asp-for="Input.firstName" autocomplete="off" id="inputFirstName" placeholder="First Name" class="form-control" />
                       <span asp-validation-for="Input.firstName" class="text-danger"></span>
                   </div>
                   <div class="col-md-3">
-                      <input type="text" asp-for="Input.lastName" autocomplete="off" placeholder="Last Name" class="form-control" />
+                      <input type="text" asp-for="Input.lastName" autocomplete="off" id="inputLastName" placeholder="Last Name" class="form-control" />
                        <span asp-validation-for="Input.lastName" class="text-danger"></span>
                   </div>
                   <div class="col-md-3">
-                      <input type="text" asp-for="Input.emailAddress" autocomplete="off" placeholder="Email Address" class="form-control" />
+                      <input type="text" asp-for="Input.emailAddress" autocomplete="off" id="inputEmail" placeholder="Email Address" class="form-control" />
                       <span asp-validation-for="Input.emailAddress" class="text-danger"></span>
                   </div>
                   <div class="col-md-3">
-                      <input type="text" asp-for="Input.phoneNumber" autocomplete="off" placeholder="Phone Number" class="form-control" />
+                      <input type="text" asp-for="Input.phoneNumber" autocomplete="off" id="inputPhoneNumber" placeholder="Phone Number" class="form-control" />
                       <span asp-validation-for="Input.phoneNumber" class="text-danger"></span>
                   </div>
               </div>
@@ -154,7 +157,7 @@
         <div style="display: none" id="ddlSitesDiv" class="row justify-content-center m-2">
             <div class="col-12">
                 <label>Campsite location</label>
-                <select onchange="continuePayment();" asp-fo r="siteid" id="ddlSites" class="form-control">
+                <select onchange="continuePayment();" asp-for="siteid" id="ddlSites" class="form-control">
                     <option value="0">- Please Select a camp site - </option>
 
                 </select>
@@ -241,6 +244,7 @@
         </div>
     </div>
 </div>
+
 
 
 
