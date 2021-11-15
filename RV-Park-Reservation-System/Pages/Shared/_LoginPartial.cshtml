@@ -1,15 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using ApplicationCore.Models
+@using ApplicationCore.Interfaces
 @inject SignInManager<Customer> SignInManager
 @inject UserManager<Customer> UserManager
-
+@inject IUnitOfWork iUnitOfWork
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item dropdown">
             <a class="nav-link text-light dropdown-toggle" href="#" id="navbarDropDown" data-toggle="dropdown">
-                Hello @UserManager.GetUserName(User)!
-            </a>
+                Hello @iUnitOfWork.Customer.Get(c=>c.Email == User.Identity.Name).CustFirstName!</a>
             <div class="dropdown-menu">
                 <a class="dropdown-item text-black" asp-area="Identity" asp-page="/Account/Manage/Index">Account</a>
                 <a class="dropdown-item text-black" asp-area="Identity" asp-page="/Account/Manage/UpsertQuestions">Security Questions</a>
