@@ -8,40 +8,82 @@
     <h1 class="display-4 text-center text-primary my-5">ADMIN DASHBOARD</h1>
     <div class="row flex-wrap">
         <div class="col-12 col-md-4">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body p-0">
-                    <h5 class="card-title text-white bg-primary text-center p-3">RESERVATIONS</h5>
-                    <div class="px-3">
-                        <div class="row mb-2 px-3 align-content-center flex-nowrap">
-                            <h6 class="col-6 text-danger m-0">Pending: </h6><span class="m-0" id="dashboardReserved"> 3</span>
+            <div class="col-12">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body p-0">
+                        <h5 class="card-title text-white bg-primary text-center p-3">RESERVATIONS</h5>
+                        <div class="px-3">
+                            <div class="row mb-2 px-3 align-content-center flex-nowrap">
+                                <h6 class="col-6 text-danger m-0">Pending: </h6><span class="m-0" id="dashboardReserved"> 3</span>
+                            </div>
+                            <div class="row mb-2 px-3  align-content-center flex-nowrap">
+                                <h6 class="col-6 text-success m-0">Confirmed: </h6><span class="m-0" id="dashboardOpen"> 12</span>
+                            </div>
                         </div>
-                        <div class="row mb-2 px-3  align-content-center flex-nowrap">
-                            <h6 class="col-6 text-success m-0">Confirmed: </h6><span class="m-0" id="dashboardOpen"> 12</span>
+                        <div class="text-center my-3">
+                            <a class="btn btn-success" asp-page="/Admin/Reservations/Index">Manage</a>
                         </div>
                     </div>
-                    <div class="text-center my-3">
-                        <a class="btn btn-success" asp-page="/Admin/Reservations/Index">Manage</a>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body p-0">
+                        <h5 class="card-title text-white bg-primary text-center p-3">SITES</h5>
+                        <div class="px-3">
+                            <div class="row mb-2 px-3 align-content-center flex-nowrap">
+                                <h6 class="col-6 text-danger m-0">Reserved: </h6>&nbsp<span class="m-0" id="dashboardReserved"> 15</span>
+                            </div>
+                            <div class="row mb-2 px-3  align-content-center flex-nowrap">
+                                <h6 class="col-6 text-success m-0">Open: </h6>&nbsp<span class="m-0" id="dashboardOpen"> 12</span>
+                            </div>
+                        </div>
+                        <div class="text-center my-3">
+                            <a class="btn btn-success" asp-page="/Admin/Sites">Manage</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-4">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body p-0">
-                    <h5 class="card-title text-white bg-primary text-center p-3">SITES</h5>
-                    <div class="px-3">
-                        <div class="row mb-2 px-3 align-content-center flex-nowrap">
-                            <h6 class="col-6 text-danger m-0">Reserved: </h6>&nbsp<span class="m-0" id="dashboardReserved"> 15</span>
-                        </div>
-                        <div class="row mb-2 px-3  align-content-center flex-nowrap">
-                            <h6 class="col-6 text-success m-0">Open: </h6>&nbsp<span class="m-0" id="dashboardOpen"> 12</span>
-                        </div>
-                    </div>
-                    <div class="text-center my-3">
-                        <a class="btn btn-success" asp-page="/Admin/Sites">Manage</a>
-                    </div>
-                </div>
+        <div class="col-12 col-md-8">
+            <div>
+                <h2>Reservations</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Number</th>
+                            <th scope="col">Length</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.vacancies.Count != 0)
+                        {
+                            @for (int i = 0; i < Model.vacancies.Count; i++)
+                            {
+                                <tr>
+                                    <th scope="row">@Model.vacancies[i].SiteNumber</th>
+                                    <td>@Model.vacancies[i].SiteLength</td>
+                                    <td>@Model.vacancies[i].SiteDescription</td>
+                                    <td class="success">VACANT</td>
+                                </tr>
+                            }
+                        }
+                        @if (Model.occupancies.Count != 0)
+                        {
+                            @for (int i = 0; i < Model.occupancies.Count; i++)
+                            {
+                                <tr>
+                                    <th scope="row">@Model.occupancies[i].SiteNumber</th>
+                                    <td>@Model.occupancies[i].SiteLength</td>
+                                    <td>@Model.occupancies[i].SiteDescription</td>
+                                    <td class="danger">OCCUPIED</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>
