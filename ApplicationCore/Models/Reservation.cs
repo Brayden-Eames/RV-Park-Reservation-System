@@ -33,12 +33,10 @@ namespace ApplicationCore.Models
         
         [Required]
         [Display(Name = "Start Date")]
-        [DataType(DataType.Date)]
         public DateTime ResStartDate { get; set; } 
 
         [Required]
         [Display(Name = "End Date")]
-        [DataType(DataType.Date)]
         public DateTime ResEndDate { get; set; }   //might potentially need to be a Composite key
 
         [Required]
