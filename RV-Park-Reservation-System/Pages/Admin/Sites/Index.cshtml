@@ -53,12 +53,6 @@
                             <th>
                                 Description
                             </th>
-                            <th>
-                                Modified Date
-                            </th>
-                            <th>
-                                Modified By
-                            </th>
                             <th></th>
                         </tr>
                     </thead>
@@ -89,12 +83,12 @@
                     { data: "siteNumber", width: "5%" },
                     { data: "siteLength", width: "5%" },
                     { data: "siteDescription", width: "20%" },
-                    { data: "siteLastModifiedDate", width: "12%", "render": function (data) { return moment(data).format("MM/DD/YYYY, hh:mm a"); }  },
-                    { data: "siteLastModifiedBy", width: "12%" },
                     {
                         data: "siteID", width: "25%",
                         "render": function (data) {
                             return `<div class="text-center">
+                            <a href="/Admin/Sites/Detail?id=${data}"
+                            class ="btn btn-info text-white style="cursor:pointer; width=100px;"> Details</a>
                             <a href="/Admin/Sites/Upsert?id=${data}"
                             class ="btn btn-success text-white style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i> Edit</a>                            
                             <a onClick=DeleteSite('/api/sites/'+${data})

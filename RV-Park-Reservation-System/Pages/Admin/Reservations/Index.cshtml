@@ -25,6 +25,7 @@
                     <th scope="col">Start Date</th>
                     <th scope="col">End Date</th>
                     <th scope="col">Customer Phone #</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
@@ -39,6 +40,18 @@
                             <td>@reservation.ResStartDate</td>
                             <td>@reservation.ResEndDate</td>
                             <td>@reservation.Customer.CustPhone</td>
+                            @if(reservation.ResStatusID == 1)
+                            { 
+                                <td class="text-danger"><b>PENDING</b></td>
+                            }
+                            @if(reservation.ResStatusID == 4)
+                                { 
+                                <td class="text-warning"><b>ONGOING</b></td>
+                            }
+                            @if(reservation.ResStatusID == 9)
+                                { 
+                                <td class="text-success"><b>SCHEDULED</b></td>
+                            }
                             <td>
                                 <form method="post">
                                     <a class="btn btn-success text-light" asp-page="/Admin/Reservations/Upsert" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id"><i class="far fa-edit"></i> Edit</a>

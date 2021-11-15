@@ -18,8 +18,18 @@ namespace RV_Park_Reservation_System.Pages.Admin
 
         [BindProperty]
         public List<Site> vacancies { get; set; }
+
         [BindProperty]
         public List<Site> occupancies { get; set; }
+
+        [BindProperty]
+        public int checkins { get; set; }
+
+        [BindProperty]
+        public int checkouts { get; set; }
+
+        [BindProperty]
+        public int ongoing { get; set; }
 
         public IActionResult OnGet()
         {
@@ -30,12 +40,16 @@ namespace RV_Park_Reservation_System.Pages.Admin
             vacancies = new List<Site>();
             occupancies = new List<Site>();
 
-            DateTime today = DateTime.Now.Date;
+            //DateTime today = DateTime.Now.Date;
+            DateTime today = new DateTime(2021, 11, 15).Date;
 
             IEnumerable<Reservation> reservations = _unitOfWork.Reservation.List();
 
-            reservations = reservations.Where(s => (DateTime.Compare(s.ResStartDate, today) >=0 && DateTime.Compare(s.ResEndDate, today) >= 0) /*||
-                                                 ((s.ResStartDate > today && s.ResEndDate > today) && (s.ResStartDate < today && s.ResEndDate < today))*/);
+            reservations = reservations.Where(s => (DateTime.Compare(s.ResStartDate.Date, today.Date) <= 0 && DateTime.Compare(s.ResEndDate.Date, today.Date) >= 0));
+
+            checkins = reservations.Where(c => (DateTime.Compare(c.ResStartDate.Date, today.Date) == 0)).Count();
+            checkouts = reservations.Where(c => (DateTime.Compare(c.ResEndDate.Date, today.Date) == 0)).Count();
+            ongoing = reservations.Where(c => (DateTime.Compare(c.ResStartDate.Date, today.Date) < 0) && DateTime.Compare(c.ResEndDate.Date, today.Date) > 0).Count();
 
             IEnumerable<Site> sites = _unitOfWork.Site.List();
 
