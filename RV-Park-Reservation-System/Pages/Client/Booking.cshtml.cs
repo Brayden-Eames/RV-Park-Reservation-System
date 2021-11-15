@@ -128,6 +128,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 TimeSpan EndTime = new TimeSpan(12, 0, 0);
                 EndDate = EndDate.Date + EndTime;
 
+                
 
                 reservationVM.reservationObj.ResAcknowledgeValidPets = breedPolicy;
                 reservationVM.reservationObj.ResStartDate = StartDate;
@@ -146,7 +147,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 _unitOfWork.Reservation.Add(reservationVM.reservationObj);
                 _unitOfWork.Commit();
 
-
+                
 
                 reservationVM.paymentObj.PayDate = DateTime.Now;
                 reservationVM.paymentObj.PayLastModifiedBy = User.Identity.Name;
@@ -154,7 +155,15 @@ namespace RV_Park_Reservation_System.Pages.Client
                 reservationVM.paymentObj.PayReasonID = 1;
                 reservationVM.paymentObj.PayTypeID = 1;
                 reservationVM.paymentObj.IsPaid = false;
-                reservationVM.paymentObj.PayTotalCost = totalCost;
+                if (reservationVM.reservationObj.TypeID == 7)
+                {
+                    reservationVM.paymentObj.PayTotalCost = (decimal)(Math.Round((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays) * 17);
+                }
+                else
+                {
+                    reservationVM.paymentObj.PayTotalCost = (decimal)(Math.Round((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays) * 25);
+
+                }
 
 
                 if (reservationVM.paymentObj.CCReference == null)
@@ -174,7 +183,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                     var paymentIntent = service.Create(options);
                     reservationVM.paymentObj.CCReference = paymentIntent.Id;
                 }
-                    HttpContext.Session.Set(SD.ReservationSession, reservationVM);
+                HttpContext.Session.Set(SD.ReservationSession, reservationVM);
 
                 
                 
@@ -185,8 +194,6 @@ namespace RV_Park_Reservation_System.Pages.Client
                 Error = true;
                 return RedirectToPage("/Client/Booking", new { error = Error});
             }
-
-            return RedirectToPage("/Index");
         }       
 
 

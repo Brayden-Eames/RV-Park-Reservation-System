@@ -27,11 +27,11 @@
                 <div class="col-md-3">
 
                     @Html.DropDownListFor(v => v.vehicleType, Model.vehicleTypes,
-                " - Please Select a vehicle type - ", new { @class = "mb-2 form-control", @id = "ddlVehicleType", @onchange= "VehicleSelected()" })
+                    " - Please Select a vehicle type - ", new { @class = "mb-2 form-control", @id = "ddlVehicleType", @onchange= "VehicleSelected();hideLots();" })
                 </div>
                 <div class="col-md-3">
 
-                    <select asp-for="vehicleLength" id="ddlVehicleLength" class=" mb-2 form-control">
+                    <select asp-for="vehicleLength" id="ddlVehicleLength" onchange="hideLots()" class=" mb-2 form-control">
                         <option value="20">- Please Select a vehicle length - </option>
                         
                         <option value="40">< = 40ft.</option>
@@ -39,20 +39,17 @@
                         <option value="64">< = 65ft.</option>
                     </select>
                 </div>
-                
-
-                
                 <div class="mb-2 col-md-2">
 
 
-                    <input asp-for="StartDate"  onchange="checkDates();" class="datepicker container-fluid pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
+                    <input asp-for="StartDate"  onchange="checkDates(); hideLots();" class="datepicker container-fluid pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="StartDate"></span>
 
 
                 </div>
                 <div class="mb-2 col-md-2">
 
-                    <input asp-for="EndDate" onchange="checkDates();" class="datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
+                    <input asp-for="EndDate" onchange="checkDates(); hideLots();" class="datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="" />
                     <span class="text-danger" asp-validation-for="EndDate"></span>
                 </div>
 
