@@ -41,7 +41,6 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
             CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
             CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
-
             return Page();
         }
 

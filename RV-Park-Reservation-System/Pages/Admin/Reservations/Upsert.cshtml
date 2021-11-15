@@ -17,7 +17,7 @@
             </div>
             <div class="form-group col-md-4">
                 <label asp-for="@Model.CustomerReservation.ResStartDate.Date">Reservation Start Date</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResStartDate.Date" value="@Model.CustomerReservation.ResStartDate.Date">
+                <input class="form-control" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString()">
             </div>
             <div class="form-group col-md-4">
                 <label asp-for="@Model.CustomerReservation.ResCreatedDate">Reservation Created Date</label>
