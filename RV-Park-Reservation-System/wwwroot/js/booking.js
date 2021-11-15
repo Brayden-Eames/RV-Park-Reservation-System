@@ -33,7 +33,9 @@ function checkDates() {
             }
 
         }
-
+        var totalCost = (dayDiff * 25);
+        document.getElementById('totalCost').value = totalCost;
+        console.log(totalCost);
     }
 }
 function loadReservations() {
@@ -100,4 +102,37 @@ function pets() {
 
         $('.petWrapper').css('display', 'block');
     $('#petsCheckbox').css('display', 'none');
+}
+
+
+function checkChange(option) {
+    if (option.value == 'newUser') {
+        $('.createAccount').css('display', 'block');
+        $('.createAccount').css('visibility', 'visible');
+        $('.genericAccount').css('display', 'none');
+        $('.genericAccount').css('visibility', 'hidden');
+        document.getElementById("inputFirstName").value = "";
+        document.getElementById("inputLastName").value = "";
+        document.getElementById("inputEmail").value = "";
+        document.getElementById("inputPhoneNumber").value = "";
+        document.getElementById("ddlDODAffiliation").value = "";
+        document.getElementById("ddlServiceStatusType").value = "";
+    }
+    if (option.value == 'genericUser') {
+        $('.genericAccount').css('display', 'block');
+        $('.genericAccount').css('visibility', 'visible');
+        $('.createAccount').css('display', 'none');
+        $('.createAccount').css('visibility', 'hidden');
+        document.getElementById("inputFirstName").value = "Generic";
+        document.getElementById("inputLastName").value = "Account";
+        document.getElementById("inputEmail").value = "genericaccount@gmail.com";
+        document.getElementById("inputPhoneNumber").value = "8888888888";
+        document.getElementById("ddlDODAffiliation").value = 1;
+        document.getElementById("ddlServiceStatusType").value = 1;
+
+    }
+    if (option.value == 'chooseDefault') {
+        $('.genericAccount').css('display', 'none');
+        $('.createAccount').css('display', 'none');
+    }
 }
