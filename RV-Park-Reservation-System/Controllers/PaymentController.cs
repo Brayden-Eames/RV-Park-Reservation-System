@@ -32,13 +32,13 @@ namespace RV_Park_Reservation_System.Controllers
                 ReservationVM reservationVM = new ReservationVM();
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
                 Payment paymentObj = reservationVM.paymentObj;
+                ApplicationCore.Models.Customer modelCustomer = _unitOfWork.Customer.Get(c => c.Email == User.Identity.Name);
                 if (reservationVM.paymentObj.CCReference == null )
                 {
                     var options = new PaymentIntentCreateOptions
                     {
                         Amount = Convert.ToInt32(paymentObj.PayTotalCost * 100),
-                        Currency = "usd",
-                        
+                        Currency = "usd", 
                         PaymentMethodTypes = new List<string>
                         {
                           "card",
