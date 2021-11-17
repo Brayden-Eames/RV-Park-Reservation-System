@@ -18,14 +18,14 @@ function checkDates() {
 
     var startDate = new Date(document.getElementById('startDate').value);
     var endDate = new Date(document.getElementById('endDate').value);
-    console.log(document.getElementById('endDate').value);
+
     if (document.getElementById('startDate').value != "" && document.getElementById('endDate').value != "") {
         if (document.getElementById('startDate').value > document.getElementById('endDate').value) {
             swal('Error', 'Please select an end date that is past the start date for this reservation', 'error')
             return false;
         }
         var dayDiff = Math.round(Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24)));
-        console.log(dayDiff);
+       
         if ((startDate.getMonth() >= 3 && startDate.getMonth() <= 9) || (endDate.getMonth() >= 3 && endDate.getMonth() <= 9)) {
             if (dayDiff > 14) {
                 swal('warning', 'Maximum length of stay April-October is 14 consecutive days except for those traveling on PCS orders. Long term stays are allowed October 15th-April 1st. For detailed information on this policy, please contact the FamCamp Office.', 'warning')
@@ -35,7 +35,7 @@ function checkDates() {
         }
         var totalCost = (dayDiff * 25);
         document.getElementById('totalCost').value = totalCost;
-        console.log(totalCost);
+
     }
 }
 function loadReservations() {
@@ -68,8 +68,13 @@ function loadReservations() {
         $('#ddlSites').append($('<option></option>').val(0).html("- Please select a Lot -"));
         /* Insert the new ones from the array above */
         $.each(sites, function (i, p) {
-            console.log(i + " " + p['siteID']);
-            $('#ddlSites').append($('<option></option>').val(p['siteID']).html("Site: " + p['siteNumber'] + " Type: " + p['siteDescription'] + " Price: 25.00$/Night" ));
+			if (p['siteID'] == 47 ) {
+                $('#ddlSites').append($('<option></option>').val(p['siteID']).html("Site: " + p['siteNumber'] + " Type: " + p['siteDescription'] + " Price: 17.00$/Night"));
+            }
+			else {
+                $('#ddlSites').append($('<option></option>').val(p['siteID']).html("Site: " + p['siteNumber'] + " Type: " + p['siteDescription'] + " Price: 25.00$/Night"));
+
+			}
         });
 
     });

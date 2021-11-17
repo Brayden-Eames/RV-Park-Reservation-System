@@ -37,7 +37,7 @@ namespace RV_Park_Reservation_System.Controllers
         public IActionResult Get()
         {
             var customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
-            return Json(new { data = _unitOfWork.Reservation.List().Where(c=>c.Customer == customer) });
+            return Json(new { data = _unitOfWork.Reservation.List().Where(c=>c.Customer == customer  /*Removed this if we want to show all reservations->*/&& c.ResStatusID == 9) });
         }
 
 
