@@ -30,7 +30,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         [BindProperty]
         public Customer CustomerInfo { get; set; }
 
-        public int reservationID { get; set; }
+        public int reservationID { get; set; } 
 
         public IActionResult OnGet(int? id, string? userId)
         {
