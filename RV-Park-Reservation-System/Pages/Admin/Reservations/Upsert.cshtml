@@ -122,8 +122,25 @@
                 dangerMode: true
             }).then(function (willDelete) {
                 if (willDelete) {
-                    document.getElementById("reservationForm").submit();
-                    return true;
+
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/api/clientReservation/' + @Model.CustomerReservation.ResID,
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                
+                            }
+                            else {
+                                toastr.error(data.message);
+                            }
+                        }
+                    }).done(function () {
+                    
+                        document.getElementById("reservationForm").submit();
+                        return true;
+
+                    });
                 }
                 else {
                     return false;
