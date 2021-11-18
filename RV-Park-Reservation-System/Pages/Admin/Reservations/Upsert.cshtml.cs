@@ -66,10 +66,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             }
             else
             {
-                var reservation = _unitOfWork.Reservation.Get(c => c.ResID == CustomerReservation.ResID);
-                _unitOfWork.Reservation.Delete(reservation);
-                _unitOfWork.Commit();
-                return RedirectToPage("./Index", new { success = true, message = "Delete Successful" });
+
+                return RedirectToPage("./Index", new { success = true, message = "Cancel Successful" });
             }
         }
     }

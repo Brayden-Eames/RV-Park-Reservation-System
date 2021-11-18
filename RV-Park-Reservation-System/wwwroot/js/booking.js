@@ -101,7 +101,7 @@ function checkinput() {
         swal('warning', 'Please enter a valid number of adults. ', 'warning')
         return false;
     }
-    console.log(document.getElementById('numPets').value);
+
     if (document.getElementById('numPets').value > 0 &&  document.getElementById('breedPolicyAgreement').checked == false) {
         swal('warning', 'Please acknolwdge FamCamps pet policy. ', 'warning')
         return false;
@@ -168,7 +168,7 @@ function hideLots() {
 }
 
 function VehicleSelected() {
-    console.log($('#ddlVehicleType').val())
+
 	if ($('#ddlVehicleType').val() == 7) {
         $('#ddlVehicleLength').css('display', 'none');
         $('#ddlVehicleLength').val(20).change() ;

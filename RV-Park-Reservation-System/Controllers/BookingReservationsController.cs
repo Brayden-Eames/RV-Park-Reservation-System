@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -38,18 +39,26 @@ namespace RV_Park_Reservation_System.Controllers
             //Get all sites
             IEnumerable<Site> site = _unitOfWork.Site.List();
             //Get only sites == Vehicle length
-            if (vLength == 40)
+            if (User.IsInRole(SD.AdminRole))
             {
-                site = site.Where(s => s.SiteLength == 42);
-            }
-            else if (vLength == 45)
-            {
-                site = site.Where(s => s.SiteLength == 45);
+                site = site.Where(s => s.SiteLength >vLength);
             }
             else
             {
-                site = site.Where(s => s.SiteLength == 65);
+                if (vLength == 40)
+                {
+                    site = site.Where(s => s.SiteLength == 42);
+                }
+                else if (vLength == 45)
+                {
+                    site = site.Where(s => s.SiteLength == 45);
+                }
+                else
+                {
+                    site = site.Where(s => s.SiteLength == 65);
+                }
             }
+            
 
             //Create empty sites variable
             List<Site> badSites = new List<Site>();

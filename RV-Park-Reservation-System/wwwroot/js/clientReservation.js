@@ -41,7 +41,7 @@ function loadList() {
 	
 }
 function Delete(url) {
-	console.log(url);
+
 	swal({
 		title: "Are you sure you want to cancel?",
 		text: "Cancellations made at least 4 days prior will be charged a $10.00 fee. "+
