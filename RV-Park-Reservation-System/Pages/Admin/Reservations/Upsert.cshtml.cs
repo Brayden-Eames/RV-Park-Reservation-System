@@ -8,6 +8,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 {
@@ -30,7 +31,34 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         [BindProperty]
         public Customer CustomerInfo { get; set; }
 
+        [BindProperty]
         public int reservationID { get; set; } 
+
+
+        [BindProperty]
+        public string firstName { get; set; }
+
+        [BindProperty]
+        public string lastName { get; set; }
+
+        public IEnumerable<SelectListItem> sites { get; set; }
+
+        [BindProperty]
+        public IEnumerable<SelectListItem> lstServiceStatus { get; set; }
+
+        [BindProperty]
+        public IEnumerable<SelectListItem> lstDODAffiliation { get; set; }
+
+        [BindProperty]
+        public int siteid { get; set; }
+
+        [BindProperty]
+        public decimal totalCost { get; set; }
+
+
+
+        //Add in member variables similar to how the AdminReservation Create page does it.  Revamp the Upsert frontend to use this functionality as well. 
+
 
         public IActionResult OnGet(int? id, string? userId)
         {
@@ -41,6 +69,9 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
             CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
             CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
+            sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
+            lstServiceStatus = _unitOfWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });
+            lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
             return Page();
         }
 
