@@ -1,55 +1,66 @@
-﻿var dtsiteCat;
+﻿var DThistoricReservations;
 var dtsite;
-var dtsiteRate;
+var DTvacancyReport;
 var DTActivity;
 
-$(document).ready(function () {
-    loadLists();
-});
+function generateVacantSitesData() {
+    let startDate = document.getElementById('startDate').value.toString();
+    let endDate = document.getElementById('endDate').value.toString();
+    getVacantSitesList(startDate, endDate);
+}
 
 
-function loadLists() {
+function getVacantSitesList(startDate, endDate) {
+        DTvacancyReport = $('#DTvacancyReport').DataTable({
+        dom: 'Bfrtip',
+        buttons: [ 'csv', 'excel', 'pdf', 'print'],
+        "ajax": {
+                "url": '/api/vacancyReport/?startDate=' + startDate + '&endDate=' + endDate,
+            "type": "GET",
+            "datatype": "json"
+        },
+        "columns": [
+            { data: "site", width: "15%" },
+            { data: "description", width: "20%" },
+            { data: "length", width: "15%" },
+            { data: "available", width: "30%" },
+            { data: "rate", width: "20%" }
+        ],
+        "language": {
+            "emptyTable": "no data found."
+        },
+        "width": "100%"
+    });
+}
 
-    //dtsiteCat = $('#DTsiteCat').DataTable({
-    //    dom: 'Bfrtip',
-    //    buttons: [
-    //        'csv', 'excel', 'pdf', 'print'
-    //    ],
-    //    "ajax": {
-    //        "url": "/api/reports",
-    //        "type": "GET",
-    //        "datatype": "json"
-    //    },
-    //    "columns": [
-    //        { data: "siteCategoryName", width: "20%" },
-    //        { data: "siteCategoryDescription", width: "35%" },
-    //        { data: "locationID", width: "20%" },            
-    //    ],
-    //    "language": {
-    //        "emptyTable": "no data found."
-    //    },
-    //    "width": "100%"
-    //});
+function getHistoricReservationList() {
+    DThistoricReservations = $('#DThistoricReservations').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'csv', 'excel', 'pdf', 'print'
+        ],
+        "ajax": {
+            "url": "/api/historicReservationReport",
+            "type": "GET",
+            "datatype": "json"
+        },
+        "columns": [
+            { data: "name", width: "14%" },
+            { data: "phone", width: "14%" },
+            { data: "email", width: "16%" },
+            { data: "siteNumber", width: "14%" },
+            { data: "checkIn", width: "14%" },
+            { data: "checkOut", width: "14%" },
+            { data: "status", width: "14%" },
+        ],
+        "language": {
+            "emptyTable": "no data found."
+        },
+        "width": "100%"
+    });
+}
 
-    //dtsiteRate = $('#DTsiteRate').DataTable({
-    //    dom: 'Bfrtip',
-    //    buttons: [ 'csv', 'excel', 'pdf', 'print'],
-    //    "ajax": {
-    //        "url": "/api/site_rate",
-    //        "type": "GET",
-    //        "datatype": "json"
-    //    },
-    //    "columns": [
-    //        { data: "rateAmount", width: "20%" },
-    //        { data: "rateStartDate", width: "20%" },
-    //        { data: "rateEndDate", width: "20%" },
-    //        { data: "siteCategoryID", width: "20%" },           
-    //    ],
-    //    "language": {
-    //        "emptyTable": "no data found."
-    //    },
-    //    "width": "100%"
-    //});
+function getActivityList() {   
 
     $('#DTActivity thead tr').clone(true).addClass('filters').appendTo('#DTActivity thead'); //this clones the first row
 
