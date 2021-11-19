@@ -122,8 +122,9 @@ namespace RV_Park_Reservation_System.Pages.Client
                     await _emailSender.SendEmailAsync(
                         user.CustEmail,
                         "FamCamp Reservation Confirmation",
-                        $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account.  " +
-                        $" <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account. " +
+                        $"Your reservation confirmation number is " + reservations.ResID.ToString() + "."
+                        );
 
 
 

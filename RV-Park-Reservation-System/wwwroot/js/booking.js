@@ -1,17 +1,45 @@
-﻿
-
-
-$(document).ready(function () {
-
-   
+﻿$(document).ready(function () {
     $('.alert').alert()
     $(".datepicker").datepicker({ minDate: 1, maxDate: "+6m" })
     $("#timepicker").timepicker({ 'minTime': '11:00 AM', 'maxTime': '9:00 PM', step: '30' })
 });
 
+
 $('#myModal').on('shown.bs.modal', function () {
     $('#myInput').trigger('focus')
 })
+
+
+var reservationBufferCount = 0;
+function checkBuffer() {
+    
+    var date = { date: document.getElementById('startDate').value };
+
+    var json = $.getJSON("/api/ReservationBuffer", date , function (reservation) {
+		if (reservation > 0) {
+            reservationBufferCount = reservation;
+
+        }
+		else {
+            reservationBufferCount = reservation;
+		}
+
+    });
+    json.done(function() {
+        if (reservationBufferCount > 0) {
+            swal('Error', 'There must be 2 weeks between reservations.', 'error')
+            return true;
+        }
+        else {
+            return false;
+        }
+    })
+   
+
+}
+
+
+
 
 function checkDates() {
 
@@ -22,6 +50,7 @@ function checkDates() {
     if (document.getElementById('startDate').value != "" && document.getElementById('endDate').value != "") {
         if (document.getElementById('startDate').value > document.getElementById('endDate').value) {
             swal('Error', 'Please select an end date that is past the start date for this reservation', 'error')
+
             return false;
         }
         var dayDiff = Math.round(Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24)));
@@ -37,7 +66,53 @@ function checkDates() {
         document.getElementById('totalCost').value = totalCost;
 
     }
+    
 }
+function checkinput() {
+    var startDate = new Date(document.getElementById('startDate').value);
+    var endDate = new Date(document.getElementById('endDate').value);
+
+    //Checks start date is less than end date
+    if (document.getElementById('startDate').value != "" && document.getElementById('endDate').value != "") {
+        if (document.getElementById('startDate').value > document.getElementById('endDate').value) {
+            swal('Error', 'Please select an end date that is past the start date for this reservation', 'error')
+
+            return false;
+        }
+    }
+
+    //Checks if difference in dates is less than 14 while in busy months
+    var dayDiff = Math.round(Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24)));
+    if ((startDate.getMonth() >= 3 && startDate.getMonth() <= 9) || (endDate.getMonth() >= 3 && endDate.getMonth() <= 9)) {
+        if (dayDiff > 14) {
+            swal('warning', 'Maximum length of stay April-October is 14 consecutive days except for those traveling on PCS orders. Long term stays are allowed October 15th-April 1st. For detailed information on this policy, please contact the FamCamp Office.', 'warning')
+            return false;
+        }
+
+    }
+
+    //checks if > 14 days between reservations
+    checkBuffer();
+    if (reservationBufferCount > 0) {
+        return false;
+    }
+
+    if ($('#numAdults').val() <=0) {
+        swal('warning', 'Please enter a valid number of adults. ', 'warning')
+        return false;
+    }
+
+    if (document.getElementById('numPets').value > 0 &&  document.getElementById('breedPolicyAgreement').checked == false) {
+        swal('warning', 'Please acknolwdge FamCamps pet policy. ', 'warning')
+        return false;
+    }
+
+
+    
+    
+    return true;
+}
+
 function loadReservations() {
 
     if (document.getElementById('endDate').value == '' || document.getElementById('startDate').value == ''
@@ -52,9 +127,8 @@ function loadReservations() {
     var dates = { date1: document.getElementById('startDate').value, date2: document.getElementById('endDate').value, vehicleLength: document.getElementById('ddlVehicleLength').value};
   
     $.getJSON("/api/BookingReservations", dates, function (sites) {
-        console.log(sites);
         var count = Object.keys(sites).length;
-        console.log(count);
+
         if (count == 0) {
             $('#btnSeeReservations').css('display', 'block');
             $('#ddlSitesDiv').css('display', 'none');
@@ -94,7 +168,7 @@ function hideLots() {
 }
 
 function VehicleSelected() {
-    console.log($('#ddlVehicleType').val())
+
 	if ($('#ddlVehicleType').val() == 7) {
         $('#ddlVehicleLength').css('display', 'none');
         $('#ddlVehicleLength').val(20).change() ;

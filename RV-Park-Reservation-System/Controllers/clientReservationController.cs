@@ -34,7 +34,7 @@ namespace RV_Park_Reservation_System.Controllers
         public IActionResult Get()
         {
             var customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
-            return Json(new { data = _unitOfWork.Reservation.List().Where(c=>c.Customer == customer  /*Removed this if we want to show all reservations->*/&& c.ResStatusID == 9) });
+            return Json(new { data = _unitOfWork.Reservation.List().Where(c=>c.Customer == customer && c.ResStatusID == 9) });
         }
 
 
@@ -63,7 +63,17 @@ namespace RV_Park_Reservation_System.Controllers
                 refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
             }
             var specialEvents = _unitOfWork.Special_Event.List();
-            
+
+
+            if ((objFromDb.ResStartDate-DateTime.Now).TotalDays <0)
+            {
+                int daysLeft = (int)Math.Round((DateTime.Now- objFromDb.ResStartDate).TotalDays);
+
+                int totalRefund = daysLeft * 2500;
+                refundAmount = refundAmount - totalRefund;
+                
+            }
+
             foreach (var events in specialEvents )
             {
                 if ((objFromDb.ResStartDate <= events.EventStartDate && objFromDb.ResEndDate >= events.EventStartDate)
@@ -88,7 +98,11 @@ namespace RV_Park_Reservation_System.Controllers
             {
                 return Json(new { success = false, message = "Error while deleting!" });
             }
-            _unitOfWork.Reservation.Delete(objFromDb);
+            objFromDb.ResStatusID = 2;
+            _unitOfWork.Reservation.Update(objFromDb);
+            _unitOfWork.Commit();
+            payObj.PayTotalCost = payObj.PayTotalCost - (refundAmount/100);
+            _unitOfWork.Payment.Update(payObj);
             _unitOfWork.Commit();
 
             var user = await _userManager.FindByEmailAsync(User.Identity.Name);
@@ -106,7 +120,7 @@ namespace RV_Park_Reservation_System.Controllers
                 $"This is a confirmation that your reservation is canceled and refunded. ");
 
 
-            return Json(new { success = true, message = "Delete Successful" });
+            return Json(new { success = true, message = "Cancel Successful" });
         }
     }
 }
