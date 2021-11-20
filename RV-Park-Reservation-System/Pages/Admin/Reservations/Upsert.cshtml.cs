@@ -55,6 +55,10 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         [BindProperty]
         public decimal totalCost { get; set; }
 
+        [BindProperty]
+        public IEnumerable<SelectListItem> lstReservationStatus { get; set; }
+
+        public int reservationStatusID { get; set; }
 
 
         //Add in member variables similar to how the AdminReservation Create page does it.  Revamp the Upsert frontend to use this functionality as well. 
@@ -72,6 +76,55 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
             lstServiceStatus = _unitOfWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });
             lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
+
+            lstReservationStatus = _unitOfWork.Reservation_Status.List().Select(s => new SelectListItem { Value = s.ResStatusID.ToString(), Text = s.ResStatusName });
+
+            if(CustomerInfo.DODAffiliationID == 1)
+            {
+                CustomerInfo.DOD_Affiliation.Equals("Army");
+            }
+            else if(CustomerInfo.DODAffiliationID == 2)
+            {
+                CustomerInfo.DOD_Affiliation.Equals("Air Force");
+            }
+            else if (CustomerInfo.DODAffiliationID == 3)
+            {
+                CustomerInfo.DOD_Affiliation.Equals("Navy");
+            }
+            else if (CustomerInfo.DODAffiliationID == 4)
+            {
+                CustomerInfo.DOD_Affiliation.Equals("Marines");
+            }
+            else if (CustomerInfo.DODAffiliationID == 5)
+            {
+                CustomerInfo.DOD_Affiliation.Equals("Coast Guard");
+            }
+            else if (CustomerInfo.DODAffiliationID == 11)
+            {
+                CustomerInfo.DOD_Affiliation.Equals("Space Force");
+            }
+
+            if(CustomerInfo.ServiceStatusID == 1)
+            {
+                CustomerInfo.Service_Status_Type.Equals("Active");
+            }
+            else if(CustomerInfo.ServiceStatusID == 2)
+            {
+                CustomerInfo.Service_Status_Type.Equals("Retired");
+            }
+            else if (CustomerInfo.ServiceStatusID == 3)
+            {
+                CustomerInfo.Service_Status_Type.Equals("Reserves");
+            }
+            else if (CustomerInfo.ServiceStatusID == 4)
+            {
+                CustomerInfo.Service_Status_Type.Equals("PCS");
+            }
+            else if (CustomerInfo.ServiceStatusID == 9)
+            {
+                CustomerInfo.Service_Status_Type.Equals("Civillian");
+            }
+
             return Page();
         }
 

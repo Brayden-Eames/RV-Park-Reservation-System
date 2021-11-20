@@ -3,12 +3,11 @@
 @{
 }
 
-<br />
-<br />
 <form class="form" method="post" id="reservationForm">
+    <h1 class="display-4 text-center text-primary my-5">EDIT RESERVATION</h1>
     <input type="hidden" id="totalCost" asp-for="totalCost" />
-    <div class="row border rounded pt-3 pb-2 mt-2 mb-2 ml-3 mr-3 justify-content-center">
-        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-4 border rounded">
+    <div class="row border  pt-3 pb-2 mt-2 mb-2 ml-7 mr-7 justify-content-center">
+        <div class="pt-3 pb-3 pl-3 ml-2 mt-2 mb-3 col-md-4 border">
             <label class="pl-2">Customer Info</label>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">First Name</span>
@@ -19,19 +18,19 @@
                 <input type="text" class="form-control" placeholder="Last Name" asp-for="@Model.CustomerInfo.CustLastName" value="@Model.CustomerInfo.CustLastName" readonly>
             </div>
             <div class="input-group mt-3">
-                <span class="input-group-text" id="">DOD Affiliation </span>
-                <input type="text" class="form-control" placeholder="DOD Affiliation" asp-for="@Model.CustomerInfo.DOD_Affiliation" value="" readonly>
+                <span class="input-group-text" id="serviceStatus">Service Status </span>
+                <input type="text" class="form-control" id="serviceStatusInputField" placeholder="Service Status" asp-for="@Model.CustomerInfo.ServiceStatusID" value="@Model.CustomerInfo.Service_Status_Type.ServiceStatusType" readonly>
             </div>
             <div class="input-group mt-3">
-                <span class="input-group-text" id="">Service Status </span>
-                <input type="text" class="form-control" placeholder="Service Status" asp-for="@Model.CustomerInfo.Service_Status_Type" value="" readonly>
+                <span class="input-group-text" id="dodAffiliation">DOD Affiliation </span>
+                <input type="text" class="form-control" id="dodInputField" placeholder="DOD Affiliation" asp-for="@Model.CustomerInfo.DODAffiliationID" value="@Model.CustomerInfo.DOD_Affiliation.DODAffiliationType" readonly>
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Phone Number</span>
                 <input type="text" class="form-control" placeholder="Phone Number" asp-for="@Model.CustomerInfo.CustPhone" value="@Model.CustomerInfo.CustPhone" readonly>
             </div>
         </div>
-        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-4 border rounded">
+        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-4 border">
             <label class="pl-2">Reservation Info</label>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Reservation ID Number</span>
@@ -39,11 +38,11 @@
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Reservation Start Date</span>
-                <input  class="form-control datepicker container-fluid pt-1 pb-1" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate"value="">
+                <input class="form-control datepicker container-fluid pt-1 pb-1" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="">
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Reservation End Date</span>
-                <input  class="form-control datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="">
+                <input class="form-control datepicker container-fluid pt-1 pb-1" placeholder="End Date" id="endDate" type="datetime" value="">
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Site Number</span>
@@ -70,14 +69,13 @@
             <br />
             <div class="input-group mb-3">
                 <label class="input-group-text" for="inputGroupSelect01">Pet Policy Acknowledged?</label>
-                <select class="form-select" id="inputGroupSelect01">
-                    <option selected>Choose...</option>
-                    <option value="1">Yes</option>
-                    <option value="2">No</option>
+                <select class="form-select" id="inputGroupSelect01" asp-for="@Model.CustomerReservation.ResAcknowledgeValidPets" value="@Model.CustomerReservation.ResAcknowledgeValidPets">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
                 </select>
             </div>
         </div>
-        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border rounded">
+        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border">
             <label class="pl-2">Actions</label>
             <br />
             <a class="btn btn-success form-control mt-2 mb-2 text-light" id="">Update Reservation</a>
@@ -86,17 +84,10 @@
             <br />
             <a class="btn btn-danger form-control mt-2 mb-2 text-light" id="">Cancel Reservation</a>
 
-            <div class="dropdown mt-3 mb-2">
-                <button class="btn btn-warning dropdown-toggle col-md-12" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Reservation Status
-                </button>
-                <ul class="dropdown-menu col-md-12" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item bg-warning text-light" href="#">Pending</a></li>
-                    <li><a class="dropdown-item bg-info text-light" href="#">Ongoing</a></li>
-                    <li><a class="dropdown-item bg-success text-light" href="#">Scheduled</a></li>
-                    <li><a class="dropdown-item bg-danger text-light" href="#">Cancelled</a></li>
-                    <li><a class="dropdown-item bg-dark text-light" href="#">Completed</a></li>
-                </ul>
+            <div class="input-group mb-3 mt-2">
+                <label class="input-group-text pt-0 pb-0" for="inputGroupSelect01">Reservation Status</label>
+                @Html.DropDownListFor(s => s.reservationStatusID, Model.lstReservationStatus, Model.CustomerReservation.Reservation_Status.ResStatusName, new { @class = "form-control bg-warning  text-light text-center", @id = "ddlResStatus", @value = Model.CustomerReservation.Reservation_Status.ResStatusName })
+
             </div>
         </div>
     </div>
@@ -141,5 +132,7 @@
                 }
             })
         })
+
+        
     </script>
 }
