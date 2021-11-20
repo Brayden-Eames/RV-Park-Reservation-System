@@ -64,7 +64,6 @@ namespace ApplicationCore.Models
 
         [Display(Name = "Customer ID")]
         public string Id { get; set; }
-
         
         [ForeignKey("Id")]
         [Required]

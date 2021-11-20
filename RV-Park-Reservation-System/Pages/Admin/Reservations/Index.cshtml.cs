@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
@@ -22,8 +20,7 @@ namespace RV_Park_Reservation_System.Pages.Admin
         public AdminReservationVM AdminReservationObject { get; set; }
         public bool Success { get; set; }
         public string Message { get; set; }
-
-        //We might need to make a ViewModel to allow us to pull from the Reservation, Customer, Service Status Type and DODAffiliation tables. 
+       
         public IActionResult OnGet(bool success = false, string message = null)
         {
             if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole))
@@ -31,8 +28,6 @@ namespace RV_Park_Reservation_System.Pages.Admin
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Index" });
             }
             
-
-            //need to pull data from Reservation, Customer, DODAffiliation and ServiceStatusType tables. Use the ViewModel to do so
             Success = success;
             Message = message;
             ReservationList = _unitofWork.Reservation.List(r => r.ResStatusID == 1 || r.ResStatusID == 4 || r.ResStatusID == 9); //9 for scheduled 4 for On Going
@@ -40,6 +35,7 @@ namespace RV_Park_Reservation_System.Pages.Admin
             {
                 Reservations = _unitofWork.Reservation.List(),
                 ListOfCustomers = _unitofWork.Customer.List(),
+                ListOfSites = _unitofWork.Site.List(),
                 DODAffiliationList = _unitofWork.DOD_Affiliation.List(),
                 ServiceStatusTypes = _unitofWork.Service_Status_Type.List()
             };
