@@ -44,11 +44,12 @@ namespace RV_Park_Reservation_System.Pages.Admin
                 ServiceStatusTypes = _unitofWork.Service_Status_Type.List()
             };
 
+            
             return Page();
         }
 
         public async Task<IActionResult> OnPost(int? id)
-        {
+        {           
             return RedirectToPage("./Upsert", new { reservationID = id });
         }
     }

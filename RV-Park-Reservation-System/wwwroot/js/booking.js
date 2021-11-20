@@ -214,4 +214,29 @@ function checkChange(option) {
         $('.genericAccount').css('display', 'none');
         $('.createAccount').css('display', 'none');
     }
+
+
+}
+function vehicleTypeCheck(option) {
+    if (option == 1) {
+        document.getElementById("ddlVehicleType").value = "Motor Home";
+    }
+    else if (option == 2) {
+        document.getElementById("ddlVehicleType").value = "Travel Trailer";
+    }
+    else if (option == 3) {
+        document.getElementById("ddlVehicleType").value = "5th Wheel";
+    }
+    else if (option == 4) {
+        document.getElementById("ddlVehicleType").value = "Pop Up";
+    }
+    else if (option == 5) {
+        document.getElementById("ddlVehicleType").value = "Van";
+    }
+    else if (option == 6) {
+        document.getElementById("ddlVehicleType").value = "Other";
+    }
+    else if (option == 7) {
+        document.getElementById("ddlVehicleType").value = "Tent";
+    }
 }

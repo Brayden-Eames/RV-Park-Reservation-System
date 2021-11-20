@@ -125,6 +125,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 CustomerInfo.Service_Status_Type.Equals("Civillian");
             }
 
+            
             return Page();
         }
 
