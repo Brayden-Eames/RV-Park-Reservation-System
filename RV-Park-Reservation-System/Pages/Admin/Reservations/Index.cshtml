@@ -37,8 +37,8 @@
                             <td id="reservationID">@reservation.ResID</td>
                             <td>@reservation.Customer.CustFirstName  @reservation.Customer.CustLastName</td>
                             <td>@reservation.Site.SiteNumber</td>
-                            <td>@reservation.ResStartDate</td>
-                            <td>@reservation.ResEndDate</td>
+                            <td>@reservation.ResStartDate.ToString("MM/dd/yyyy")</td>
+                            <td>@reservation.ResEndDate.ToString("MM/dd/yyyy")</td>
                             <td>@reservation.Customer.CustPhone</td>
                             @if(reservation.ResStatusID == 1)
                             { 

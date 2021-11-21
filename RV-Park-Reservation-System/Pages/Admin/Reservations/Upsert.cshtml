@@ -69,13 +69,19 @@
                 <input type="text" class="form-control" placeholder="Number of Pets" asp-for="@Model.CustomerReservation.ResNumPets" value="@Model.CustomerReservation.ResNumPets">
             </div>
             <br />
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="inputGroupSelect01">Pet Policy Acknowledged?</label>
-                <select class="form-select" id="inputGroupSelect01" asp-for="@Model.CustomerReservation.ResAcknowledgeValidPets" value="@Model.CustomerReservation.ResAcknowledgeValidPets">
-                    <option value="true">Yes</option>
-                    <option value="false">No</option>
-                </select>
-            </div>
+            @{
+                @if (Model.CustomerReservation.ResNumPets > 0)
+                {
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Pet Policy Acknowledged?</label>
+                        <select class="form-select" id="inputGroupSelect01" asp-for="@Model.CustomerReservation.ResAcknowledgeValidPets" value="@Model.CustomerReservation.ResAcknowledgeValidPets">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                }
+            }
+            <br />
         </div>
         <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border">
             <label class="pl-2">Actions</label>
@@ -91,7 +97,7 @@
                 @Html.DropDownListFor(s => s.reservationStatusID, Model.lstReservationStatus, Model.CustomerReservation.Reservation_Status.ResStatusName, new { @class = "form-control bg-warning  text-light text-center", @id = "ddlResStatus", @value = Model.CustomerReservation.Reservation_Status.ResStatusName })
 
             </div>
-            <div class="pt-3 pb-3 pl-3  mt-0 mb-3 col-md-12 border">
+            <div class="pt-3 pb-3 pl-3  mt-0 mb-0 col-md-12 border">
                 <label class="pl-2">Edit Reservation Dates and Site Number</label>
                 <div class="input-group mt-3">
                     <span class="input-group-text" id="">Reservation Start Date</span>
@@ -106,9 +112,9 @@
                         <button onclick="loadReservations();" type="button" class="btn container-fluid btn-primary">See Available Lots</button>
                     </div>
                 </div>
-                <div style="display: none" id="ddlSitesDiv" class="row justify-content-center m-2">
-                    <div class="col-12">
-                        <label>Campsite location</label>
+                <div style="display: none" id="ddlSitesDiv" class="row justify-content-center ">
+                    <div class="col-md-12 mt-2 ">
+                        <label class="pl-2">Campsite location</label>
                         <select onchange="continuePayment();" asp-for="siteid" id="ddlSites" class="form-control">
                             <option value="0">- Please Select a camp site - </option>
 
