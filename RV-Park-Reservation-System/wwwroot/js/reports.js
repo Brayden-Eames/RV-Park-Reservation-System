@@ -4,13 +4,23 @@ var DTvacancyReport;
 var DTActivity;
 
 function generateVacantSitesData() {
+    destroyVacantTable();
     let startDate = document.getElementById('startDate').value.toString();
     let endDate = document.getElementById('endDate').value.toString();
     getVacantSitesList(startDate, endDate);
 }
 
+function destroyVacantTable() {
+    var table = $('#DTvacancyReport').DataTable()
+    if (table) {        
+        table.destroy();
+        
+    }
+}
+
 
 function getVacantSitesList(startDate, endDate) {
+        
         DTvacancyReport = $('#DTvacancyReport').DataTable({
         dom: 'Bfrtip',
         buttons: [ 'csv', 'excel', 'pdf', 'print'],
@@ -35,7 +45,7 @@ function getVacantSitesList(startDate, endDate) {
 
 function getHistoricReservationList() {
     DThistoricReservations = $('#DThistoricReservations').DataTable({
-        dom: 'Bfrtip',
+        dom: 'Bfrtip',        
         buttons: [
             'csv', 'excel', 'pdf', 'print'
         ],
@@ -52,7 +62,7 @@ function getHistoricReservationList() {
             { data: "checkIn", width: "14%" },
             { data: "checkOut", width: "14%" },
             { data: "status", width: "14%" },
-        ],
+        ],     
         "language": {
             "emptyTable": "no data found."
         },
