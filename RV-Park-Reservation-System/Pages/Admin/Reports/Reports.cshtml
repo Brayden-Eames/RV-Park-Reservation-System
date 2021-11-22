@@ -10,40 +10,46 @@
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="current-reservations-tab" data-bs-toggle="tab" data-bs-target="#current-reservations" type="button" role="tab" aria-controls="current-reservations" aria-selected="true">Current Reservations</button>
+            <button class="nav-link active" id="vacant-sites-tab" data-bs-toggle="tab" data-bs-target="#vacant-sites" type="button" role="tab" aria-controls="vacant-sites" aria-selected="false">Vacant Sites</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="current-availability-tab" data-bs-toggle="tab" data-bs-target="#current-availability" type="button" role="tab" aria-controls="current-availability" aria-selected="false">Vacant Sites</button>
+            <button class="nav-link " id="upcoming-activity-tab" data-bs-toggle="tab" data-bs-target="#upcoming-activity" type="button" role="tab" aria-controls="upcoming-activity" aria-selected="false" onclick="getActivityList(); this.onclick = null;">Upcoming Activity</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="tomorrow-activity-tab" data-bs-toggle="tab" data-bs-target="#tomorrow-activity" type="button" role="tab" aria-controls="tomorrow-activity" aria-selected="false">Upcoming Activity</button>
+            <button class="nav-link" id="historic-reservations-tab" data-bs-toggle="tab" data-bs-target="#historic-reservations" type="button" role="tab" aria-controls="historic-reservations" aria-selected="true" onclick="getHistoricReservationList(); this.onclick = null;">Historic Reservations</button>
         </li>
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-        @*<div class="tab-pane active" id="current-reservations" role="tabpanel" aria-labelledby="current-reservations-tab">
+        <div class="tab-pane" id="historic-reservations" role="tabpanel" aria-labelledby="historic-reservations-tab">
                 <div class="border backgroundWhite container p-3">
                     <br />
                     <br />
                     <div id="content1">
-                        <table id="DTsiteCat" class="table table-striped table-bordered mx-0 w-100">
+                        <table id="DThistoricReservations" class="table table-striped table-bordered mx-0 w-100">
                             <thead>
                                 <tr>
                                     <th>
                                         Name
                                     </th>
                                     <th>
+                                        Phone
+                                    </th>
+                                    <th>
+                                        Email
+                                    </th>
+                                    <th>
                                         Site #
-                                    </th>
+                                    </th>                                   
                                     <th>
-                                        # Nights
-                                    </th>
-                                    <th>
-                                        Check In
+                                        Check In 
                                     </th>
                                     <th>
                                         Check Out
+                                    </th>
+                                    <th>
+                                        Status
                                     </th>
                                 </tr>
                             </thead>
@@ -51,30 +57,50 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="current-availability" role="tabpanel" aria-labelledby="current-availability-tab">
+            <div class="tab-pane active" id="vacant-sites" role="tabpanel" aria-labelledby="vacant-sites-tab">
                 <div class="border backgroundWhite container p-3">
+
+                    <div class="text-center font-weight-bold ">
+                        <span class="p-1 mr-2 h-50">
+                            <label class="p-1">From:</label>
+                            <input id="startDate" type="date" />
+                        </span>
+
+                        <span class="p-1">
+                            <label class="p-1">To:</label>
+                            <input id="endDate" type="date"/>
+                        </span>
+                        <button class="dt-button button-primary" onclick="generateVacantSitesData()">Go</button>
+                    </div>
+
                     <br />
                     <br />
                     <div id="content2">
-                        <table id="DTsiteRate" class="table table-striped table-bordered mx-0 w-100">
+                        <table id="DTvacancyReport" class="table table-striped table-bordered mx-0 w-100">
                             <thead>
                                 <tr>
                                     <th>
                                         Site #
                                     </th>
                                     <th>
-                                        # of Nights Available
+                                        Description
                                     </th>
                                     <th>
-                                        Price Per Night
+                                        Length
+                                    </th>
+                                    <th>
+                                        Available Dates
+                                    </th>
+                                    <th>
+                                        Rate
                                     </th>
                                 </tr>
                             </thead>
                         </table>
                     </div>
                 </div>
-            </div>*@
-        <div class="tab-pane" id="tomorrow-activity" role="tabpanel" aria-labelledby="tomorrow-activity-tab">
+            </div>
+        <div class="tab-pane" id="upcoming-activity" role="tabpanel" aria-labelledby="upcoming-activity-tab">
             <div class="border backgroundWhite container p-3">
                 <br />
                 <span class="row">
@@ -123,6 +149,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-buttons/2.0.1/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-buttons/2.0.1/js/buttons.print.min.js"></script>
     <script src="~/js/reports.js"></script>
+
     <script>
         var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))
         triggerTabList.forEach(function (triggerEl) {
@@ -134,8 +161,18 @@
             })
         })
 
+        window.addEventListener('load', setDefaultDaysInInput());
 
+        function setDefaultDaysInInput() {
+            let thirdDay = new Date();
+            thirdDay.setDate(thirdDay.getDate() - 1);
+            document.getElementById('startDate').valueAsDate = thirdDay;
+            let endInput = document.getElementById('endDate');            
+            thirdDay.setDate(thirdDay.getDate() + 3);
+            endInput.valueAsDate = thirdDay;
+        }
 
+   
         function setCheckInDay(plusDays) {
             let checkIn = document.getElementById('CheckIn');
             let checkOut = document.getElementById('CheckOut');
@@ -163,8 +200,6 @@
                 checkOut.focus();
                 checkOut.dispatchEvent(enterEvent);
             }
-
-
         }
 
 

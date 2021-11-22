@@ -55,7 +55,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteRate
                 return Page();
             }
 
-            if (SiteRateObj.SiteRate.RateID == 0) //New Site Category
+            if (SiteRateObj.SiteRate.RateID == 0) //New Site Rate
             {
                 SiteRateObj.SiteRate.RateLastModifiedBy = User.Identity.Name;
                 SiteRateObj.SiteRate.RateModifiedDate = DateTime.Now;

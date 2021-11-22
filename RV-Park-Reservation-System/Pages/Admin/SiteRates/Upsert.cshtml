@@ -18,7 +18,7 @@
                         <label asp-for="SiteRateObj.SiteRate.RateAmount"></label>
                     </div>
                     <div class="col-9">
-                        <input class="form-control" asp-for="SiteRateObj.SiteRate.RateAmount" />
+                        <input class="form-control" asp-for="SiteRateObj.SiteRate.RateAmount" id="rateAmount" onchange="checkAmount(); ValidateInput();"/>
                         <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.RateAmount"></span>
                     </div>
                     @if (Model.SiteRateObj.SiteRate.RateID != 0)
@@ -33,11 +33,11 @@
                     <div class="col-9">
                         @if (Model.SiteRateObj.SiteRate.RateID != 0)
                         {
-                            <input asp-for="SiteRateObj.SiteRate.RateStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="@Model.SiteRateObj.SiteRate.RateStartDate" onchange="checkDates();" />
+                            <input asp-for="SiteRateObj.SiteRate.RateStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="@Model.SiteRateObj.SiteRate.RateStartDate" onchange="checkStartDate(); ValidateInput();" />
                         }
                         else
                         {
-                            <input asp-for="SiteRateObj.SiteRate.RateStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" onchange="checkDates();" />
+                            <input asp-for="SiteRateObj.SiteRate.RateStartDate" class="datepicker pb-1 pt-1" placeholder="Start Date" id="startDate" type="datetime" value="" onchange="checkStartDate(); ValidateInput();" />
                         }
                         <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.RateStartDate"></span>
                     </div>
@@ -49,11 +49,11 @@
                     <div class="col-9">
                         @if (Model.SiteRateObj.SiteRate.RateID != 0)
                         {
-                            <input asp-for="SiteRateObj.SiteRate.RateEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="@Model.SiteRateObj.SiteRate.RateEndDate" onchange="checkDates();" />
+                            <input asp-for="SiteRateObj.SiteRate.RateEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="@Model.SiteRateObj.SiteRate.RateEndDate" onchange="checkEndDate(); ValidateInput();" />
                         }
                         else
                         {
-                            <input asp-for="SiteRateObj.SiteRate.RateEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="" onchange="checkDates();" />
+                            <input asp-for="SiteRateObj.SiteRate.RateEndDate" class="datepicker pb-1 pt-1" placeholder="End Date" id="endDate" type="datetime" value="" onchange="checkEndDate(); ValidateInput();" />
                         }
                         <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.RateEndDate"></span>
                     </div>
@@ -63,7 +63,7 @@
                         <label asp-for="SiteRateObj.SiteRate.SiteCategoryID"></label>
                     </div>
                     <div class="col-9">
-                        @Html.DropDownListFor(c => c.SiteRateObj.SiteRate.SiteCategoryID, Model.SiteRateObj.SiteCategoryList, " - Please select a category - ", new { @class = "form-control", @id = "ddlCategory" })
+                        @Html.DropDownListFor(c => c.SiteRateObj.SiteRate.SiteCategoryID, Model.SiteRateObj.SiteCategoryList, " - Please select a category - ", new { @class = "form-control", @id = "ddlCategory", @onchange = "ValidateInput();" })
                         <span class="text-danger" asp-validation-for="SiteRateObj.SiteRate.SiteCategoryID"></span>
                     </div>
                 </div>
@@ -73,11 +73,11 @@
                             <div class="col-6">
                                 @if (Model.SiteRateObj.SiteRate.RateID != 0)
                                 {
-                                    <button type="submit" class="btn btn-primary form-control" onclick="return ValidateInput()">Update</button>
+                                    <button type="submit" class="btn btn-primary form-control" id="btnUpdate">Update</button>
                                 }
                                 else
                                 {
-                                    <button type="submit" class="btn btn-primary form-control" onclick="return ValidateInput()">Create</button>
+                                    <button type="submit" class="btn btn-primary form-control" id="btnCreate" disabled>Create</button>
                                 }
                             </div>
                             <div class="col-6">
@@ -98,22 +98,76 @@
         });
 
         function checkDates() {
-            var startDate = new Date(document.getElementById('startDate').value);
-            var endDate = new Date(document.getElementById('endDate').value);
-            if (startDate != "" && endDate != "") {
-                if (startDate > endDate) {
-                    swal('Error', 'Please select an end date that is equal to or past the start date for this special event', 'error')
-                    return false;
+            let bStart = checkStartDate();
+            let bEnd = checkEndDate();
+            if (bStart && bEnd) {
+                var startDate = new Date(document.getElementById('startDate').value);
+                var endDate = new Date(document.getElementById('endDate').value);
+                if (startDate && endDate) {
+                    if (startDate > endDate) {
+                        swal('Error', 'Please select an end date that is equal to or past the start date for this site rate', 'error')
+                        return false;
+                    }
                 }
+                return true;
+            } else {
+                return false;
             }
         }
 
-        function ValidateInput() {
-            if ($('#ddlCategory option:selected').val() == 0 || $('#ddlCategory option:selected').index == 0) {
-                swal('Error', 'Please select a category.', 'error');
+        function checkAmount() {
+            if ($('#rateAmount').val() == 0) {
+                swal('Error', 'Please enter a site rate.', 'error');
+                return false;
+            }
+        }
+
+        function checkStartDate() {
+            console.log(document.getElementById('startDate').value)
+            if (!document.getElementById('startDate').value) {
+                swal('Error', 'Please select a start date', 'error')
                 return false;
             }
             return true;
+        }
+
+        function checkEndDate() {
+            console.log(document.getElementById('endDate').value)
+            if (!document.getElementById('endDate').value) {
+                swal('Error', 'Please select an end date', 'error')
+                return false;
+            }
+            return true;
+        }
+
+        function ValidateInput() {
+            var errors = 0;
+            if ($('#ddlCategory option:selected').val() == 0 || $('#ddlCategory option:selected').index == 0) {
+                errors++;
+                $('#btnUpdate').prop('disabled', true)
+                $('#btnCreate').prop('disabled', true)
+            }
+            let bDates = checkDates();
+            if (!bDates) {
+                $('#btnUpdate').prop('disabled', true)
+                $('#btnCreate').prop('disabled', true)
+                errors++;
+            }
+            if ($('#rateAmount').val() == 0) {
+                errors++;
+                $('#btnUpdate').prop('disabled', true)
+                $('#btnCreate').prop('disabled', true)
+            }
+            if (errors == 0) {
+                $('#btnUpdate').prop('disabled', false)
+                $('#btnCreate').prop('disabled', false)
+                return true;
+            }
+            else {
+                $('#btnUpdate').prop('disabled', true)
+                $('#btnCreate').prop('disabled', true)
+                return false;
+            }
         }
     </script>
 }
