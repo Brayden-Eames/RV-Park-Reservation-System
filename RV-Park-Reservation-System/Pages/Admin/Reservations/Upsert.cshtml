@@ -6,12 +6,18 @@
 <form class="form" method="post" id="reservationForm" onsubmit="return checkinput();">
     <h1 class="display-4 text-center text-primary my-5">EDIT RESERVATION</h1>
     <input type="hidden" id="totalCost" asp-for="totalCost" />
+    <input type="hidden" value="@Model.CustomerReservation.ResID" asp-for="@Model.CustomerReservation.ResID" />
+    <input type="hidden" value="@Model.CustomerReservation.Site" asp-for="@Model.CustomerReservation.Site" />
+    <input type="hidden" value="@Model.CustomerReservation.Site.SiteID" asp-for="@Model.CustomerReservation.Site.SiteID" />
+    <input type="hidden" value="@Model.CustomerReservation.Site.SiteNumber" asp-for="@Model.CustomerReservation.Site.SiteNumber" />
+
+
     <div class="row border  pt-3 pb-2 mt-2 mb-2 ml-7 mr-7 justify-content-center">
         <div class="pt-3 pb-3 pl-3 ml-2 mt-2 mb-3 col-md-3 border">
             <label class="pl-2">Customer Info</label>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">First Name</span>
-                <input type="text" class="form-control" placeholder="First Name" asp-for="@Model.CustomerInfo.CustFirstName" value="@Model.CustomerInfo.CustFirstName" readonly>
+                <input class="form-control" placeholder="First Name" asp-for="@Model.CustomerInfo.CustFirstName" value="@Model.CustomerInfo.CustFirstName" readonly>
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Last Name</span>
@@ -35,7 +41,7 @@
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Vehicle Length (ft)</span>
-                <input type="text" class="form-control" id="ddlVehicleLength" placeholder="Vehicle Length"  asp-for="@Model.CustomerReservation.ResVehicleLength" value="@Model.CustomerReservation.ResVehicleLength" readonly>
+                <input type="text" class="form-control" id="ddlVehicleLength" placeholder="Vehicle Length" asp-for="@Model.CustomerReservation.ResVehicleLength" value="@Model.CustomerReservation.ResVehicleLength" readonly>
             </div>
         </div>
         <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border">
@@ -45,16 +51,16 @@
                 <input type="text" class="form-control" placeholder="Reservation Num" asp-for="@Model.CustomerReservation.ResID" value="@Model.CustomerReservation.ResID" readonly>
             </div>
             <div class="input-group mt-3">
-                <span class="input-group-text" id="">Reservation Start Date</span>
-                <input class="form-control" placeholder="Start Date" id="" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")" readonly>
+                <span class="input-group-text" id="">Start Date</span>
+                <input class="form-control" placeholder="Start Date" id="" type="datetime" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")" readonly>
             </div>
             <div class="input-group mt-3">
-                <span class="input-group-text" id="">Reservation End Date</span>
-                <input class="form-control" placeholder="End Date" id="" type="datetime" asp-for="@Model.CustomerReservation.ResEndDate" value="@Model.CustomerReservation.ResEndDate.ToString("MM/dd/yyyy")" readonly>
+                <span class="input-group-text" id="">End Date</span>
+                <input class="form-control" placeholder="End Date" id="" type="datetime" value="@Model.CustomerReservation.ResEndDate.ToString("MM/dd/yyyy")" readonly>
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Site Number</span>
-                <input type="text" class="form-control" placeholder="Site Number" asp-for="@Model.CustomerReservation.Site.SiteNumber" value="@Model.CustomerReservation.Site.SiteNumber" readonly>
+                <input type="text" class="form-control" placeholder="Site Number" asp-for="@Model.CustomerReservation.Site" value="@Model.CustomerReservation.Site.SiteNumber" readonly>
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Number of Adults</span>
@@ -83,29 +89,29 @@
             }
             <br />
         </div>
-        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border">
+        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border form" id="actionForm">
             <label class="pl-2">Actions</label>
             <br />
-            <a class="btn btn-success form-control mt-3 mb-2 text-light" id="">Update Reservation</a>
+            <button class="btn btn-success form-control mt-3 mb-2 text-light" asp-route-value="update" id="submitUpdate">Update Reservation</button>
             <br />
             <a class="btn btn-primary form-control mt-2 mb-2 text-light" id="" href="/Admin/Reservations">Back to List</a>
             <br />
-            <a class="btn btn-danger form-control mt-2 mb-2 text-light" id="">Cancel Reservation</a>
+            <a class="btn btn-danger form-control mt-2 mb-2 text-light" asp-route-value="delete" onclick="Delete('/api/clientReservation/'+@Model.CustomerReservation.ResID" id="submitDelete">Cancel Reservation</a>
 
             <div class="input-group mb-3 mt-2">
-                <label class="input-group-text pt-0 pb-0" for="inputGroupSelect01">Reservation Status</label>
+                <label class="input-group-text pt-0 pb-0" for="inputGroupSelect01" >Reservation Status</label>
                 @Html.DropDownListFor(s => s.reservationStatusID, Model.lstReservationStatus, Model.CustomerReservation.Reservation_Status.ResStatusName, new { @class = "form-control bg-warning  text-light text-center", @id = "ddlResStatus", @value = Model.CustomerReservation.Reservation_Status.ResStatusName })
 
             </div>
             <div class="pt-3 pb-3 pl-3  mt-0 mb-0 col-md-12 border">
                 <label class="pl-2">Edit Reservation Dates and Site Number</label>
                 <div class="input-group mt-3">
-                    <span class="input-group-text" id="">Reservation Start Date</span>
-                    <input class="form-control datepicker container-fluid pt-1 pb-1" onchange="checkDates();" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="">
+                    <span class="input-group-text" id="">New Start Date</span>
+                    <input class="form-control datepicker container-fluid pt-1 pb-1" onchange="checkDates();" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")">
                 </div>
                 <div class="input-group mt-3">
-                    <span class="input-group-text" id="">Reservation End Date</span>
-                    <input class="form-control datepicker container-fluid pt-1 pb-1" onchange="checkDates();" placeholder="End Date" id="endDate" type="datetime" asp-for="@Model.CustomerReservation.ResEndDate" value="">
+                    <span class="input-group-text" id="">New End Date</span>
+                    <input class="form-control datepicker container-fluid pt-1 pb-1" onchange="checkDates();" placeholder="End Date" id="endDate" type="datetime" asp-for="@Model.CustomerReservation.ResEndDate" value="@Model.CustomerReservation.ResEndDate.ToString("MM/dd/yyyy")">
                 </div>
                 <div class="row justify-content-center mt-3 mb-3" id="btnSeeReservations">
                     <div class="col-md-12">
@@ -128,7 +134,7 @@
                 </div>
             </div>
         </div>
-     </div>
+    </div>
 </form>
 
 
@@ -172,5 +178,8 @@
         })
 
         window.onload = vehicleTypeCheck(@Model.CustomerReservation.TypeID);
+        //document.getElementById("submitUpdate").onclick = function () {
+        //    document.getElementById("actionForm").submit();
+        //}
     </script>
 }

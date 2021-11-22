@@ -56,6 +56,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         [BindProperty]
         public IEnumerable<SelectListItem> lstReservationStatus { get; set; }
 
+        [BindProperty]
         public int reservationStatusID { get; set; }
 
 
@@ -77,11 +78,12 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
             lstReservationStatus = _unitOfWork.Reservation_Status.List().Select(s => new SelectListItem { Value = s.ResStatusID.ToString(), Text = s.ResStatusName });
 
-            if(CustomerInfo.DODAffiliationID == 1)
+            //We need to move all of this to the register page, and keep it here until we wipe all accounts
+            if (CustomerInfo.DODAffiliationID == 1)
             {
                 CustomerInfo.DOD_Affiliation.Equals("Army");
             }
-            else if(CustomerInfo.DODAffiliationID == 2)
+            else if (CustomerInfo.DODAffiliationID == 2)
             {
                 CustomerInfo.DOD_Affiliation.Equals("Air Force");
             }
@@ -102,11 +104,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 CustomerInfo.DOD_Affiliation.Equals("Space Force");
             }
 
-            if(CustomerInfo.ServiceStatusID == 1)
+            if (CustomerInfo.ServiceStatusID == 1)
             {
                 CustomerInfo.Service_Status_Type.Equals("Active");
             }
-            else if(CustomerInfo.ServiceStatusID == 2)
+            else if (CustomerInfo.ServiceStatusID == 2)
             {
                 CustomerInfo.Service_Status_Type.Equals("Retired");
             }
@@ -123,16 +125,17 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 CustomerInfo.Service_Status_Type.Equals("Civillian");
             }
 
-            
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(string value)
-        { //current issue: value is not being sent to the page. Fix: Switch if checks to check for update instead of delete
-            if(value == "update") // if the delete button is clicked
+        { 
+            if(value == "update") 
             {
                 var reservation = _unitOfWork.Reservation.Get(c => c.ResID == CustomerReservation.ResID);
-                reservation.SiteID = CustomerReservation.SiteID;
+                reservation.SiteID = CustomerReservation.Site.SiteID;
+                reservation.Site = CustomerReservation.Site;
+                reservation.Site.SiteNumber = CustomerReservation.Site.SiteNumber;
                 reservation.ResStartDate = CustomerReservation.ResStartDate;
                 reservation.ResEndDate = CustomerReservation.ResEndDate;
                 reservation.ResNumAdults = CustomerReservation.ResNumAdults;
@@ -142,6 +145,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservation.ResComment = CustomerReservation.ResComment;
                 reservation.ResVehicleLength = CustomerReservation.ResVehicleLength;
                 reservation.Vehicle_Type = CustomerReservation.Vehicle_Type;
+                reservation.ResStatusID = reservationStatusID;
                 reservation.Reservation_Status = CustomerReservation.Reservation_Status;
                 _unitOfWork.Reservation.Update(reservation);
                 _unitOfWork.Commit();
