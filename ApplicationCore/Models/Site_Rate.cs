@@ -22,10 +22,14 @@ namespace ApplicationCore.Models
 
         [Required]
         [Display(Name = "Start Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime RateStartDate { get; set; }
 
         [Required]
         [Display(Name = "End Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime RateEndDate { get; set; }
 
         [MaxLength(50)]
@@ -36,7 +40,7 @@ namespace ApplicationCore.Models
         public DateTime RateModifiedDate { get; set; }
 
         [Required]
-        [Display(Name = "Site Category ID")]
+        [Display(Name = "Site Category")]
         public int SiteCategoryID { get; set; }
 
         [ForeignKey("SiteCategoryID")]

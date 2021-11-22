@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Infrastructure.Services;
@@ -53,7 +55,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.SiteRate
                 return Page();
             }
 
-            if (SiteRateObj.SiteRate.RateID == 0) //New Site Category
+            if (SiteRateObj.SiteRate.RateID == 0) //New Site Rate
             {
                 SiteRateObj.SiteRate.RateLastModifiedBy = User.Identity.Name;
                 SiteRateObj.SiteRate.RateModifiedDate = DateTime.Now;
