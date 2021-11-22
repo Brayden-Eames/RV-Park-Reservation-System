@@ -20,10 +20,14 @@ namespace ApplicationCore.Models
 
         [Required]
         [Display(Name = "Start Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EventStartDate { get; set; }
 
         [Required]
         [Display(Name = "End Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EventEndDate { get; set; }
 
         [Display(Name = "Description")]

@@ -33,10 +33,14 @@ namespace ApplicationCore.Models
         
         [Required]
         [Display(Name = "Start Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ResStartDate { get; set; } 
 
         [Required]
         [Display(Name = "End Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ResEndDate { get; set; }   //might potentially need to be a Composite key
 
         [Required]
