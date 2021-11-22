@@ -16,6 +16,8 @@ namespace ApplicationCore.Models
 
         [Required]
         [Display(Name = "Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime PayDate { get; set; }
 
         [Required]
