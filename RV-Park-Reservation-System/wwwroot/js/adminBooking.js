@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     $('.alert').alert()
-    $(".datepicker").datepicker({ minDate: 1, maxDate: "+6m" })
+    $(".datepicker").datepicker({ minDate: -5, maxDate: "+6m" })
     $("#timepicker").timepicker({ 'minTime': '11:00 AM', 'maxTime': '9:00 PM', step: '30' })
 });
 
@@ -12,20 +12,20 @@ $('#myModal').on('shown.bs.modal', function () {
 
 var reservationBufferCount = 0;
 function checkBuffer() {
-    
+
     var date = { date: document.getElementById('startDate').value };
 
-    var json = $.getJSON("/api/ReservationBuffer", date , function (reservation) {
-		if (reservation > 0) {
+    var json = $.getJSON("/api/ReservationBuffer", date, function (reservation) {
+        if (reservation > 0) {
             reservationBufferCount = reservation;
 
         }
-		else {
+        else {
             reservationBufferCount = reservation;
-		}
+        }
 
     });
-    json.done(function() {
+    json.done(function () {
         if (reservationBufferCount > 0) {
             swal('Error', 'There must be 2 weeks between reservations.', 'error')
             return true;
@@ -34,7 +34,7 @@ function checkBuffer() {
             return false;
         }
     })
-   
+
 
 }
 
@@ -54,7 +54,7 @@ function checkDates() {
             return false;
         }
         var dayDiff = Math.round(Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24)));
-       
+
         if ((startDate.getMonth() >= 3 && startDate.getMonth() <= 9) || (endDate.getMonth() >= 3 && endDate.getMonth() <= 9)) {
             if (dayDiff > 14) {
                 swal('warning', 'Maximum length of stay April-October is 14 consecutive days except for those traveling on PCS orders. Long term stays are allowed October 15th-April 1st. For detailed information on this policy, please contact the FamCamp Office.', 'warning')
@@ -66,7 +66,7 @@ function checkDates() {
         document.getElementById('totalCost').value = totalCost;
 
     }
-    
+
 }
 function checkinput() {
     var startDate = new Date(document.getElementById('startDate').value);
@@ -97,35 +97,34 @@ function checkinput() {
         return false;
     }
 
-    if ($('#numAdults').val() <=0) {
+    if ($('#numAdults').val() <= 0) {
         swal('warning', 'Please enter a valid number of adults. ', 'warning')
         return false;
     }
 
-    if (document.getElementById('numPets').value > 0 &&  document.getElementById('breedPolicyAgreement').checked == false) {
+    if (document.getElementById('numPets').value > 0 && document.getElementById('breedPolicyAgreement').checked == false) {
         swal('warning', 'Please acknolwdge FamCamps pet policy. ', 'warning')
         return false;
     }
 
 
-    
-    
+
+
     return true;
 }
 
 function loadReservations() {
 
     if (document.getElementById('endDate').value == '' || document.getElementById('startDate').value == ''
-        || (document.getElementById('ddlVehicleLength').value == 20 && document.getElementById('ddlVehicleType').value != 7))
-    {
+        || (document.getElementById('ddlVehicleLength').value == 20 && document.getElementById('ddlVehicleType').value != 7)) {
         swal('Error', 'Please select a start date, end date, and vehicle type to see available resevations', 'error')
         return false;
-	}
+    }
 
 
 
-    var dates = { date1: document.getElementById('startDate').value, date2: document.getElementById('endDate').value, vehicleLength: document.getElementById('ddlVehicleLength').value};
-  
+    var dates = { date1: document.getElementById('startDate').value, date2: document.getElementById('endDate').value, vehicleLength: document.getElementById('ddlVehicleLength').value };
+
     $.getJSON("/api/BookingReservations", dates, function (sites) {
     }).done(function (sites) {
         var count = Object.keys(sites).length;
@@ -171,17 +170,17 @@ function hideLots() {
 
 function VehicleSelected() {
 
-	if ($('#ddlVehicleType').val() == 7) {
+    if ($('#ddlVehicleType').val() == 7) {
         $('#ddlVehicleLength').css('display', 'none');
-        $('#ddlVehicleLength').val(20).change() ;
+        $('#ddlVehicleLength').val(20).change();
     }
-	else {
+    else {
         $('#ddlVehicleLength').css('display', 'block');
-	}
+    }
 }
 function pets() {
 
-        $('.petWrapper').css('display', 'block');
+    $('.petWrapper').css('display', 'block');
     $('#petsCheckbox').css('display', 'none');
 }
 
