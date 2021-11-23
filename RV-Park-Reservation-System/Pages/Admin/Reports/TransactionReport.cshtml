@@ -1,0 +1,42 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Admin.Reports.TransactionReportModel
+@{
+    ViewData["Title"] = "Transaction Report";
+}
+
+<div class="container mb-4">
+    <h1 class="display-4 text-center text-primary my-5">REPORTS</h1>
+
+    <div class="row">
+        <div class="col-3 col-md-2 d-flex flex-column text-left">
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Check In/Out</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Daily Revenue</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Night Vacancy</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Monthly Revenue</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Past Reservations</a>
+            <a class="btn btn-primary w-100 py-2 text-left" asp-page="">Transactions <i class="fas fa-angle-right"></i></a>
+        </div>
+        <div class="col-10 px-0">
+            <div class="border backgroundWhite container p-3">
+                <div class="row">
+                    <div class="col-6">
+                        <h4>Transactions</h4>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <table id="DTtransactions" class="table table-striped table-bordered mx-0 w-100">
+                    <thead>
+                        <tr>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                DOD Affiliation Type
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
