@@ -18,7 +18,7 @@ namespace RV_Park_Reservation_System.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(DateTime startDate, DateTime endDate)
         {
             var reservationList = _unitofWork.Reservation.List();
             var customerList = _unitofWork.Customer.List();
@@ -37,6 +37,8 @@ namespace RV_Park_Reservation_System.Controllers
                                    join rat in siteRateList on cat.SiteCategory equals rat.SiteCategoryID
                                    into reservation
                                    from subItem in reservation.DefaultIfEmpty()
+                                   where rev.ResCreatedDate > startDate 
+                                        && rev.ResCreatedDate < endDate
                                    select new
                                    {
                                        id = rev.ResID,
