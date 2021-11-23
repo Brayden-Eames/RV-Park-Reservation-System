@@ -66,7 +66,7 @@
                             @for (int i = 0; i < Model.vacancies.Count; i++)
                             {
                                 <tr>
-                                    <th scope="row">@Model.vacancies[i].SiteNumber</th>
+                                    <th scope="row"><a href="/Admin/Sites/Detail?id=@Model.vacancies[i].SiteID">@Model.vacancies[i].SiteNumber</a></th>
                                     <td>@Model.vacancies[i].SiteLength</td>
                                     <td>@Model.vacancies[i].SiteDescription</td>
                                     <td class="text-success"><b>VACANT</b></td>
@@ -78,7 +78,7 @@
                             @for (int i = 0; i < Model.occupancies.Count; i++)
                             {
                                 <tr>
-                                    <th scope="row">@Model.occupancies[i].SiteNumber</th>
+                                    <th scope="row"><a href="/Admin/Sites/Detail?id=@Model.occupancies[i].SiteID">@Model.occupancies[i].SiteNumber</a></th>
                                     <td>@Model.occupancies[i].SiteLength</td>
                                     <td>@Model.occupancies[i].SiteDescription</td>
                                     <td class="text-danger"><b>OCCUPIED</b></td>
