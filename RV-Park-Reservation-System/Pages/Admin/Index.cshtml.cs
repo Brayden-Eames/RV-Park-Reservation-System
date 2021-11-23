@@ -41,7 +41,7 @@ namespace RV_Park_Reservation_System.Pages.Admin
             occupancies = new List<Site>();
 
             //DateTime today = DateTime.Now.Date;
-            DateTime today = new DateTime(2021, 11, 15).Date;
+            DateTime today = DateTime.Now.Date;
 
             IEnumerable<Reservation> reservations = _unitOfWork.Reservation.List();
 
