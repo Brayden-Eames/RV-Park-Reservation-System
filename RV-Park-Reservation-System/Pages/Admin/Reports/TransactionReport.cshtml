@@ -17,22 +17,24 @@
             <a class="btn btn-primary w-100 py-2 text-left" asp-page="">Transactions <i class="fas fa-angle-right"></i></a>
         </div>
         <div class="col-10 px-0">
-            <div class="border backgroundWhite container p-3">
-                <div class="text-center font-weight-bold ">
-                    <span class="p-1 mr-2 h-50">
-                        <label class="p-1">From:</label>
-                        <input class="datepicker container-fluid pt-1 pb-1 w-25" id="startDate" type="date" />
-                    </span>
-
-                    <span class="p-1">
-                        <label class="p-1">To:</label>
-                        <input class="datepicker container-fluid pt-1 pb-1 w-25" id="endDate" type="date" />
-                    </span>
-                    <button class="dt-button button-primary" onclick="generateTransactionData()">Go</button>
-                </div>
+            <div class="border backgroundWhite container p-3"> 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-12 col-lg-3">
                         <h4>Transactions</h4>
+                    </div>
+                    <div class="col-12 col-lg-9">
+                        <div class="text-center font-weight-bold ">
+                            <span class="p-1 mr-2 h-50">
+                                <label class="p-1">From:</label>
+                                <input class="datepicker container-fluid pt-1 pb-1 w-25" id="startDate" type="date" />
+                            </span>
+
+                            <span class="p-1">
+                                <label class="p-1">To:</label>
+                                <input class="datepicker container-fluid pt-1 pb-1 w-25" id="endDate" type="date" />
+                            </span>
+                            <button class="dt-button button-primary" onclick="generateTransactionData()">Go</button>
+                        </div>
                     </div>
                 </div>
                 <br />
@@ -54,9 +56,6 @@
                             </th>
                             <th>
                                 Reservation ID
-                            </th>
-                            <th>
-                                Reservation Name
                             </th>
                             <th>
                                 Pay Type
@@ -163,7 +162,7 @@
         }
 
         function destroyTransactionTable() {
-            var table = $('#DTtransactionReport').DataTable()
+            var table = $('#DTtransactions').DataTable()
             if (table) {
                 table.destroy();
             }
@@ -177,12 +176,11 @@
                     "datatype": "json"
                 },
                 "columns": [
-                    { data: "id", width: "5%" },
-                    { data: "date", width: "15%" },
-                    { data: "total", width: "10%" },
+                    { data: "id", width: "10%" },
+                    { data: "date", width: "25%", "render": function (data) { return moment(data).format("MM/DD/YYYY, hh:mm a"); }  },
+                    { data: "total", width: "15%", "render": function (data) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(data); }  },
                     { data: "paid", width: "10%" },
-                    { data: "resID", width: "5%" },
-                    { data: "resName", width: "25%" },
+                    { data: "resID", width: "10%" },
                     { data: "paymentType", width: "10%" },
                     { data: "paymentReason", width: "20%" },
                 ],

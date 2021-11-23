@@ -25,8 +25,8 @@ namespace RV_Park_Reservation_System.Controllers
             var paymentList = _unitOfWork.Payment.List(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate);
             var payTypeList = _unitOfWork.Payment_Type.List();
             var payReasonList = _unitOfWork.Payment_Reason.List();
-            List<Reservation> reservationList = new List<Reservation>();
-            List<Customer> customerList = new List<Customer>();
+            var customerList = _unitOfWork.Customer.List();
+            List <Reservation> reservationList = new List<Reservation>();
 
             foreach(Payment p in paymentList)
             {
@@ -34,17 +34,10 @@ namespace RV_Park_Reservation_System.Controllers
                 reservationList.Add(r);
             }
 
-            foreach(Reservation r in reservationList)
-            {
-                Customer c = _unitOfWork.Customer.Get(c => c.Id == r.Id);
-                customerList.Add(c);
-            }
-
             var transactionQuery = from payment in paymentList
                                    join payType in payTypeList on payment.PayTypeID equals payType.PayTypeID
                                    join payReason in payReasonList on payment.PayReasonID equals payReason.PayReasonID
-                                   join reservation in reservationList on payment.ResID equals reservation.ResID
-                                   join cust in customerList on reservation.Id equals cust.Id
+                                   join res in reservationList on payment.ResID equals res.ResID
                                    into transaction
                                    from subItem in transaction.DefaultIfEmpty()
                                    select new
@@ -54,7 +47,6 @@ namespace RV_Park_Reservation_System.Controllers
                                        total = payment.PayTotalCost,
                                        paid = payment.IsPaid,
                                        resID = payment.ResID,
-                                       resName = reservation.Customer.CustFirstName + " " + reservation.Customer.CustLastName,
                                        paymentType = payType.PayType,
                                        paymentReason = payReason.PayReasonName
                                    };
@@ -76,7 +68,6 @@ namespace RV_Park_Reservation_System.Controllers
                     transaction.paid = "no";
                 }
                 transaction.resID = t.resID;
-                transaction.resName = t.resName;
                 transaction.paymentType = t.paymentType;
                 transaction.paymentReason = t.paymentReason;
 
