@@ -18,7 +18,6 @@ function destroyVacantTable() {
     }
 }
 
-
 function getVacantSitesList(startDate, endDate) {
         
         DTvacancyReport = $('#DTvacancyReport').DataTable({
