@@ -95,15 +95,19 @@ namespace RV_Park_Reservation_System.Controllers
                     refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
                 }
             }
-          
+
             //Creates the refund object using stripe and adds the refund amount. 
-            var refunds = new RefundService();
-            var refundOptions = new RefundCreateOptions
+            if (refundAmount !=0 )
             {
-                Charge = payment.Charges.Data[0].Id,
-                Amount = refundAmount,
-            };
-            var refund = refunds.Create(refundOptions);
+                var refunds = new RefundService();
+                var refundOptions = new RefundCreateOptions
+                {
+                    Charge = payment.Charges.Data[0].Id,
+                    Amount = refundAmount,
+                };
+                var refund = refunds.Create(refundOptions);
+            }
+
 
             //Updates the payment and reservation objects based on the refund. 
             if (objFromDb == null)
