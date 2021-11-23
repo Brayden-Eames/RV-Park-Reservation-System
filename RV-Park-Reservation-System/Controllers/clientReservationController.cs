@@ -20,12 +20,11 @@ namespace RV_Park_Reservation_System.Controllers
     [ApiController]
     public class clientReservationController : Controller
     {
+        #region injectedServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IOptions<Infrastructure.Services.StripeSettings> _stripe;
         private readonly UserManager<ApplicationCore.Models.Customer> _userManager;
         private readonly IEmailSender _emailSender;
-
-
 
         public clientReservationController(IUnitOfWork unitOfWork, IOptions<Infrastructure.Services.StripeSettings> stripe, UserManager<ApplicationCore.Models.Customer> userManager, IEmailSender emailSender) {
             _unitOfWork = unitOfWork;
@@ -33,7 +32,9 @@ namespace RV_Park_Reservation_System.Controllers
             _userManager = userManager;
             _emailSender = emailSender;
         }
+        #endregion
 
+        //Gets all reservations for current user that are scheduled. 
         [HttpGet]
         public IActionResult Get()
         {
@@ -42,22 +43,27 @@ namespace RV_Park_Reservation_System.Controllers
         }
 
 
-
+        //Process the refund amount and updates the selected reservation to canceled. 
         [HttpDelete("{id}")]
         public async  Task<IActionResult> Delete(int id)
         {
+            //Gets the payment and reservation object from the Database.
             var objFromDb = _unitOfWork.Reservation.Get(c => c.ResID == id);
             var payObj = _unitOfWork.Payment.Get(p => p.ResID == id);
+
+            //Checks if the user paid or not. 
             if (payObj.IsPaid == false)
             {
                 return Json(new { success = false, message = "Reservation is not paid." });
             }
-            StripeConfiguration.ApiKey = _stripe.Value.SecretKey;
 
+            //Gets the stripe key and payment intent for the selected user. 
+            StripeConfiguration.ApiKey = _stripe.Value.SecretKey;
             var intent = new Stripe.PaymentIntentService();
             var payment = intent.Get(payObj.CCReference);
+            
+            //Calculates the refund amount based on the policy. 
             int refundAmount = 0 ;
-
             if ((objFromDb.ResStartDate - DateTime.Now).TotalDays >= 4)
             {
                 refundAmount = (int)(payObj.PayTotalCost * 100) - 1000;
@@ -66,9 +72,8 @@ namespace RV_Park_Reservation_System.Controllers
             {
                 refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
             }
-            var specialEvents = _unitOfWork.Special_Event.List();
-
-
+            
+            //Checks if user is cancelling mid reservation and calculates refund based on remaining days. 
             if ((objFromDb.ResStartDate-DateTime.Now).TotalDays <0)
             {
                 int daysLeft = (int)Math.Round((DateTime.Now- objFromDb.ResStartDate).TotalDays);
@@ -78,6 +83,8 @@ namespace RV_Park_Reservation_System.Controllers
                 
             }
 
+            //Checks if user is cancelling on a special event. 
+            var specialEvents = _unitOfWork.Special_Event.List();
             foreach (var events in specialEvents )
             {
                 if ((objFromDb.ResStartDate <= events.EventStartDate && objFromDb.ResEndDate >= events.EventStartDate)
@@ -89,7 +96,7 @@ namespace RV_Park_Reservation_System.Controllers
                 }
             }
           
-
+            //Creates the refund object using stripe and adds the refund amount. 
             var refunds = new RefundService();
             var refundOptions = new RefundCreateOptions
             {
@@ -98,6 +105,7 @@ namespace RV_Park_Reservation_System.Controllers
             };
             var refund = refunds.Create(refundOptions);
 
+            //Updates the payment and reservation objects based on the refund. 
             if (objFromDb == null)
             {
                 return Json(new { success = false, message = "Error while deleting!" });
@@ -109,6 +117,8 @@ namespace RV_Park_Reservation_System.Controllers
             _unitOfWork.Payment.Update(payObj);
             _unitOfWork.Commit();
 
+
+            //Sends email to user to confirm cancellation. 
             var user = await _userManager.FindByEmailAsync(User.Identity.Name);
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

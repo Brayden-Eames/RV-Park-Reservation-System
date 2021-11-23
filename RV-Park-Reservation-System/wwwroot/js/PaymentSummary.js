@@ -3,6 +3,7 @@
 const stripe = Stripe('pk_test_51JhX39C1OcDeDQ0XknryEu26l0Sh687xS7zBdQ6dFnw2Og5NI52bMrinthhk1S5cU8PhRkwJspsSQ1UmXmUfFwUV00kNdmAsJ0');
 var host = window.location.protocol + "//" + window.location.host;
 
+//Loads the stripe elements in the page when a payment intent exists. 
 (async () => {
     const appearance = {
         theme: 'night',
@@ -11,7 +12,7 @@ var host = window.location.protocol + "//" + window.location.host;
 
     };
 
-    
+    //Gets the payment intent client secret. 
     $.getJSON("/api/Payment", function (payment) {
         
         const { client_secret: clientSecret } = payment;
