@@ -22,6 +22,8 @@
 
     <!-- Tab panes -->
     <div class="tab-content">
+
+        <!--Historic Reservations-->
         <div class="tab-pane" id="historic-reservations" role="tabpanel" aria-labelledby="historic-reservations-tab">
                 <div class="border backgroundWhite container p-3">
                     <br />
@@ -57,18 +59,20 @@
                     </div>
                 </div>
             </div>
+
+        <!--Vacant Sites-->
             <div class="tab-pane active" id="vacant-sites" role="tabpanel" aria-labelledby="vacant-sites-tab">
                 <div class="border backgroundWhite container p-3">
 
                     <div class="text-center font-weight-bold ">
                         <span class="p-1 mr-2 h-50">
                             <label class="p-1">From:</label>
-                            <input id="startDate" type="date" />
+                            <input class="datepicker container-fluid pt-1 pb-1 w-25" id="startDate" type="date" />
                         </span>
 
                         <span class="p-1">
                             <label class="p-1">To:</label>
-                            <input id="endDate" type="date"/>
+                            <input class="datepicker container-fluid pt-1 pb-1 w-25" id="endDate" type="date"/>
                         </span>
                         <button class="dt-button button-primary" onclick="generateVacantSitesData()">Go</button>
                     </div>
@@ -100,11 +104,13 @@
                     </div>
                 </div>
             </div>
+
+        <!--Upcoming Activity-->
         <div class="tab-pane" id="upcoming-activity" role="tabpanel" aria-labelledby="upcoming-activity-tab">
             <div class="border backgroundWhite container p-3">
                 <br />
                 <span class="row">
-                    <span class="text-right">
+                    <span class="text-right">                      
                         <button id="btn_today" class="btn btn-primary mb-1" onclick="setCheckInDay(0)">Today</button>
                         <button id="btn_tomorrow" class="btn btn-primary mb-1" onclick="setCheckInDay(1)">Tomorrow</button>
                         <button id="btn_three" class="btn btn-primary mb-1" onclick="setCheckInDay(2)">3 Days</button>
@@ -151,6 +157,7 @@
     <script src="~/js/reports.js"></script>
 
     <script>
+        //Handle Tab Clicks
         var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))
         triggerTabList.forEach(function (triggerEl) {
             var tabTrigger = new bootstrap.Tab(triggerEl)
@@ -201,8 +208,6 @@
                 checkOut.dispatchEvent(enterEvent);
             }
         }
-
-
 
 
     </script>

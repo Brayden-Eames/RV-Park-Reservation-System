@@ -3,7 +3,7 @@
 //Loads the date picker, timepicker, and alert module. 
 $(document).ready(function () {
     $('.alert').alert()
-    $(".datepicker").datepicker({ minDate: 1, maxDate: "+6m" })
+    $(".datepicker").datepicker({ minDate: -5, maxDate: "+6m" })
     $("#timepicker").timepicker({ 'minTime': '11:00 AM', 'maxTime': '9:00 PM', step: '30' })
 });
 
@@ -23,14 +23,14 @@ function checkBuffer() {
     var date = { date: document.getElementById('startDate').value };
 
     //gets the reservations that are within 2 weeks of selected date. 
-    var json = $.getJSON("/api/ReservationBuffer", date , function (reservation) {
-		if (reservation > 0) {
+    var json = $.getJSON("/api/ReservationBuffer", date, function (reservation) {
+        if (reservation > 0) {
             reservationBufferCount = reservation;
 
         }
-		else {
+        else {
             reservationBufferCount = reservation;
-		}
+        }
 
     });
     json.done(function () {
@@ -43,7 +43,7 @@ function checkBuffer() {
             return false;
         }
     })
-   
+
 
 }
 
@@ -79,7 +79,7 @@ function checkDates() {
         document.getElementById('totalCost').value = totalCost;
 
     }
-    
+
 }
 
 //Validates the user input. 
@@ -113,13 +113,13 @@ function checkinput() {
     }
 
     //Checks valid number of adults. 
-    if ($('#numAdults').val() <=0) {
+    if ($('#numAdults').val() <= 0) {
         swal('warning', 'Please enter a valid number of adults. ', 'warning')
         return false;
     }
 
     //Checks that user agreed to the famcamp pet policy if they are bringing pets.  
-    if (document.getElementById('numPets').value > 0 &&  document.getElementById('breedPolicyAgreement').checked == false) {
+    if (document.getElementById('numPets').value > 0 && document.getElementById('breedPolicyAgreement').checked == false) {
         swal('warning', 'Please acknolwdge FamCamp\'s pet policy. ', 'warning')
         return false;
     }
@@ -132,15 +132,14 @@ function loadReservations() {
 
     //Checks if a start date, end date, and vehicle length selected.  
     if (document.getElementById('endDate').value == '' || document.getElementById('startDate').value == ''
-        || (document.getElementById('ddlVehicleLength').value == 20 && document.getElementById('ddlVehicleType').value != 7))
-    {
+        || (document.getElementById('ddlVehicleLength').value == 20 && document.getElementById('ddlVehicleType').value != 7)) {
         swal('Error', 'Please select a start date, end date, and vehicle type to see available resevations', 'error')
         return false;
-	}
+    }
 
 
     //Creates a date json object. 
-    var dates = { date1: document.getElementById('startDate').value, date2: document.getElementById('endDate').value, vehicleLength: document.getElementById('ddlVehicleLength').value};
+    var dates = { date1: document.getElementById('startDate').value, date2: document.getElementById('endDate').value, vehicleLength: document.getElementById('ddlVehicleLength').value };
 
     //Calls the booking reservation controller to load the available sites. 
     $.getJSON("/api/BookingReservations", dates, function (sites) {
@@ -197,19 +196,19 @@ function hideLots() {
 //Hides the vehicle length if tent is selected and displays it, if it is changed from tent. 
 function VehicleSelected() {
 
-	if ($('#ddlVehicleType').val() == 7) {
+    if ($('#ddlVehicleType').val() == 7) {
         $('#ddlVehicleLength').css('display', 'none');
-        $('#ddlVehicleLength').val(20).change() ;
+        $('#ddlVehicleLength').val(20).change();
     }
-	else {
+    else {
         $('#ddlVehicleLength').css('display', 'block');
-	}
+    }
 }
 
 //Shows the pet policy and agreement if the user plans to bring pets checkbox is checked. 
 function pets() {
 
-        $('.petWrapper').css('display', 'block');
+    $('.petWrapper').css('display', 'block');
     $('#petsCheckbox').css('display', 'none');
 }
 
@@ -243,30 +242,5 @@ function checkChange(option) {
     if (option.value == 'chooseDefault') {
         $('.genericAccount').css('display', 'none');
         $('.createAccount').css('display', 'none');
-    }
-
-
-}
-function vehicleTypeCheck(option) {
-    if (option == 1) {
-        document.getElementById("ddlVehicleType").value = "Motor Home";
-    }
-    else if (option == 2) {
-        document.getElementById("ddlVehicleType").value = "Travel Trailer";
-    }
-    else if (option == 3) {
-        document.getElementById("ddlVehicleType").value = "5th Wheel";
-    }
-    else if (option == 4) {
-        document.getElementById("ddlVehicleType").value = "Pop Up";
-    }
-    else if (option == 5) {
-        document.getElementById("ddlVehicleType").value = "Van";
-    }
-    else if (option == 6) {
-        document.getElementById("ddlVehicleType").value = "Other";
-    }
-    else if (option == 7) {
-        document.getElementById("ddlVehicleType").value = "Tent";
     }
 }
