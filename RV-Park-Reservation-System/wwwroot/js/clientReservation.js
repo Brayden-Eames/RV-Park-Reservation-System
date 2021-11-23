@@ -45,7 +45,7 @@ function Delete(url) {
 	swal({
 		title: "Are you sure you want to cancel?",
 		text: "Cancellations made at least 4 days prior will be charged a $10.00 fee. "+
-			"Cancellations made less than 3 days prior will be charged a one- day fee." +
+			"Cancellations made less than 4 days prior will be charged a one- day fee." +
 			"Cancellation for holidays or special events will be charged a $25.00 fee.",
 		icon: "warning",
 		buttons: true,
