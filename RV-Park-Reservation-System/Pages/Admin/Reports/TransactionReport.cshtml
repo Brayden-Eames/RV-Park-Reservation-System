@@ -18,6 +18,18 @@
         </div>
         <div class="col-10 px-0">
             <div class="border backgroundWhite container p-3">
+                <div class="text-center font-weight-bold ">
+                    <span class="p-1 mr-2 h-50">
+                        <label class="p-1">From:</label>
+                        <input class="datepicker container-fluid pt-1 pb-1 w-25" id="startDate" type="date" />
+                    </span>
+
+                    <span class="p-1">
+                        <label class="p-1">To:</label>
+                        <input class="datepicker container-fluid pt-1 pb-1 w-25" id="endDate" type="date" />
+                    </span>
+                    <button class="dt-button button-primary" onclick="generateTransactionData()">Go</button>
+                </div>
                 <div class="row">
                     <div class="col-6">
                         <h4>Transactions</h4>
@@ -32,11 +44,153 @@
                                 ID
                             </th>
                             <th>
-                                DOD Affiliation Type
+                                Date
                             </th>
-                            <th></th>
+                            <th>
+                                Total
+                            </th>
+                            <th>
+                                Paid
+                            </th>
+                            <th>
+                                Reservation ID
+                            </th>
+                            <th>
+                                Reservation Name
+                            </th>
+                            <th>
+                                Pay Type
+                            </th>
+                            <th>
+                                Pay Reason
+                            </th>
                         </tr>
                     </thead>
                 </table>
             </div>
         </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables-buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.2/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.2/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-buttons/2.0.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-buttons/2.0.1/js/buttons.print.min.js"></script>
+
+    <script>
+        function leapYear(year) {
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        function setDefaultDaysInInput() {
+            let today = new Date();
+            let month = today.getMonth();
+            let year = today.getFullYear();
+            let initStartDate = "";
+            let initEndDate = "";
+
+            switch (month) {
+                case 0:
+                    initStartDate = year + "-01-01";
+                    initEndDate = year + "-01-31";
+                    break;
+                case 1:
+                    initStartDate = year + "-02-01";
+                    if (leapYear(year)) {
+                        initEndDate = year + "-02-29";
+                    } else {
+                        initEndDate = year + "-02-28";
+                    }
+                    break;
+                case 2:
+                    initStartDate = year + "-03-01";
+                    initEndDate = year + "-03-31";
+                    break;
+                case 3:
+                    initStartDate = year + "-04-01";
+                    initEndDate = year + "-04-30";
+                    break;
+                case 4:
+                    initStartDate = year + "-05-01";
+                    initEndDate = year + "-05-31";
+                    break;
+                case 5:
+                    initStartDate = year + "-06-01";
+                    initEndDate = year + "-06-30";
+                    break;
+                case 6:
+                    initStartDate = year + "-07-01";
+                    initEndDate = year + "-07-31";
+                    break;
+                case 7:
+                    initStartDate = year + "-08-01";
+                    initEndDate = year + "-08-31";
+                    break;
+                case 8:
+                    initStartDate = year + "-09-01";
+                    initEndDate = year + "-09-30";
+                    break;
+                case 9:
+                    initStartDate = year + "-10-01";
+                    initEndDate = year + "-10-31";
+                    break;
+                case 10:
+                    initStartDate = year + "-11-01";
+                    initEndDate = year + "-11-30";
+                    break;
+                case 11:
+                    initStartDate = year + "-12-01";
+                    initEndDate = year + "-12-31";
+                    break;
+            }
+
+            document.getElementById('startDate').value = initStartDate;
+            document.getElementById('endDate').value = initEndDate;
+        }
+
+        window.addEventListener('load', setDefaultDaysInInput());
+
+        function generateTransactionData() {
+            destroyTransactionTable();
+            let startDate = document.getElementById('startDate').value.toString();
+            let endDate = document.getElementById('endDate').value.toString();
+            console.log(startDate);
+            console.log(endDate);
+            getTransactionList(startDate, endDate);
+        }
+
+        function destroyTransactionTable() {
+            var table = $('#DTtransactionReport').DataTable()
+            if (table) {
+                table.destroy();
+            }
+        }
+
+        function getTransactionList(startDate, endDate) {
+            DTtransactions = $('#DTtransactions').DataTable({
+                "ajax": {
+                    "url": '/api/transactionReport/?startDate=' + startDate + '&endDate=' + endDate,
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { data: "id", width: "5%" },
+                    { data: "date", width: "15%" },
+                    { data: "total", width: "10%" },
+                    { data: "paid", width: "10%" },
+                    { data: "resID", width: "5%" },
+                    { data: "resName", width: "25%" },
+                    { data: "paymentType", width: "10%" },
+                    { data: "paymentReason", width: "20%" },
+                ],
+                "language": {
+                    "emptyTable": "no data found."
+                },
+                "width": "100%"
+            });
+        }
+    </script>
+}
