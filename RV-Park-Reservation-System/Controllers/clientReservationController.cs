@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -117,8 +118,12 @@ namespace RV_Park_Reservation_System.Controllers
             objFromDb.ResStatusID = 2;
             _unitOfWork.Reservation.Update(objFromDb);
             _unitOfWork.Commit();
-            payObj.PayTotalCost = payObj.PayTotalCost - (refundAmount/100);
-            _unitOfWork.Payment.Update(payObj);
+            Payment refunded = new Payment();
+            refunded = payObj;
+            refunded.PayID = 0;
+            refunded.PayTotalCost = 0 - (refundAmount / 100);
+            refunded.PayReasonID = 4;
+            _unitOfWork.Payment.Add(refunded);
             _unitOfWork.Commit();
 
 
