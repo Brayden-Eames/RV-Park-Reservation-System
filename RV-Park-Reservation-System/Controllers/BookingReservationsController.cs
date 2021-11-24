@@ -38,9 +38,10 @@ namespace RV_Park_Reservation_System.Controllers
             //where the end date falls after the start date and befor the end date of the selected dates,
             //or where the start date falls after the start date and befor the end date of the selected dates.
             var reservations = _unitOfWork.Reservation.List()
-                                                 .Where(s => (s.ResStartDate <= startDate && s.ResEndDate >= startDate)
+                                                 .Where(s => ((s.ResStartDate <= startDate && s.ResEndDate >= startDate)
                                                  || (s.ResStartDate <= endDate && s.ResEndDate >= endDate) ||
-                                                 ((s.ResStartDate > startDate && s.ResEndDate > startDate) && (s.ResStartDate < endDate && s.ResEndDate < endDate))).ToList(); 
+                                                 ((s.ResStartDate > startDate && s.ResEndDate > startDate) && (s.ResStartDate < endDate && s.ResEndDate < endDate))) 
+                                                 && (s.ResStatusID == 9 || s.ResStatusID == 4 || s.ResStatusID == 1)).ToList(); 
 
 
 
@@ -81,12 +82,12 @@ namespace RV_Park_Reservation_System.Controllers
             site = site.Except(badSites);
 
             //Checks if tent was selected and only displays the tent site if available. 
-            if (reservations.Select(s => s.SiteID).Contains(47) && vLength == 20)
+            if (reservations.Select(s => s.SiteID).Contains(47) && vLength == 24)
             {
                 site = Enumerable.Empty<Site>();
 
             }
-            if (vLength == 20 && !reservations.Select(s => s.SiteID).Contains(47))
+            if (vLength == 24 && !reservations.Select(s => s.SiteID).Contains(47))
             {
                 site = Enumerable.Empty<Site>();
                 site = site.Append(_unitOfWork.Site.Get(s => s.SiteID == 47));

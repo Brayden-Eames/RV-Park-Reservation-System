@@ -10,11 +10,25 @@ function generateVacantSitesData() {
     getVacantSitesList(startDate, endDate);
 }
 
+function generateHistoricSitesData() {
+    destroyHistoricTable();
+    let startDate = document.getElementById('historicStartDate').value.toString();
+    let endDate = document.getElementById('historicEndDate').value.toString();
+    getHistoricReservationList(startDate, endDate);
+}
+
 function destroyVacantTable() {
     var table = $('#DTvacancyReport').DataTable()
     if (table) {        
         table.destroy();
         
+    }
+}
+
+function destroyHistoricTable() {
+    var table = $('#DThistoricReservations').DataTable()
+    if (table) {
+        table.destroy();
     }
 }
 
@@ -42,14 +56,14 @@ function getVacantSitesList(startDate, endDate) {
     });
 }
 
-function getHistoricReservationList() {
+function getHistoricReservationList(startDate, endDate) {
     DThistoricReservations = $('#DThistoricReservations').DataTable({
         dom: 'Bfrtip',        
         buttons: [
             'csv', 'excel', 'pdf', 'print'
         ],
         "ajax": {
-            "url": "/api/historicReservationReport",
+            "url": '/api/historicReservationReport/?startDate='+ startDate + '&endDate=' + endDate,
             "type": "GET",
             "datatype": "json"
         },

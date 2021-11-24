@@ -132,7 +132,7 @@ function loadReservations() {
 
     //Checks if a start date, end date, and vehicle length selected.  
     if (document.getElementById('endDate').value == '' || document.getElementById('startDate').value == ''
-        || (document.getElementById('ddlVehicleLength').value == 20 && document.getElementById('ddlVehicleType').value != 7)) {
+        || (document.getElementById('ddlVehicleLength').value == 24 && document.getElementById('ddlVehicleType').value != 7)) {
         swal('Error', 'Please select a start date, end date, and vehicle type to see available resevations', 'error')
         return false;
     }
@@ -198,7 +198,7 @@ function VehicleSelected() {
 
     if ($('#ddlVehicleType').val() == 7) {
         $('#ddlVehicleLength').css('display', 'none');
-        $('#ddlVehicleLength').val(20).change();
+        $('#ddlVehicleLength').val(24).change();
     }
     else {
         $('#ddlVehicleLength').css('display', 'block');
