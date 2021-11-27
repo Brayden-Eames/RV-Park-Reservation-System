@@ -16,9 +16,9 @@ namespace RV_Park_Reservation_System.Controllers
         public Site_RateController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            return Json(new { data = _unitOfWork.Site_Rate.List() });
+            return Json(new { data = await _unitOfWork.Site_Rate.ListAsync(a => a.RateID != null) });
         }
 
         [HttpDelete("{id}")]

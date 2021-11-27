@@ -17,15 +17,15 @@ namespace RV_Park_Reservation_System.Controllers
         public SiteCategoryController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            return Json(new { data = _unitOfWork.Site_Category.List() });
+            return Json(new { data = await _unitOfWork.Site_Category.ListAsync( a => a.SiteCategory != null) });
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> OnDelete(int id)
         {
-            var objFromDb = _unitOfWork.Site_Category.Get(c => c.SiteCategory == id);
+            var objFromDb = await _unitOfWork.Site_Category.GetAsync(c => c.SiteCategory == id);
             if (objFromDb == null)
             {
                 return Json(new { success = false, message = "Error while deleting." });

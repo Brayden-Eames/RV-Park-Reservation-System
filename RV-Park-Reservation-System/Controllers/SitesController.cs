@@ -1,8 +1,7 @@
 ﻿using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-
-
+using System.Threading.Tasks;
 
 namespace RV_Park_Reservation_System.Controllers
 {
@@ -19,9 +18,9 @@ namespace RV_Park_Reservation_System.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            return Json(new { data = _unitofWork.Site.List(null, null, "Site_Category") });
+            return Json(new { data = await _unitofWork.Site.ListAsync(null, null, "Site_Category") });
         }
 
 

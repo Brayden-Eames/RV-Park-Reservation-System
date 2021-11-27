@@ -16,9 +16,9 @@ namespace RV_Park_Reservation_System.Controllers
         public SecurityQuestionController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            return Json(new { data = _unitOfWork.Security_Question.List() });
+            return Json(new { data = await _unitOfWork.Security_Question.ListAsync(a => a.QuestionID != null) });
         }
 
         [HttpDelete("{id}")]

@@ -4,6 +4,7 @@ using RV_Park_Reservation_System.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RV_Park_Reservation_System.Controllers
 {
@@ -18,17 +19,17 @@ namespace RV_Park_Reservation_System.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> OnGet(DateTime startDate, DateTime endDate)
         {
 
 
-            var reservationList = _unitofWork.Reservation.List();
-            var customerList = _unitofWork.Customer.List();
-            var siteList = _unitofWork.Site.List();
-            var siteCategoryList = _unitofWork.Site_Category.List();
-            var statusList = _unitofWork.Reservation_Status.List();
-            var siteRateList = _unitofWork.Site_Rate.List();
-            var vehicleTypeList = _unitofWork.Vehicle_Type.List();
+            var reservationList = await _unitofWork.Reservation.ListAsync(a => a.Id != null);
+            var customerList = await _unitofWork.Customer.ListAsync(a => a.Id != null);
+            var siteList = await _unitofWork.Site.ListAsync(a => a.SiteID != null);
+            var siteCategoryList = await _unitofWork.Site_Category.ListAsync(a => a.LocationID != null);
+            var statusList = await _unitofWork.Reservation_Status.ListAsync(a => a.ResStatusID != null);
+            var siteRateList = await _unitofWork.Site_Rate.ListAsync(a => a.RateID != null);
+            var vehicleTypeList = await _unitofWork.Vehicle_Type.ListAsync(a => a.TypeID != null);
 
             //GET SITE LIST
             var siteQuery = from site in siteList
@@ -109,9 +110,9 @@ namespace RV_Park_Reservation_System.Controllers
                                   join booking in reservationActivityList on site.site equals booking.siteNumber
                                   into vacantSites
                                   from subItem in vacantSites.DefaultIfEmpty()
-                                  where subItem == null 
-                                  || DateTime.Parse(subItem.checkIn) < startDate 
-                                  && DateTime.Parse(subItem.checkOut) < startDate 
+                                  where subItem == null                               
+                                  ||  ( DateTime.Parse(subItem.checkIn) < startDate 
+                                  && DateTime.Parse(subItem.checkOut) < startDate )
                                   || DateTime.Parse(subItem.checkIn) > endDate
                                   select new
                                   {
@@ -119,7 +120,7 @@ namespace RV_Park_Reservation_System.Controllers
                                       site.site,
                                       site.description,
                                       site.length,
-                                      site.rate,                                    
+                                      site.rate,                                     
                                   };
 
             var vacantSitesList = new List<VacantSiteReportVM>();
@@ -136,7 +137,7 @@ namespace RV_Park_Reservation_System.Controllers
 
                 vacantSitesList.Add(row);
             }
-
+    
 
             return Json(new { data = vacantSitesList });
 

@@ -39,7 +39,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.User
             Success = success;
             Message = message;
             UserRoles = new Dictionary<string, List<string>>();
-            ApplicationUsers = _unitOfWork.Customer.List();
+            ApplicationUsers = await _unitOfWork.Customer.ListAsync(a => a.Id != null);
             foreach (var user in ApplicationUsers)
             {
                 var userRole = await _userManager.GetRolesAsync(user);
@@ -50,7 +50,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.User
         }
         public async Task<IActionResult> OnPostLockUnlock(string id)
         {
-            var user = _unitOfWork.Customer.Get(u => u.Id == id);
+            var user = await _unitOfWork.Customer.GetAsync(u => u.Id == id);
             if (user.LockoutEnd == null)
             {
                 user.LockoutEnd = DateTime.Now.AddYears(100);
@@ -63,7 +63,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.User
             {
                 user.LockoutEnd = DateTime.Now.AddYears(100);
             }
-            _unitOfWork.Customer.Update(user);
+             _unitOfWork.Customer.Update(user);
             await _unitOfWork.CommitAsync();
             return RedirectToPage();
         }

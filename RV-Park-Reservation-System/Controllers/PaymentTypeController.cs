@@ -16,9 +16,9 @@ namespace RV_Park_Reservation_System.Controllers
         public PaymentTypeController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            return Json(new { data = _unitOfWork.Payment_Type.List() });
+            return Json(new { data = await _unitOfWork.Payment_Type.ListAsync(a => a.PayTypeID != null) });
         }
 
         [HttpDelete("{id}")]
