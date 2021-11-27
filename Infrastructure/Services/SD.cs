@@ -13,6 +13,7 @@ namespace Infrastructure.Services
         public const string EmployeeRole = "Employee";
 
         public const string ReservationSession = "Reservation";
+        public const string ReservationUpdateSession = "ReservationUpdate";
     }
 
 }

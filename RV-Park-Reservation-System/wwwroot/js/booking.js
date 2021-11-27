@@ -182,6 +182,8 @@ function continuePayment() {
     $('#btnPayment').css('display', 'block');
 }
 
+
+
 //Checks the pet policy check box
 function checkAgreement() {
     $('#breedPolicyAgreement').prop("checked", true);
@@ -247,6 +249,8 @@ function checkChange(option) {
 
 
 }
+
+//this needs to be removed, is a temporary solution.
 function vehicleTypeCheck(option) {
     if (option == 1) {
         document.getElementById("ddlVehicleType").value = "Motor Home";

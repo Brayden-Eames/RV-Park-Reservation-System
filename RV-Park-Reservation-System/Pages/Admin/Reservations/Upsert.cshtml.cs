@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace RV_Park_Reservation_System.Pages.Admin.Reservations
-{
+{    
     public class ReservationsUpdateModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -30,6 +32,9 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
         [BindProperty]
         public Customer CustomerInfo { get; set; }
+
+        [BindProperty]
+        public Payment CustomerPayment { get; set; }
 
         [BindProperty]
         public int reservationID { get; set; } 
@@ -74,70 +79,45 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
             CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
             CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
+            CustomerPayment = _unitOfWork.Payment.Get(p => p.ResID == id);
+           
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
             lstServiceStatus = _unitOfWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });
             lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
 
             lstReservationStatus = _unitOfWork.Reservation_Status.List().Select(s => new SelectListItem { Value = s.ResStatusID.ToString(), Text = s.ResStatusName });
-
-            //We need to move all of this to the register page, and keep it here until we wipe all accounts
-            if (CustomerInfo.DODAffiliationID == 1)
-            {
-                CustomerInfo.DOD_Affiliation.Equals("Army");
-            }
-            else if (CustomerInfo.DODAffiliationID == 2)
-            {
-                CustomerInfo.DOD_Affiliation.Equals("Air Force");
-            }
-            else if (CustomerInfo.DODAffiliationID == 3)
-            {
-                CustomerInfo.DOD_Affiliation.Equals("Navy");
-            }
-            else if (CustomerInfo.DODAffiliationID == 4)
-            {
-                CustomerInfo.DOD_Affiliation.Equals("Marines");
-            }
-            else if (CustomerInfo.DODAffiliationID == 5)
-            {
-                CustomerInfo.DOD_Affiliation.Equals("Coast Guard");
-            }
-            else if (CustomerInfo.DODAffiliationID == 11)
-            {
-                CustomerInfo.DOD_Affiliation.Equals("Space Force");
-            }
-
-            if (CustomerInfo.ServiceStatusID == 1)
-            {
-                CustomerInfo.Service_Status_Type.Equals("Active");
-            }
-            else if (CustomerInfo.ServiceStatusID == 2)
-            {
-                CustomerInfo.Service_Status_Type.Equals("Retired");
-            }
-            else if (CustomerInfo.ServiceStatusID == 3)
-            {
-                CustomerInfo.Service_Status_Type.Equals("Reserves");
-            }
-            else if (CustomerInfo.ServiceStatusID == 4)
-            {
-                CustomerInfo.Service_Status_Type.Equals("PCS");
-            }
-            else if (CustomerInfo.ServiceStatusID == 9)
-            {
-                CustomerInfo.Service_Status_Type.Equals("Civillian");
-            }
-
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(string value)
-        { 
-            if(value == "update") 
+        public async Task<IActionResult> OnPostAsync(string value, string updateType)
+        {
+            if (value == "update") //conditional for updating everything except for adding a new site and/or dates.
             {
-                var reservation = _unitOfWork.Reservation.Get(c => c.ResID == CustomerReservation.ResID);
-                reservation.SiteID = CustomerReservation.Site.SiteID;
-                reservation.Site = CustomerReservation.Site;
-                reservation.Site.SiteNumber = CustomerReservation.Site.SiteNumber;
+                var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID); 
+                var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == CustomerReservation.Site.SiteID); 
+                reservation.Site = siteObj;  
+                reservation.Site.SiteNumber = siteObj.SiteNumber;
+                reservation.ResStartDate = CustomerReservation.ResStartDate;
+                reservation.ResEndDate = CustomerReservation.ResEndDate;
+                reservation.ResNumAdults = CustomerReservation.ResNumAdults;
+                reservation.ResNumChildren = CustomerReservation.ResNumChildren;
+                reservation.ResNumPets = CustomerReservation.ResNumPets;
+                reservation.ResAcknowledgeValidPets = CustomerReservation.ResAcknowledgeValidPets;
+                reservation.ResComment = CustomerReservation.ResComment;
+                reservation.ResVehicleLength = CustomerReservation.ResVehicleLength;
+                reservation.Vehicle_Type = CustomerReservation.Vehicle_Type;
+                reservation.ResStatusID = CustomerReservation.ResStatusID;
+
+                _unitOfWork.Reservation.Update(reservation);
+                _unitOfWork.Commit();
+                return RedirectToPage("./Index", new { success = true, message = "Update Successful" });
+            }
+            else if (value == "addDaysUpdate") //conditional for adding new days/new site
+            {
+                var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID);
+                var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == siteid);
+                reservation.Site = siteObj;
+                reservation.Site.SiteNumber = siteObj.SiteNumber;
                 reservation.ResStartDate = CustomerReservation.ResStartDate;
                 reservation.ResEndDate = CustomerReservation.ResEndDate;
                 reservation.ResNumAdults = CustomerReservation.ResNumAdults;
@@ -148,10 +128,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservation.ResVehicleLength = CustomerReservation.ResVehicleLength;
                 reservation.Vehicle_Type = CustomerReservation.Vehicle_Type;
                 reservation.ResStatusID = reservationStatusID;
-                reservation.Reservation_Status = CustomerReservation.Reservation_Status;
-                _unitOfWork.Reservation.Update(reservation);
-                _unitOfWork.Commit();
-                return RedirectToPage("./Index", new { success = true, message = "Update Successful" });
+
+
+                HttpContext.Session.Set(SD.ReservationUpdateSession, reservation); //uses the ReservationUpdateSession string to handle this separate from regular sessions.
+
+                return RedirectToPage("./Admin/Reservations/AdminUpdateSummary"); //redirect to the admin page
             }
             else
             {

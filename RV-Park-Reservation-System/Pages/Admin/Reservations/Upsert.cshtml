@@ -3,13 +3,16 @@
 @{
 }
 
-<form class="form" method="post" id="reservationForm" onsubmit="return checkinput();">
+<form class="form" method="post" onload="checkDates()" id="reservationForm" onsubmit="return checkinput();">
     <h1 class="display-4 text-center text-primary my-5">EDIT RESERVATION</h1>
-    <input type="hidden" id="totalCost" asp-for="totalCost" />
+
     <input type="hidden" value="@Model.CustomerReservation.ResID" asp-for="@Model.CustomerReservation.ResID" />
     <input type="hidden" value="@Model.CustomerReservation.Site" asp-for="@Model.CustomerReservation.Site" />
     <input type="hidden" value="@Model.CustomerReservation.Site.SiteID" asp-for="@Model.CustomerReservation.Site.SiteID" />
     <input type="hidden" value="@Model.CustomerReservation.Site.SiteNumber" asp-for="@Model.CustomerReservation.Site.SiteNumber" />
+    <input type="hidden" value="@Model.totalCost" asp-for="@Model.totalCost" />
+    @*<input type="hidden" value="@Model.CustomerReservation.Reservation_Status" asp-for="@Model.CustomerReservation.Reservation_Status" />*@
+    <input type="hidden" value="@Model.CustomerReservation.ResStatusID" asp-for="reservationStatusID" />
 
 
     <div class="row border  pt-3 pb-2 mt-2 mb-2 ml-7 mr-7 justify-content-center">
@@ -46,9 +49,19 @@
         </div>
         <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border">
             <label class="pl-2">Reservation Info</label>
+            <div class="input-group mb-3 mt-3">
+                @*<label class="input-group-text pt-0 pb-0">Reservation Status</label>*@
+                <span class="input-group-text pt-0 pb-0" id="">Reservation Status</span>
+                <input type="text" class="form-control" placeholder="Reservation Status" value="@Model.CustomerReservation.Reservation_Status.ResStatusName" readonly>
+                @*<span class="text-danger" asp-validation-for="@Model.reservationStatusID"></span>*@
+            </div>
             <div class="input-group mt-3">
-                <span class="input-group-text" id="">Reservation ID Number</span>
+                <span class="input-group-text" id="">Reservation ID</span>
                 <input type="text" class="form-control" placeholder="Reservation Num" asp-for="@Model.CustomerReservation.ResID" value="@Model.CustomerReservation.ResID" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Total Cost</span>
+                <input type="text" class="form-control" placeholder="Total Cost" id="totalCost" asp-for="@Model.totalCost" value="$@Model.CustomerPayment.PayTotalCost" readonly>
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Start Date</span>
@@ -92,22 +105,21 @@
         <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border form" id="actionForm">
             <label class="pl-2">Actions</label>
             <br />
-            <button class="btn btn-success form-control mt-3 mb-2 text-light" asp-route-value="update" id="submitUpdate">Update Reservation</button>
+            <button class="btn btn-success form-control mt-3 mb-2 text-light" style="background-color: #5E700E; border-color: #5E700E" asp-route-value="update" asp-route-updateType="addDays" id="submitUpdate">Update Reservation</button>
             <br />
             <a class="btn btn-primary form-control mt-2 mb-2 text-light" id="" href="/Admin/Reservations">Back to List</a>
             <br />
             <a class="btn btn-danger form-control mt-2 mb-2 text-light" asp-route-value="delete" onclick="Delete('/api/clientReservation/'+@Model.CustomerReservation.ResID" id="submitDelete">Cancel Reservation</a>
+            <br />
+            <label class="pl-2 mt-2">Update Reservation Status</label>
+            @Html.DropDownListFor(s => s.CustomerReservation.ResStatusID, Model.lstReservationStatus, new { @class = "form-control text-center", @id = "ddlResStatus" })
+            <br />
 
-            <div class="input-group mb-3 mt-2">
-                <label class="input-group-text pt-0 pb-0" for="inputGroupSelect01" >Reservation Status</label>
-                @Html.DropDownListFor(s => s.reservationStatusID, Model.lstReservationStatus, Model.CustomerReservation.Reservation_Status.ResStatusName, new { @class = "form-control bg-warning  text-light text-center", @id = "ddlResStatus", @value = Model.CustomerReservation.Reservation_Status.ResStatusName })
-
-            </div>
             <div class="pt-3 pb-3 pl-3  mt-0 mb-0 col-md-12 border">
                 <label class="pl-2">Edit Reservation Dates and Site Number</label>
                 <div class="input-group mt-3">
                     <span class="input-group-text" id="">New Start Date</span>
-                    <input class="form-control datepicker container-fluid pt-1 pb-1" onchange="checkDates();" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")">
+                    <input class="form-control datepicker container-fluid pt-1 pb-1" onchange="clearEndDate(); checkDates();" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")">
                 </div>
                 <div class="input-group mt-3">
                     <span class="input-group-text" id="">New End Date</span>
@@ -121,7 +133,7 @@
                 <div style="display: none" id="ddlSitesDiv" class="row justify-content-center ">
                     <div class="col-md-12 mt-2 ">
                         <label class="pl-2">Campsite location</label>
-                        <select onchange="continuePayment();" asp-for="siteid" id="ddlSites" class="form-control">
+                        <select onchange="continuePayment(); hideUpdateBtn();" asp-for="siteid" id="ddlSites" class="form-control">
                             <option value="0">- Please Select a camp site - </option>
 
                         </select>
@@ -132,6 +144,11 @@
                     </div>
 
                 </div>
+                <div class="row justify-content-center mt-3 mb-3">
+                    <div class="col-md-12 mt-2" style="display: none" id="btnPayment">
+                        <button class="btn btn-success col-md-12" style="background-color: #5E700E; border-color: #5E700E"  asp-route-value="addDaysUpdate">Continue to Payment and Update</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -139,7 +156,7 @@
 
 
 @section Scripts {
-    <script src="~/js/booking.js"></script>
+    <script src="~/js/adminBooking.js"></script>
     <script type="text/javascript">
         $("#deleteRecord").on("click", function (e) {
             e.preventDefault();

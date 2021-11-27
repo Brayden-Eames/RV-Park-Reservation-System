@@ -186,6 +186,16 @@ function checkAgreement() {
     $('#breedPolicyAgreement').prop("checked", true);
 }
 
+//Hides 'Update Reservation' Button when a new site and dates are picked (forces the user to proceed to pay for added days).
+function hideUpdateBtn() {
+    $('#submitUpdate').css('display', 'none');
+}
+
+//removes end date value from the new end date field (to prevent error box from showing up while selecting new dates)
+function clearEndDate() {
+    document.getElementById("endDate").value = "";
+}
+
 //Hides the site drop down list if any information is changed. 
 function hideLots() {
     $('#btnPayment').css('display', 'none');
@@ -242,5 +252,31 @@ function checkChange(option) {
     if (option.value == 'chooseDefault') {
         $('.genericAccount').css('display', 'none');
         $('.createAccount').css('display', 'none');
+    }
+}
+
+
+//this needs to be removed, is a temporary solution.
+function vehicleTypeCheck(option) {
+    if (option == 1) {
+        document.getElementById("ddlVehicleType").value = "Motor Home";
+    }
+    else if (option == 2) {
+        document.getElementById("ddlVehicleType").value = "Travel Trailer";
+    }
+    else if (option == 3) {
+        document.getElementById("ddlVehicleType").value = "5th Wheel";
+    }
+    else if (option == 4) {
+        document.getElementById("ddlVehicleType").value = "Pop Up";
+    }
+    else if (option == 5) {
+        document.getElementById("ddlVehicleType").value = "Van";
+    }
+    else if (option == 6) {
+        document.getElementById("ddlVehicleType").value = "Other";
+    }
+    else if (option == 7) {
+        document.getElementById("ddlVehicleType").value = "Tent";
     }
 }
