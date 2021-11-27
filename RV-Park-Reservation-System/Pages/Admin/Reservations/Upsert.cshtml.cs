@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RV_Park_Reservation_System.ViewModels;
 
 namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 {    
@@ -66,6 +67,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         [BindProperty]
         public int reservationStatusID { get; set; }
 
+        public ReservationVM reservationVM { get; set; }
+
 
         //Add in member variables similar to how the AdminReservation Create page does it.  Revamp the Upsert frontend to use this functionality as well. 
 
@@ -116,6 +119,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             {
                 var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID);
                 var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == siteid);
+                var paymentObject = await _unitOfWork.Payment.GetAsync(p => p.ResID == CustomerReservation.ResID);
                 reservation.Site = siteObj;
                 reservation.Site.SiteNumber = siteObj.SiteNumber;
                 reservation.ResStartDate = CustomerReservation.ResStartDate;
@@ -129,10 +133,17 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservation.Vehicle_Type = CustomerReservation.Vehicle_Type;
                 reservation.ResStatusID = reservationStatusID;
 
+                reservationVM = new ReservationVM()
+                {
+                    reservationObj = reservation,
+                    paymentObj = paymentObject,
+                    customerObj = CustomerInfo
+                };
 
-                HttpContext.Session.Set(SD.ReservationUpdateSession, reservation); //uses the ReservationUpdateSession string to handle this separate from regular sessions.
 
-                return RedirectToPage("./Admin/Reservations/AdminUpdateSummary"); //redirect to the admin page
+                HttpContext.Session.Set(SD.ReservationSession, reservationVM); //uses the ReservationSession string to handle this separate from regular sessions.
+
+                return RedirectToPage("./AdminUpdateSummary"); //redirect to the admin page
             }
             else
             {
