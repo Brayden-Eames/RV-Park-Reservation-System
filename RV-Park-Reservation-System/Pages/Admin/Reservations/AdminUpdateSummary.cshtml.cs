@@ -72,9 +72,45 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     Error = true;
                 }
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
-                
-                newReservation = reservationVM.reservationObj;
-                paymentObj = reservationVM.paymentObj;
+
+                newReservation = new Reservation();
+                paymentObj = new Payment();
+                //newReservation = reservationVM.reservationObj;
+                //Add all attributes manually to the newReservation object, that way we can omit the reservation id (this allows the later code to create a brand new reservation)
+                newReservation.Customer = reservationVM.reservationObj.Customer;
+                newReservation.Id = reservationVM.reservationObj.Id;
+                newReservation.ResAcknowledgeValidPets = reservationVM.reservationObj.ResAcknowledgeValidPets;
+                newReservation.ResComment = reservationVM.reservationObj.ResComment;
+                newReservation.ResCreatedDate = reservationVM.reservationObj.ResCreatedDate;
+                newReservation.ResEndDate = reservationVM.reservationObj.ResEndDate;
+                newReservation.Reservation_Status = reservationVM.reservationObj.Reservation_Status;
+                newReservation.ResLastModifiedBy = reservationVM.reservationObj.ResLastModifiedBy;
+                newReservation.ResLastModifiedDate = reservationVM.reservationObj.ResLastModifiedDate;
+                newReservation.ResNumAdults = reservationVM.reservationObj.ResNumAdults;
+                newReservation.ResNumChildren = reservationVM.reservationObj.ResNumChildren;
+                newReservation.ResNumPets = reservationVM.reservationObj.ResNumPets;
+                newReservation.ResStartDate = reservationVM.reservationObj.ResStartDate;
+                newReservation.ResStatusID = reservationVM.reservationObj.ResStatusID;
+                newReservation.ResVehicleLength = reservationVM.reservationObj.ResVehicleLength;
+                newReservation.Site = reservationVM.reservationObj.Site;
+                newReservation.SiteID = reservationVM.reservationObj.SiteID;
+                newReservation.TypeID = reservationVM.reservationObj.TypeID;
+                newReservation.Vehicle_Type = reservationVM.reservationObj.Vehicle_Type;
+
+                //paymentObj = reservationVM.paymentObj;
+
+                paymentObj.CCReference = reservationVM.paymentObj.CCReference;
+                paymentObj.IsPaid = reservationVM.paymentObj.IsPaid;
+                paymentObj.PayDate = reservationVM.paymentObj.PayDate;
+                paymentObj.PayID = reservationVM.paymentObj.PayID;
+                paymentObj.PayLastModifiedBy = reservationVM.paymentObj.PayLastModifiedBy;
+                paymentObj.PayLastModifiedDate = reservationVM.paymentObj.PayLastModifiedDate;
+                paymentObj.Payment_Reason = reservationVM.paymentObj.Payment_Reason;
+                paymentObj.Payment_Type = reservationVM.paymentObj.Payment_Type;
+                paymentObj.PayReasonID = reservationVM.paymentObj.PayReasonID;
+                paymentObj.PayTotalCost = reservationVM.paymentObj.PayTotalCost;
+                paymentObj.PayTypeID = reservationVM.paymentObj.PayTypeID;
+
                 customerObj = reservationVM.customerObj;
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
                 //ReturnUrl = returnUrl;
@@ -101,20 +137,46 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
             if (paymentIntent.Status.ToLower() == "succeeded")
             {
-                // call delete in adminReservationUpdateController here, passing the reservationVM.reservationObj.ResID
-
                 ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustFirstName == reservationVM.customerObj.CustFirstName && c.CustLastName == reservationVM.customerObj.CustLastName && c.CustEmail == reservationVM.customerObj.CustEmail);
-                reservationVM.reservationObj.Id = customer.Id;
+                newReservation.Id = customer.Id;
+                newReservation.ResLastModifiedBy = reservationVM.reservationObj.ResLastModifiedBy;
+                newReservation.ResAcknowledgeValidPets = reservationVM.reservationObj.ResAcknowledgeValidPets;
+                newReservation.ResComment = reservationVM.reservationObj.ResComment;
+                newReservation.ResCreatedDate = reservationVM.reservationObj.ResCreatedDate;
+                newReservation.ResEndDate = reservationVM.reservationObj.ResEndDate;
+                newReservation.Reservation_Status = reservationVM.reservationObj.Reservation_Status;
+                newReservation.ResLastModifiedBy = reservationVM.reservationObj.ResLastModifiedBy;
+                newReservation.ResLastModifiedDate = reservationVM.reservationObj.ResLastModifiedDate;
+                newReservation.ResNumAdults = reservationVM.reservationObj.ResNumAdults;
+                newReservation.ResNumChildren = reservationVM.reservationObj.ResNumChildren;
+                newReservation.ResNumPets = reservationVM.reservationObj.ResNumPets;
+                newReservation.ResStartDate = reservationVM.reservationObj.ResStartDate;
+                newReservation.ResStatusID = reservationVM.reservationObj.ResStatusID;
+                newReservation.ResVehicleLength = reservationVM.reservationObj.ResVehicleLength;
+                newReservation.SiteID = reservationVM.reservationObj.SiteID;
+                newReservation.TypeID = reservationVM.reservationObj.TypeID;
+                newReservation.Vehicle_Type = reservationVM.reservationObj.Vehicle_Type;
 
-                _unitOfWork.Reservation.Add(reservationVM.reservationObj); //this is where we had an issue. refer to the tracking error in the pic.
-                //explanation of problem: The context is already tracking an instance of the customer. sort out where that instance is and figure out how to handle it.
-                _unitOfWork.Commit();
+                paymentObj.CCReference = reservationVM.paymentObj.CCReference;
+                paymentObj.IsPaid = reservationVM.paymentObj.IsPaid;
+                paymentObj.PayDate = reservationVM.paymentObj.PayDate;
+                //paymentObj.PayID = reservationVM.paymentObj.PayID;
+                paymentObj.PayLastModifiedBy = reservationVM.paymentObj.PayLastModifiedBy;
+                paymentObj.PayLastModifiedDate = reservationVM.paymentObj.PayLastModifiedDate;
+                paymentObj.Payment_Reason = reservationVM.paymentObj.Payment_Reason;
+                paymentObj.Payment_Type = reservationVM.paymentObj.Payment_Type;
+                paymentObj.PayReasonID = reservationVM.paymentObj.PayReasonID;
+                paymentObj.PayTotalCost = reservationVM.paymentObj.PayTotalCost;
+                paymentObj.PayTypeID = reservationVM.paymentObj.PayTypeID;
+
+                _unitOfWork.Reservation.Add(newReservation); //Current issue: becauase we are updating the old reservation, we aren't creating a brand new one, just altering the original.
+                await _unitOfWork.CommitAsync();
 
                 var reservations = _unitOfWork.Reservation.List().Where(r => r.Customer == customer).Last();
-                reservationVM.paymentObj.ResID = reservations.ResID;
-                reservationVM.paymentObj.IsPaid = true;
-                _unitOfWork.Payment.Add(reservationVM.paymentObj);
-                _unitOfWork.Commit();
+                paymentObj.ResID = reservations.ResID;
+                paymentObj.IsPaid = true;
+                _unitOfWork.Payment.Add(paymentObj);
+                await _unitOfWork.CommitAsync();
                 HttpContext.Session.Clear();
 
                

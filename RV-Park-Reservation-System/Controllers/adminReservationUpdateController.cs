@@ -63,6 +63,7 @@ namespace RV_Park_Reservation_System.Controllers
             //Gets the payment and reservation object from the Database.
             var objFromDb = await _unitOfWork.Reservation.GetAsync(c => c.ResID == id);
             var payObj = await _unitOfWork.Payment.GetAsync(p => p.ResID == id);
+            var custObj = await _unitOfWork.Customer.GetAsync(d => d.Id == objFromDb.Id);
 
             //Checks if the user paid or not. 
             if (payObj.IsPaid == false)
@@ -115,9 +116,10 @@ namespace RV_Park_Reservation_System.Controllers
                 var refunds = new RefundService();
                 var refundOptions = new RefundCreateOptions
                 {
-                    Charge = payment.Charges.Data[0].Id,
-                    Amount = refundAmount,
+                    Charge = payment.Charges.Data[0].Id, //within data at this position we have an attribute called 'AmountRefunded', which is 5000, meaning 2500 is left. 
+                    Amount = refundAmount, 
                 };
+                //payment.Charges.Data[0].AmountRefunded = 0; //testing purposes
                 var refund = refunds.Create(refundOptions);
             }
 
@@ -140,7 +142,7 @@ namespace RV_Park_Reservation_System.Controllers
 
 
             //Sends email to user to confirm cancellation. 
-            var user = await _userManager.FindByEmailAsync(User.Identity.Name); //modify to handle finding the user based on the res id. ***STILL NEEDS TO BE FIXED***
+            var user = await _userManager.FindByEmailAsync(custObj.CustEmail); //modify to handle finding the user based on the res id. ***STILL NEEDS TO BE FIXED***
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var callbackUrl = Url.Page(

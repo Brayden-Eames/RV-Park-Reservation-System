@@ -170,17 +170,19 @@
                 dangerMode: true
             }).then(function (willDelete) {
                 if (willDelete) {
-
+                    
                     $.ajax({
                         type: 'DELETE',
                         url: '/api/adminReservationUpdate/' + @Model.CustomerReservation.ResID,
                         success: function (data) {
                             if (data.success) {
                                 toastr.success(data.message);
+                                console.log("Success!");
 
                             }
                             else {
                                 toastr.error(data.message);
+                                console.log("Failure!");
                             }
                         }
                     }).done(function () {
@@ -194,6 +196,14 @@
                     return false;
                 }
             })
+                .catch(err => {
+                    if (err) {
+                        swal("Oh noes!", "The AJAX request failed!", "error");
+                    } else {
+                        swal.stopLoading();
+                        swal.close();
+                    }
+                });
         })
 
         window.onload = vehicleTypeCheck(@Model.CustomerReservation.TypeID);
