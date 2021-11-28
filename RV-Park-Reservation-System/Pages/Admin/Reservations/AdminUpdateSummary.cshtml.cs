@@ -56,14 +56,15 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
         public ReservationVM reservationVM { get; set; }
 
+       
         public IActionResult OnGet(bool? error, string returnUrl = null)
         {
-
+           
             if (!User.Identity.IsAuthenticated /*&& !User.IsInRole("Customer")*/) //removed check for customer role, cause the admin won't have that role by default. 
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/AdminUpdateSummary" });
             }
-
+            
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
             {
                 if (error != null)
@@ -71,13 +72,13 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     Error = true;
                 }
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
-
+                
                 newReservation = reservationVM.reservationObj;
                 paymentObj = reservationVM.paymentObj;
                 customerObj = reservationVM.customerObj;
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
                 //ReturnUrl = returnUrl;
-
+                
             }
             else
             {
@@ -98,19 +99,15 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             var service = new PaymentIntentService();
             var paymentIntent = service.Get(reservationVM.paymentObj.CCReference);
 
-            //somewhere in here, we need to call the adminReservation controller (not created yet) to delete the old reservation, and create a new reservation. 
-
             if (paymentIntent.Status.ToLower() == "succeeded")
             {
-                //var password = new Password().IncludeNumeric().IncludeLowercase().IncludeUppercase().IncludeSpecial().LengthRequired(12);
-                //var pwResult = password.Next(); //generating and creating temp password
-
-                //var userResult = await _userManager.CreateAsync(reservationVM.customerObj, pwResult); //creating new account with password. and awaitng creation
-                //await _userManager.AddToRoleAsync(reservationVM.customerObj, SD.CustomerRole); //adds customer role to new account 
+                // call delete in adminReservationUpdateController here, passing the reservationVM.reservationObj.ResID
 
                 ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustFirstName == reservationVM.customerObj.CustFirstName && c.CustLastName == reservationVM.customerObj.CustLastName && c.CustEmail == reservationVM.customerObj.CustEmail);
                 reservationVM.reservationObj.Id = customer.Id;
-                _unitOfWork.Reservation.Add(reservationVM.reservationObj);
+
+                _unitOfWork.Reservation.Add(reservationVM.reservationObj); //this is where we had an issue. refer to the tracking error in the pic.
+                //explanation of problem: The context is already tracking an instance of the customer. sort out where that instance is and figure out how to handle it.
                 _unitOfWork.Commit();
 
                 var reservations = _unitOfWork.Reservation.List().Where(r => r.Customer == customer).Last();
@@ -120,7 +117,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 _unitOfWork.Commit();
                 HttpContext.Session.Clear();
 
-
+               
 
                 // --- RESERVATION CANCELLATION EMAIL --- //
 
@@ -140,37 +137,6 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     "FamCamp Reservation Confirmation",
                     $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account.  " +
                     $" <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-
-                // --- ACCOUNT CREATION CONFIRMATION EMAIL --- // 
-                //var codeConfirm = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                //codeConfirm = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(codeConfirm));
-                //var callbackUrlConfirm = Url.Page(
-                //    "/Account/ConfirmEmail",
-                //    pageHandler: null,
-                //    values: new { area = "Identity", userId = user.Id, code, returnUrl },
-                //    protocol: Request.Scheme);
-                //await _emailSender.SendEmailAsync(reservationVM.customerObj.Email, "You have been regiserted! Please confirm your email.",
-                //   $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                //if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                //{
-                //    return RedirectToPage("RegisterConfirmation", new { email = reservationVM.customerObj.CustEmail, returnUrl });
-                //}
-                //else
-                //{
-                //    //await _signInManager.SignInAsync(user, isPersistent: false); //Find out what this does in register
-                //    //return LocalRedirect(returnUrl);
-                //}
-
-                // --- TEMP PASSWORD EMAIL --- //
-                //await _emailSender.SendEmailAsync(
-                //    reservationVM.customerObj.Email,
-                //    "FamCamp Account Temporary Password",
-                //    $"Your FamCamp account has been successfully created! Here is your temporary password:  " +
-                //    $"<strong>{pwResult}</strong>  " +
-                //    $" Log in using this password, then we strongly recommend changing your password. ");
-
-
 
 
                 return RedirectToPage("/Client/PaymentConfirmation");

@@ -73,16 +73,16 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         //Add in member variables similar to how the AdminReservation Create page does it.  Revamp the Upsert frontend to use this functionality as well. 
 
 
-        public IActionResult OnGet(int? id, string? userId)
+        public async  Task<IActionResult> OnGet(int? id, string? userId)
         {
             if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole))
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Upsert" });
             }
 
-            CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
-            CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
-            CustomerPayment = _unitOfWork.Payment.Get(p => p.ResID == id);
+            CustomerReservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == id);
+            CustomerInfo = await _unitOfWork.Customer.GetAsync(c => c.Id == userId);
+            CustomerPayment = await _unitOfWork.Payment.GetAsync(p => p.ResID == id);
            
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
             lstServiceStatus = _unitOfWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });
@@ -110,6 +110,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservation.ResVehicleLength = CustomerReservation.ResVehicleLength;
                 reservation.Vehicle_Type = CustomerReservation.Vehicle_Type;
                 reservation.ResStatusID = CustomerReservation.ResStatusID;
+                
 
                 _unitOfWork.Reservation.Update(reservation);
                 _unitOfWork.Commit();
@@ -120,6 +121,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID);
                 var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == siteid);
                 var paymentObject = await _unitOfWork.Payment.GetAsync(p => p.ResID == CustomerReservation.ResID);
+                var customerInfoObj = await _unitOfWork.Customer.GetAsync(c => c.CustFirstName == CustomerInfo.CustFirstName && c.CustLastName == CustomerInfo.CustLastName);
                 reservation.Site = siteObj;
                 reservation.Site.SiteNumber = siteObj.SiteNumber;
                 reservation.ResStartDate = CustomerReservation.ResStartDate;
@@ -137,7 +139,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 {
                     reservationObj = reservation,
                     paymentObj = paymentObject,
-                    customerObj = CustomerInfo
+                    customerObj = customerInfoObj
                 };
 
 
