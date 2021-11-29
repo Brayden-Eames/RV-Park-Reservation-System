@@ -18,11 +18,27 @@ namespace RV_Park_Reservation_System.Controllers
         public TransactionReportController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public async Task<IActionResult> OnGet(string startDate, string endDate)
+        public async Task<IActionResult> OnGet(string startDate, string endDate, string type, string reason)
         {
             DateTime DTstartDate = DateTime.Parse(startDate);
             DateTime DTendDate = DateTime.Parse(endDate);
-            var paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate);
+            IEnumerable<Payment> paymentList = null;
+            if (type != "0" && reason != "0")
+            {
+                paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate && p.PayTypeID == Convert.ToInt32(type) && p.PayReasonID == Convert.ToInt32(reason));
+            } 
+            else if (type != "0" && reason == "0")
+            {
+                paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate && p.PayTypeID == Convert.ToInt32(type));
+            } 
+            else if (type == "0" && reason != "0")
+            {
+                paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate && p.PayReasonID == Convert.ToInt32(reason));
+            }
+            else
+            {
+                paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate);
+            }
             var payTypeList = await _unitOfWork.Payment_Type.ListAsync(a => a.PayTypeID != null);
             var payReasonList = await _unitOfWork.Payment_Reason.ListAsync(a => a.PayReasonID != null);
             var customerList = await _unitOfWork.Customer.ListAsync(a => a.Id != null);

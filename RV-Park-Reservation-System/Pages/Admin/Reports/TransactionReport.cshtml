@@ -17,28 +17,74 @@
             <a class="btn btn-primary w-100 py-2 text-left" asp-page="/Admin/Reports/TransactionReport">Transactions <i class="fas fa-angle-right"></i></a>
         </div>
         <div class="col-10 px-0">
-            <div class="border backgroundWhite container p-3"> 
+            <div class="border backgroundWhite container p-3">
                 <div class="row">
                     <div class="col-12 col-lg-3">
                         <h4>Transactions</h4>
                     </div>
                     <div class="col-12 col-lg-9">
-                        <div class="text-center font-weight-bold ">
-                            <span class="p-1 mr-2 h-50">
-                                <label class="p-1">From:</label>
-                                <input class="datepicker container-fluid pt-1 pb-1 w-25" id="startDate" type="date" />
+                        <span class="row">
+                            <span class="text-right">
+                                <button id="btn_today" class="btn btn-primary mb-1" onclick="setDefaultDaysInInput('today'); generateTransactionData();">Today</button>
+                                <button id="btn_tomorrow" class="btn btn-primary mb-1" onclick="setDefaultDaysInInput('week'); generateTransactionData();">Past Week</button>
+                                <button id="btn_three" class="btn btn-primary mb-1" onclick="setDefaultDaysInInput('month'); generateTransactionData();">Past 30 Days</button>
                             </span>
-
-                            <span class="p-1">
-                                <label class="p-1">To:</label>
-                                <input class="datepicker container-fluid pt-1 pb-1 w-25" id="endDate" type="date" />
-                            </span>
-                            <button class="dt-button button-primary" onclick="generateTransactionData()">Go</button>
-                        </div>
+                        </span>
                     </div>
                 </div>
-                <br />
-                <br />
+                <hr />
+                <div>
+                    <label class="mr-3"><b>Filter by payment type:</b></label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="paymentType" id="noPayType" value="0" checked>
+                        <label class="form-check-label" for="noPayType">
+                            None
+                        </label>
+                    </div>
+                    @for (int i = 0; i < Model.paymentTypeList.Count; i++)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="paymentType" id="@Model.paymentTypeList[i].PayType" value="@Model.paymentTypeList[i].PayTypeID">
+                            <label class="form-check-label" for="@Model.paymentTypeList[i].PayType">
+                                @Model.paymentTypeList[i].PayType
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div>
+                    <label class="mr-3"><b>Filter by payment reason:</b></label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="paymentReason" id="noPayReason" value="0" checked>
+                        <label class="form-check-label" for="noPayReason">
+                            None
+                        </label>
+                    </div>
+                    @for (int i = 0; i < Model.paymentReasonList.Count; i++)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="paymentReason" id="@Model.paymentReasonList[i].PayReasonName" value="@Model.paymentReasonList[i].PayReasonID">
+                            <label class="form-check-label" for="@Model.paymentReasonList[i].PayReasonName">
+                                @Model.paymentReasonList[i].PayReasonName
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="d-inline-flex w-100 align-items-center">
+                    <label><b>Filter by date:</b></label>
+                    <div class="w-85">
+                        <span class="p-1 mr-2">
+                            <label class="p-1">From:</label>
+                            <input class="datepicker container-fluid pt-1 pb-1 w-25" id="startDate" type="date" />
+                        </span>
+
+                        <span class="p-1">
+                            <label class="p-1">To:</label>
+                            <input class="datepicker container-fluid pt-1 pb-1 w-25" id="endDate" type="date" />
+                        </span>
+                        <button class="dt-button button-primary" onclick="generateTransactionData()">Filter</button>
+                    </div>
+                </div>
+                <hr />
                 <table id="DTtransactions" class="table table-striped table-bordered mx-0 w-100">
                     <thead>
                         <tr>
@@ -84,81 +130,99 @@
             return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
         }
 
-        function setDefaultDaysInInput() {
+        function setDefaultDaysInInput(range) {
             let today = new Date();
+            let day = today.getDate();
             let month = today.getMonth();
             let year = today.getFullYear();
             let initStartDate = "";
             let initEndDate = "";
 
-            switch (month) {
-                case 0:
-                    initStartDate = year + "-01-01";
-                    initEndDate = year + "-01-31";
-                    break;
-                case 1:
-                    initStartDate = year + "-02-01";
-                    if (leapYear(year)) {
-                        initEndDate = year + "-02-29";
-                    } else {
-                        initEndDate = year + "-02-28";
-                    }
-                    break;
-                case 2:
-                    initStartDate = year + "-03-01";
-                    initEndDate = year + "-03-31";
-                    break;
-                case 3:
-                    initStartDate = year + "-04-01";
-                    initEndDate = year + "-04-30";
-                    break;
-                case 4:
-                    initStartDate = year + "-05-01";
-                    initEndDate = year + "-05-31";
-                    break;
-                case 5:
-                    initStartDate = year + "-06-01";
-                    initEndDate = year + "-06-30";
-                    break;
-                case 6:
-                    initStartDate = year + "-07-01";
-                    initEndDate = year + "-07-31";
-                    break;
-                case 7:
-                    initStartDate = year + "-08-01";
-                    initEndDate = year + "-08-31";
-                    break;
-                case 8:
-                    initStartDate = year + "-09-01";
-                    initEndDate = year + "-09-30";
-                    break;
-                case 9:
-                    initStartDate = year + "-10-01";
-                    initEndDate = year + "-10-31";
-                    break;
-                case 10:
-                    initStartDate = year + "-11-01";
-                    initEndDate = year + "-11-30";
-                    break;
-                case 11:
-                    initStartDate = year + "-12-01";
-                    initEndDate = year + "-12-31";
-                    break;
+            if (range == "default") {
+                switch (month) {
+                    case 0:
+                        initStartDate = year + "-01-01";
+                        initEndDate = year + "-01-31";
+                        break;
+                    case 1:
+                        initStartDate = year + "-02-01";
+                        if (leapYear(year)) {
+                            initEndDate = year + "-02-29";
+                        } else {
+                            initEndDate = year + "-02-28";
+                        }
+                        break;
+                    case 2:
+                        initStartDate = year + "-03-01";
+                        initEndDate = year + "-03-31";
+                        break;
+                    case 3:
+                        initStartDate = year + "-04-01";
+                        initEndDate = year + "-04-30";
+                        break;
+                    case 4:
+                        initStartDate = year + "-05-01";
+                        initEndDate = year + "-05-31";
+                        break;
+                    case 5:
+                        initStartDate = year + "-06-01";
+                        initEndDate = year + "-06-30";
+                        break;
+                    case 6:
+                        initStartDate = year + "-07-01";
+                        initEndDate = year + "-07-31";
+                        break;
+                    case 7:
+                        initStartDate = year + "-08-01";
+                        initEndDate = year + "-08-31";
+                        break;
+                    case 8:
+                        initStartDate = year + "-09-01";
+                        initEndDate = year + "-09-30";
+                        break;
+                    case 9:
+                        initStartDate = year + "-10-01";
+                        initEndDate = year + "-10-31";
+                        break;
+                    case 10:
+                        initStartDate = year + "-11-01";
+                        initEndDate = year + "-11-30";
+                        break;
+                    case 11:
+                        initStartDate = year + "-12-01";
+                        initEndDate = year + "-12-31";
+                        break;
+                }
+            } else if (range == "today") {
+                initStartDate = year + "-" + (month + 1) + "-" + day;
+                initEndDate = year + "-" + (month + 1) + "-" + day;
+            } else if (range == "week") {
+                initEndDate = year + "-" + (month + 1) + "-" + day;
+                let weekEnd = today;
+                weekEnd.setDate(today.getDate() - 7);
+                console.log(weekEnd);
+                initStartDate = year + "-" + (weekEnd.getMonth() + 1) + "-" + weekEnd.getDate();
+                console.log(initStartDate)
+            } else if (range == "month") {
+                initEndDate = year + "-" + (month + 1)  + "-" + day;
+                let monthEnd = today;
+                monthEnd.setDate(today.getDate() - 30);
+                initStartDate = year + "-" + (monthEnd.getMonth() + 1) + "-" + monthEnd.getDate();
             }
-
+            
             document.getElementById('startDate').value = initStartDate;
             document.getElementById('endDate').value = initEndDate;
         }
 
-        window.addEventListener('load', setDefaultDaysInInput());
+        window.addEventListener('load', setDefaultDaysInInput('default'));
 
         function generateTransactionData() {
             destroyTransactionTable();
             let startDate = document.getElementById('startDate').value.toString();
             let endDate = document.getElementById('endDate').value.toString();
-            console.log(startDate);
-            console.log(endDate);
-            getTransactionList(startDate, endDate);
+            let type = $("input[name='paymentType']:checked").val()
+            let reason = $("input[name='paymentReason']:checked").val()
+            getTransactionList(startDate, endDate, type, reason);
         }
 
         function destroyTransactionTable() {
@@ -168,12 +232,12 @@
             }
         }
 
-        function getTransactionList(startDate, endDate) {
+        function getTransactionList(startDate, endDate, type, reason) {
             DTtransactions = $('#DTtransactions').DataTable({
                 dom: 'Bfrtip',
                 buttons: ['csv', 'excel', 'pdf', 'print'],
                 "ajax": {
-                    "url": '/api/transactionReport/?startDate=' + startDate + '&endDate=' + endDate,
+                    "url": '/api/transactionReport/?startDate=' + startDate + '&endDate=' + endDate + '&type=' + type + '&reason=' + reason,
                     "type": "GET",
                     "datatype": "json"
                 },
