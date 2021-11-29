@@ -20,6 +20,8 @@ namespace RV_Park_Reservation_System.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
+
     public class adminReservationUpdateController : Controller
     {
         #region injectedServices
@@ -37,13 +39,69 @@ namespace RV_Park_Reservation_System.Controllers
         }
         #endregion
 
-        //[HttpGet]
-        //commenting out for testing purposes, as this relates to showing the customer only their index page of just their scheduled reservations. 
-        //public IActionResult Index()
-        //{
-        //    //var customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name); 
-        //    //return Json(new { data = _unitOfWork.Reservation.List().Where(c => c.Customer == customer && c.ResStatusID == 9) });
-        //}
+        public AdminReservationVM AdminReservationObject { get; set; }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            //AdminReservationObject = new AdminReservationVM()
+            //{
+            //    Reservations = _unitOfWork.Reservation.List().Where(c => c.ResStatusID == 1 || c.ResStatusID == 4 || c.ResStatusID == 9),
+            //    ListOfCustomers = _unitOfWork.Customer.List(),
+            //    ListOfSites = _unitOfWork.Site.List(),
+            //    DODAffiliationList = _unitOfWork.DOD_Affiliation.List(),
+            //    ServiceStatusTypes = _unitOfWork.Service_Status_Type.List()
+            //};
+
+            var reservationList = _unitOfWork.Reservation.List();
+            var customerList = _unitOfWork.Customer.List();
+            var siteList = _unitOfWork.Site.List();
+            var siteCategoryList = _unitOfWork.Site_Category.List();
+            var statusList = _unitOfWork.Reservation_Status.List();
+            var siteRateList = _unitOfWork.Site_Rate.List();
+            var vehicleTypeList = _unitOfWork.Vehicle_Type.List();
+
+            var reservationsQuery = from rev in reservationList
+                                   join stat in statusList on rev.ResStatusID equals stat.ResStatusID
+                                   join veh in vehicleTypeList on rev.TypeID equals veh.TypeID
+                                   join cust in customerList on rev.Id equals cust.Id
+                                   join sit in siteList on rev.SiteID equals sit.SiteID
+                                   join cat in siteCategoryList on sit.SiteCategoryID equals cat.SiteCategory
+                                   join rat in siteRateList on cat.SiteCategory equals rat.SiteCategoryID
+                                   into reservation
+                                   from subItem in reservation.DefaultIfEmpty()
+                                   select new
+                                   {
+                                       id = rev.ResID,
+                                       name = cust.CustFirstName + " " + cust.CustLastName,
+                                       siteNumber = sit.SiteNumber,
+                                       startDate = rev.ResStartDate,
+                                       endDate = rev.ResEndDate,
+                                       status = stat.ResStatusName,
+                                       customerID = cust.Id
+                                   };
+
+            var reservationGridList = new List<AdminReservationVM>();
+
+            foreach (var v in reservationsQuery)
+            {
+                if (v.status != "Cancelled" && v.status != "Completed")
+                {               
+                    AdminReservationVM row = new AdminReservationVM();
+                    row.reservationID = v.id;
+                    row.fullName = v.name;
+                    row.siteNumber = v.siteNumber;
+                    row.startDate = v.startDate;
+                    row.endDate = v.endDate;
+                    row.customerID = v.customerID;
+
+
+                    reservationGridList.Add(row);
+                }
+
+            }
+            return Json(new { data = reservationGridList });
+        }
 
 
         //Process the refund amount and updates the selected reservation to canceled. 

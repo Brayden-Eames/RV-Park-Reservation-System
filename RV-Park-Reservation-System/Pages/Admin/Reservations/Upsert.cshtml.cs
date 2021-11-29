@@ -81,7 +81,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             }
 
             CustomerReservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == id);
-            CustomerInfo = await _unitOfWork.Customer.GetAsync(c => c.Id == userId);
+            CustomerInfo = await _unitOfWork.Customer.GetAsync(c => c.Id == CustomerReservation.Id);
             CustomerPayment = await _unitOfWork.Payment.GetAsync(p => p.ResID == id);
            
             sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
