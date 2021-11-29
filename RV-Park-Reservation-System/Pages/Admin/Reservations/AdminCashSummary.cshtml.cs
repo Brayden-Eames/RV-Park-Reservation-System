@@ -84,8 +84,9 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
             }
 
-             ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustFirstName == reservationVM.customerObj.CustFirstName && c.CustLastName == reservationVM.customerObj.CustLastName && c.CustEmail == reservationVM.customerObj.CustEmail);
-             reservationVM.reservationObj.Id = customer.Id;
+             ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c =>c.CustEmail == reservationVM.customerObj.CustEmail);
+             reservationVM.reservationObj.Id = customer.Id; //current bug: The name isn't being pulled of what's been input for the generic account info. I'll ahve to look into this later. 
+            //also need to figure out how to implement or if implementation is even needed for payment amounts for generic. Might just have a checkbox that says (Paid? Y/N).
              _unitOfWork.Reservation.Add(reservationVM.reservationObj);
              _unitOfWork.Commit();
 
