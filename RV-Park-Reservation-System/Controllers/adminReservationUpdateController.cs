@@ -44,15 +44,6 @@ namespace RV_Park_Reservation_System.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            //AdminReservationObject = new AdminReservationVM()
-            //{
-            //    Reservations = _unitOfWork.Reservation.List().Where(c => c.ResStatusID == 1 || c.ResStatusID == 4 || c.ResStatusID == 9),
-            //    ListOfCustomers = _unitOfWork.Customer.List(),
-            //    ListOfSites = _unitOfWork.Site.List(),
-            //    DODAffiliationList = _unitOfWork.DOD_Affiliation.List(),
-            //    ServiceStatusTypes = _unitOfWork.Service_Status_Type.List()
-            //};
-
             var reservationList = _unitOfWork.Reservation.List();
             var customerList = _unitOfWork.Customer.List();
             var siteList = _unitOfWork.Site.List();
@@ -78,7 +69,8 @@ namespace RV_Park_Reservation_System.Controllers
                                        startDate = rev.ResStartDate,
                                        endDate = rev.ResEndDate,
                                        status = stat.ResStatusName,
-                                       customerID = cust.Id
+                                       customerID = cust.Id,
+                                       customerEmail = cust.CustEmail
                                    };
 
             var reservationGridList = new List<AdminReservationVM>();
@@ -94,7 +86,8 @@ namespace RV_Park_Reservation_System.Controllers
                     row.startDate = v.startDate;
                     row.endDate = v.endDate;
                     row.customerID = v.customerID;
-
+                    row.reservationStatus = v.status;
+                    row.customerEmailAddress = v.customerEmail;
 
                     reservationGridList.Add(row);
                 }
@@ -102,7 +95,6 @@ namespace RV_Park_Reservation_System.Controllers
             }
             return Json(new { data = reservationGridList });
         }
-
 
         //Process the refund amount and updates the selected reservation to canceled. 
         [HttpDelete("{id}")]
@@ -219,7 +211,7 @@ namespace RV_Park_Reservation_System.Controllers
                
                 return Json(new { success = true, message = "Cancel Successful" }); //need to change this to redirectToPage(/index) for returning to the grid.
             }
-            return Json(new { }); //need to change this to redirectToPage(/index) for returning to the grid.
+            return Json(new { success = true }); //need to change this to redirectToPage(/index) for returning to the grid.
             
             
         }

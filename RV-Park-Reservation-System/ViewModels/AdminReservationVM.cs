@@ -21,6 +21,8 @@ namespace RV_Park_Reservation_System.ViewModels
         public string fullName { get; set; }
         public string siteNumber { get; set; }
         public string customerID { get; set; }
+        public string reservationStatus { get; set; }
+        public string customerEmailAddress { get; set; }
 
     }
 }

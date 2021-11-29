@@ -14,10 +14,12 @@ function loadList() {
 		},
 		"columns": [
 			{ data: "reservationID", width: "10%" },
-			{ data: "fullName", width: "15%" },
+			{ data: "fullName", width: "20%" },
+			{ data: "customerEmailAddress", width: "25%" },
 			{ data: "startDate", width: "10%", "render": function (data) { return moment(data).format("MM/DD/YYYY"); } },
 			{ data: "endDate", width: "10%", "render": function (data) { return moment(data).format("MM/DD/YYYY"); } },
-			{ data: "siteNumber", width: "30%" },
+			{ data: "siteNumber", width: "5%" },
+			{ data: "reservationStatus", width: "10%" },
 			{
 				data: "reservationID", width: "10%",
 				"render": function (data) {
