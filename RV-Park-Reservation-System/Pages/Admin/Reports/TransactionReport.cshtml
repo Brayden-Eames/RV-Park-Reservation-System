@@ -9,12 +9,12 @@
 
     <div class="row">
         <div class="col-3 col-md-2 d-flex flex-column text-left">
-            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Check In/Out</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/Reports/CheckInOutReport">Check In/Out</a>
             <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Daily Revenue</a>
-            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Night Vacancy</a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/Reports/NightVacancyReport">Night Vacancy</a>
             <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Monthly Revenue</a>
-            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="">Past Reservations</a>
-            <a class="btn btn-primary w-100 py-2 text-left" asp-page="">Transactions <i class="fas fa-angle-right"></i></a>
+            <a class="btn btn-primary-outline w-100 py-2 text-left" asp-page="/Admin/Reports/PastReservationsReport">Past Reservations</a>
+            <a class="btn btn-primary w-100 py-2 text-left" asp-page="/Admin/Reports/TransactionReport">Transactions <i class="fas fa-angle-right"></i></a>
         </div>
         <div class="col-10 px-0">
             <div class="border backgroundWhite container p-3"> 
@@ -170,6 +170,8 @@
 
         function getTransactionList(startDate, endDate) {
             DTtransactions = $('#DTtransactions').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['csv', 'excel', 'pdf', 'print'],
                 "ajax": {
                     "url": '/api/transactionReport/?startDate=' + startDate + '&endDate=' + endDate,
                     "type": "GET",
