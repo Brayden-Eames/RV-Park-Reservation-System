@@ -16,15 +16,15 @@ namespace RV_Park_Reservation_System.Controllers
         public VehicleTypeController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            return Json(new { data = _unitOfWork.Vehicle_Type.List() });
+            return Json(new { data = await _unitOfWork.Vehicle_Type.ListAsync(a => a.TypeID != null) });
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> OnDelete(int id)
         {
-            var objFromDb = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == id);
+            var objFromDb = await _unitOfWork.Vehicle_Type.GetAsync(v => v.TypeID == id);
             if (objFromDb == null)
             {
                 return Json(new { success = false, message = "Error while deleting." });

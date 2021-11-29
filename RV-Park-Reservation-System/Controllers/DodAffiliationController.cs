@@ -16,9 +16,9 @@ namespace RV_Park_Reservation_System.Controllers
         public DodAffiliationController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            return Json(new { data = _unitOfWork.DOD_Affiliation.List() });
+            return Json(new { data = await _unitOfWork.DOD_Affiliation.ListAsync(a => a.DODAffiliationID != null) });
         }
 
         [HttpDelete("{id}")]

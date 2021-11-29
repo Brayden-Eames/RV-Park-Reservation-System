@@ -18,19 +18,35 @@ namespace RV_Park_Reservation_System.Controllers
         public TransactionReportController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public IActionResult Get(string startDate, string endDate)
+        public async Task<IActionResult> OnGet(string startDate, string endDate, string type, string reason)
         {
             DateTime DTstartDate = DateTime.Parse(startDate);
             DateTime DTendDate = DateTime.Parse(endDate);
-            var paymentList = _unitOfWork.Payment.List(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate);
-            var payTypeList = _unitOfWork.Payment_Type.List();
-            var payReasonList = _unitOfWork.Payment_Reason.List();
-            var customerList = _unitOfWork.Customer.List();
+            IEnumerable<Payment> paymentList = null;
+            if (type != "0" && reason != "0")
+            {
+                paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate && p.PayTypeID == Convert.ToInt32(type) && p.PayReasonID == Convert.ToInt32(reason));
+            } 
+            else if (type != "0" && reason == "0")
+            {
+                paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate && p.PayTypeID == Convert.ToInt32(type));
+            } 
+            else if (type == "0" && reason != "0")
+            {
+                paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate && p.PayReasonID == Convert.ToInt32(reason));
+            }
+            else
+            {
+                paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= DTstartDate && p.PayDate <= DTendDate);
+            }
+            var payTypeList = await _unitOfWork.Payment_Type.ListAsync(a => a.PayTypeID != null);
+            var payReasonList = await _unitOfWork.Payment_Reason.ListAsync(a => a.PayReasonID != null);
+            var customerList = await _unitOfWork.Customer.ListAsync(a => a.Id != null);
             List <Reservation> reservationList = new List<Reservation>();
 
             foreach(Payment p in paymentList)
             {
-                Reservation r = _unitOfWork.Reservation.Get(r => r.ResID == p.ResID);
+                Reservation r = await _unitOfWork.Reservation.GetAsync(r => r.ResID == p.ResID);
                 reservationList.Add(r);
             }
 

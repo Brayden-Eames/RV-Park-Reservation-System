@@ -122,6 +122,23 @@ h1 {
     color: var(--danger) !important;
 }
 
+.w-80 {
+    width: 80%;
+}
+
+.w-85 {
+    width: 85%
+}
+
+.w-90 {
+    width: 90%;
+}
+
+.w-95 {
+    width: 95%
+}
+
+
 body {
     background-color: var(--white) !important;
     color: var(--dark) !important;
