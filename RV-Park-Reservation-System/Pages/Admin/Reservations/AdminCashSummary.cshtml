@@ -30,9 +30,9 @@
                     <div class="row text-center">
                         <div class="col-md-12">
                             <p class="pt-4">
-                                Start Date: @Model.newReservation.ResStartDate.ToString()
+                                Start Date: @Model.newReservation.ResStartDate.ToString("MM/dd/yyyy")
                                 &nbsp;&nbsp; <i class="fas fa-align-center fa-arrow-right"></i> &nbsp;&nbsp;
-                                End Date: @Model.newReservation.ResEndDate.ToString()
+                                End Date: @Model.newReservation.ResEndDate.ToString("MM/dd/yyyy")
                             </p>
                         </div>
                     </div>
@@ -69,8 +69,6 @@
                     </div>
                     <form method="post" class="p-2" id="payment-form">
                         <input type="hidden" id="paymentIntent" asp-for="paymentID" />
-                        <input asp-for="paymentAmount" class="col-6 form-control mt-2 mb-3" type="number" placeholder="Enter Cash Amount Paid" />
-                        <span asp-validation-for="paymentAmount" class="text-danger"></span>
                         <div class="row list-group-horizontal">
                             <div class="col-md-6">
                                 <button type="submit" class="btn mt-2 mb-2 container-fluid btn-primary" id="submit">

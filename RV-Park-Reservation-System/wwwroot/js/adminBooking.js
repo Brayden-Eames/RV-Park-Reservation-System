@@ -229,8 +229,6 @@ function checkChange(option) {
         $('.createAccount').css('visibility', 'visible');
         $('.genericAccount').css('display', 'none');
         $('.genericAccount').css('visibility', 'hidden');
-        $('.custNameFields').css('display', 'block');
-        $('.custNameFields').css('visibility', 'visible');
         document.getElementById("inputFirstName").value = "";
         document.getElementById("inputLastName").value = "";
         document.getElementById("inputEmail").value = "";
@@ -245,18 +243,16 @@ function checkChange(option) {
         $('.createAccount').css('visibility', 'hidden');
         $('.custNameFields').css('display', 'block');
         $('.custNameFields').css('visibility', 'visible');
-        //document.getElementById("inputFirstName").value = "Generic";
-        //document.getElementById("inputLastName").value = "Account";
+        document.getElementById("inputFirstName").value = "Generic";
+        document.getElementById("inputLastName").value = "Account";
         document.getElementById("inputEmail").value = "genericaccount@gmail.com";
         document.getElementById("inputPhoneNumber").value = "8888888888";
         document.getElementById("ddlDODAffiliation").value = 1;
         document.getElementById("ddlServiceStatusType").value = 1;
-
     }
     if (option.value == 'chooseDefault') {
         $('.genericAccount').css('display', 'none');
         $('.createAccount').css('display', 'none');
-        $('.custNameFields').css('display', 'none');
     }
 }
 
