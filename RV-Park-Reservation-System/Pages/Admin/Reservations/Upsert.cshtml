@@ -10,9 +10,10 @@
     <input type="hidden" value="@Model.CustomerReservation.Site" asp-for="@Model.CustomerReservation.Site" />
     <input type="hidden" value="@Model.CustomerReservation.Site.SiteID" asp-for="@Model.CustomerReservation.Site.SiteID" />
     <input type="hidden" value="@Model.CustomerReservation.Site.SiteNumber" asp-for="@Model.CustomerReservation.Site.SiteNumber" />
-    <input type="hidden" value="@Model.totalCost" asp-for="@Model.totalCost" />
+    <input type="hidden" id="totalCost"value="@Model.totalCost" asp-for="@Model.totalCost" />
     <input type="hidden" value="@Model.CustomerInfo.CustFirstName" asp-for="@Model.CustomerInfo.CustFirstName" />
     <input type="hidden" value="@Model.CustomerInfo.CustLastName" asp-for="@Model.CustomerInfo.CustLastName" />
+    @*<input type="hidden" id="totalCost" asp-for="totalCost" />*@
     @*<input type="hidden" value="@Model.CustomerReservation.Reservation_Status" asp-for="@Model.CustomerReservation.Reservation_Status" />*@
     <input type="hidden" value="@Model.CustomerReservation.ResStatusID" asp-for="reservationStatusID" />
 
@@ -63,7 +64,7 @@
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Total Cost</span>
-                <input type="text" class="form-control" placeholder="Total Cost" id="totalCost" asp-for="@Model.totalCost" value="$@Model.CustomerPayment.PayTotalCost" readonly>
+                <input type="text" class="form-control" placeholder="Total Cost" id="totalCost2"  value="$@Model.CustomerPayment.PayTotalCost" readonly>
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Start Date</span>
