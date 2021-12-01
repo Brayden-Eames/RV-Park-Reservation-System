@@ -131,7 +131,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     reservationObj = reservation,
                     paymentObj = paymentObject,
                     customerObj = customerInfoObj,
-                    paymentUpdateObj = new Payment()
+                    //paymentUpdateObj = new Payment()
                 };
 
                 reservation.Site = siteObj;
@@ -147,17 +147,16 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservation.Vehicle_Type = CustomerReservation.Vehicle_Type;
                 reservation.ResStatusID = reservationStatusID;
 
-                reservationVM.paymentUpdateObj.PayDate = DateTime.Now;
-                reservationVM.paymentUpdateObj.PayLastModifiedBy = User.Identity.Name;
-                reservationVM.paymentUpdateObj.PayLastModifiedDate = DateTime.Now;
-                reservationVM.paymentUpdateObj.PayReasonID = 1;
-                reservationVM.paymentUpdateObj.PayTypeID = 1;
-                reservationVM.paymentUpdateObj.IsPaid = false;
-                reservationVM.paymentUpdateObj.PayTotalCost = totalCost;
+                reservationVM.paymentObj.PayDate = DateTime.Now;
+                reservationVM.paymentObj.PayLastModifiedBy = User.Identity.Name;
+                reservationVM.paymentObj.PayLastModifiedDate = DateTime.Now;
+                reservationVM.paymentObj.PayReasonID = 1;
+                reservationVM.paymentObj.PayTypeID = 1;
+                reservationVM.paymentObj.IsPaid = false;
+                reservationVM.paymentObj.PayTotalCost = totalCost;
 
 
-                if(reservationVM.paymentUpdateObj.CCReference == null)
-                {
+
                     var options = new PaymentIntentCreateOptions
                     {
                         Amount = Convert.ToInt32(totalCost * 100),
@@ -173,8 +172,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
                     var service = new PaymentIntentService();
                     var paymentIntent = service.Create(options);
-                    reservationVM.paymentUpdateObj.CCReference = paymentIntent.Id;
-                }
+                    reservationVM.paymentObj.CCReference = paymentIntent.Id;
+                
 
                 HttpContext.Session.Set(SD.ReservationSession, reservationVM); //uses the ReservationSession string to handle this separate from regular sessions.
 

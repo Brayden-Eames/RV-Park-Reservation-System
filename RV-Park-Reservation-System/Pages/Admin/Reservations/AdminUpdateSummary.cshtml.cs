@@ -109,7 +109,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 paymentObj.Payment_Reason = reservationVM.paymentObj.Payment_Reason;
                 paymentObj.Payment_Type = reservationVM.paymentObj.Payment_Type;
                 paymentObj.PayReasonID = reservationVM.paymentObj.PayReasonID;
-                paymentObj.PayTotalCost = reservationVM.paymentUpdateObj.PayTotalCost;
+                paymentObj.PayTotalCost = reservationVM.paymentObj.PayTotalCost;
                 paymentObj.PayTypeID = reservationVM.paymentObj.PayTypeID;
 
                 customerObj = reservationVM.customerObj;
@@ -144,7 +144,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
                 System.Threading.Thread.Sleep(1000);
 
-                paymentIntent = service.Get(reservationVM.paymentUpdateObj.CCReference);
+                paymentIntent = service.Get(reservationVM.paymentObj.CCReference);
 
 
                 if (paymentIntent.Status.ToLower() == "succeeded")
@@ -178,7 +178,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     //paymentObj.Payment_Reason = reservationVM.paymentObj.Payment_Reason;
                     //paymentObj.Payment_Type = reservationVM.paymentObj.Payment_Type;
                     //paymentObj.PayReasonID = reservationVM.paymentObj.PayReasonID;
-                    paymentObj.PayTotalCost = reservationVM.paymentUpdateObj.PayTotalCost;
+                    paymentObj.PayTotalCost = reservationVM.paymentObj.PayTotalCost;
                     //paymentObj.PayTypeID = reservationVM.paymentObj.PayTypeID;
 
                     _unitOfWork.Reservation.Add(newReservation);
