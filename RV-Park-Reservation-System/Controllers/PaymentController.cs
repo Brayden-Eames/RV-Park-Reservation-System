@@ -22,8 +22,10 @@ namespace RV_Park_Reservation_System.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult Get(string paymentAmount)
         {
+            double paymentGiven = Convert.ToDouble(paymentAmount);
+
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null )
             {
 
@@ -41,6 +43,7 @@ namespace RV_Park_Reservation_System.Controllers
                         {
                           "card",
                         },
+                        
                     };
 
                     var service = new PaymentIntentService();
@@ -57,6 +60,21 @@ namespace RV_Park_Reservation_System.Controllers
                 {
                     var intent = new Stripe.PaymentIntentService();
                     var payment = intent.Get(reservationVM.paymentObj.CCReference);
+                    if (paymentGiven != 0)
+                    {
+                        var options = new ChargeCreateOptions
+                        {
+                            Amount = Convert.ToInt32(paymentGiven * 100),
+                            Currency = "usd",
+
+
+                        };
+                        var service = new ChargeService();
+                        Charge charge = service.Create(options);
+                        
+
+                    }
+                    
                     return Json(new { client_secret = payment.ClientSecret });
                 }
 

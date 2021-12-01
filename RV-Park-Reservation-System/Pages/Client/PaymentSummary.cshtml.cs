@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -50,6 +51,10 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         public bool Error { get; set; } = false;
 
+        public decimal paymentAmount { get; set; }
+
+        public decimal amountDue { get; set; }
+
         public ReservationVM reservationVM { get; set; }
         #endregion
 
@@ -79,6 +84,36 @@ namespace RV_Park_Reservation_System.Pages.Client
 
                 //Gets the vehicle type for the summary page. 
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
+
+                if ((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays > 30)
+                {
+                    DateTime endOfMonthStartDate = new DateTime(reservationVM.reservationObj.ResStartDate.Year,
+                                                       reservationVM.reservationObj.ResStartDate.Month,
+                                                       DateTime.DaysInMonth(reservationVM.reservationObj.ResStartDate.Year,
+                                                                            reservationVM.reservationObj.ResStartDate.Month));
+                    DateTime nextMonthStartDate = new DateTime(reservationVM.reservationObj.ResStartDate.Year,
+                                   reservationVM.reservationObj.ResStartDate.Month + 1,
+                                   DateTime.DaysInMonth(reservationVM.reservationObj.ResStartDate.Year,
+                                                        reservationVM.reservationObj.ResStartDate.Month));
+                    DateTime startOfMonthEndDate = new DateTime(reservationVM.reservationObj.ResEndDate.Year,
+                                                                reservationVM.reservationObj.ResEndDate.Month, 1);
+                    var totalDayDiff = Math.Ceiling((endOfMonthStartDate - reservationVM.reservationObj.ResStartDate).TotalDays) + 1 + Math.Floor((reservationVM.reservationObj.ResEndDate - startOfMonthEndDate).TotalDays);
+                    var monthDiff = getMonthDifference(nextMonthStartDate, startOfMonthEndDate);
+                    DateTime today = DateTime.Now;
+
+                    if (today <= endOfMonthStartDate)
+                    {
+                        amountDue = (decimal)(Math.Ceiling((endOfMonthStartDate - reservationVM.reservationObj.ResStartDate).TotalDays)+ 1) * 25 ;
+                    }
+                    else if (today > startOfMonthEndDate )
+                    {
+                        amountDue = (decimal)(Math.Floor((reservationVM.reservationObj.ResEndDate - startOfMonthEndDate).TotalDays)) * 25;
+                    }
+                    else
+                    {
+                        amountDue = 700;
+                    }
+                }
 
             }
             else
@@ -164,5 +199,12 @@ namespace RV_Park_Reservation_System.Pages.Client
             return RedirectToPage("/Client/PaymentSummary", new { error = true });
 
         }
+
+        public static int getMonthDifference(DateTime startDate, DateTime endDate)
+        {
+            int monthsApart = 12 * (startDate.Year - endDate.Year) + startDate.Month - endDate.Month;
+            return Math.Abs(monthsApart);
+        }
+
     }
 }

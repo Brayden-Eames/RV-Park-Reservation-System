@@ -6,6 +6,7 @@
 @{
 }
 
+
 <div class="container ">
     @if (Model.Error == true)
     {
@@ -60,6 +61,18 @@
                             total Cost: @Model.paymentObj.PayTotalCost.ToString()
                         </div>
                     </div>
+                    @if ((Model.reservationVM.reservationObj.ResEndDate - Model.reservationVM.reservationObj.ResStartDate).TotalDays > 30)
+                    {
+                        <div class="row pt-4  text-center">
+                            <div class="col-6">Amount Due: @Model.amountDue </div>
+                            <div class="col-6">
+                                <label>Please enter payment amount. </label>
+                                <input onchange="loadPayment();" asp-for="paymentAmount" id="paymentAmount"  />
+                                
+                            </div>
+                        </div>
+                    }
+
                 </div>
                 <div class="col-md-6 border-left  pt-3 ">
                     <form method="post" class="p-2" id="payment-form">

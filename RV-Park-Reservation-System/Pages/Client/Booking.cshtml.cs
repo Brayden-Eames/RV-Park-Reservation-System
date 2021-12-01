@@ -132,6 +132,8 @@ namespace RV_Park_Reservation_System.Pages.Client
                 TimeSpan EndTime = new TimeSpan(12, 0, 0);
                 EndDate = EndDate.Date + EndTime;
 
+
+
                 
                 //Creates the reservation object based on the user input. 
                 reservationVM.reservationObj.ResAcknowledgeValidPets = breedPolicy;
@@ -160,16 +162,45 @@ namespace RV_Park_Reservation_System.Pages.Client
                 reservationVM.paymentObj.PayTypeID = 1;
                 reservationVM.paymentObj.IsPaid = false;
 
-                //Calculates the total cost based on the type of vehicle and amount of days. 
-                if (reservationVM.reservationObj.TypeID == 7)//Type 7 is the tent space. 
+                if ((EndDate - StartDate).TotalDays >= 30)
                 {
-                    reservationVM.paymentObj.PayTotalCost = (decimal)(Math.Round((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays) * 17);
+                    DateTime endOfMonthStartDate = new DateTime(StartDate.Year,
+                                                       StartDate.Month,
+                                                       DateTime.DaysInMonth(StartDate.Year,
+                                                                            StartDate.Month));
+                    DateTime nextMonthStartDate = new DateTime(StartDate.Year,
+                                   StartDate.Month + 1,
+                                   DateTime.DaysInMonth(StartDate.Year,
+                                                        StartDate.Month));
+                    DateTime startOfMonthEndDate = new DateTime(EndDate.Year,
+                                                                EndDate.Month, 1);
+                    var totalDayDiff = Math.Ceiling((endOfMonthStartDate - StartDate).TotalDays) + 1 + Math.Floor((EndDate - startOfMonthEndDate).TotalDays);
+                    var monthDiff = getMonthDifference(nextMonthStartDate, startOfMonthEndDate);
+
+                    if (reservationVM.reservationObj.TypeID == 7)//Type 7 is the tent space. 
+                    {
+                        reservationVM.paymentObj.PayTotalCost = (decimal)((totalDayDiff * 17) + monthDiff * 700);
+                    }
+                    else
+                    {
+                        reservationVM.paymentObj.PayTotalCost = (decimal)((totalDayDiff * 25) + monthDiff * 700);
+
+                    }
                 }
                 else
                 {
-                    reservationVM.paymentObj.PayTotalCost = (decimal)(Math.Round((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays) * 25);
+                    //Calculates the total cost based on the type of vehicle and amount of days. 
+                    if (reservationVM.reservationObj.TypeID == 7)//Type 7 is the tent space. 
+                    {
+                        reservationVM.paymentObj.PayTotalCost = (decimal)(Math.Round((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays) * 17);
+                    }
+                    else
+                    {
+                        reservationVM.paymentObj.PayTotalCost = (decimal)(Math.Round((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays) * 25);
 
+                    }
                 }
+
 
                 //Checks if a payment reference already exist or not. 
                 if (reservationVM.paymentObj.CCReference == null)
@@ -213,6 +244,12 @@ namespace RV_Park_Reservation_System.Pages.Client
             var reservations = _unitOfWork.Reservation.List();
             reservations = reservations.Where(r => r.ResStatusID == 1 && (DateTime.Now - r.ResCreatedDate).TotalMinutes > 15);
             _unitOfWork.Reservation.Delete(reservations);
+        }
+
+        public static int getMonthDifference(DateTime startDate, DateTime endDate)
+        {
+            int monthsApart = 12 * (startDate.Year - endDate.Year) + startDate.Month - endDate.Month;
+            return Math.Abs(monthsApart);
         }
 
     }
