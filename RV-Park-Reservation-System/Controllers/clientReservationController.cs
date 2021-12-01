@@ -37,9 +37,9 @@ namespace RV_Park_Reservation_System.Controllers
 
         //Gets all reservations for current user that are scheduled. 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            var customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
+            var customer = await _unitOfWork.Customer.GetAsync(c => c.CustEmail == User.Identity.Name);
             return Json(new { data = _unitOfWork.Reservation.List().Where(c=>c.Customer == customer && c.ResStatusID == 9) });
         }
 

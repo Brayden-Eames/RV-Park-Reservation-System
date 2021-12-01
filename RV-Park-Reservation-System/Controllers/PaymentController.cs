@@ -8,6 +8,7 @@ using RV_Park_Reservation_System.ViewModels;
 using Stripe;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RV_Park_Reservation_System.Controllers
 {
@@ -22,7 +23,7 @@ namespace RV_Park_Reservation_System.Controllers
             _unitOfWork = unitOfWork;
         }
         [HttpGet]
-        public ActionResult Get(string paymentAmount)
+        public async Task<ActionResult> OnGet()
         {
             double paymentGiven = Convert.ToDouble(paymentAmount);
 
@@ -32,7 +33,7 @@ namespace RV_Park_Reservation_System.Controllers
                 ReservationVM reservationVM = new ReservationVM();
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
                 Payment paymentObj = reservationVM.paymentObj;
-                ApplicationCore.Models.Customer modelCustomer = _unitOfWork.Customer.Get(c => c.Email == User.Identity.Name);
+                ApplicationCore.Models.Customer modelCustomer = await _unitOfWork.Customer.GetAsync(c => c.Email == User.Identity.Name);
                 if (reservationVM.paymentObj.CCReference == null )
                 {
                     var options = new PaymentIntentCreateOptions
@@ -77,9 +78,7 @@ namespace RV_Park_Reservation_System.Controllers
                     
                     return Json(new { client_secret = payment.ClientSecret });
                 }
-
                 
-
             }
 
             else

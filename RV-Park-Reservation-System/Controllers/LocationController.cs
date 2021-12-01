@@ -16,9 +16,9 @@ namespace RV_Park_Reservation_System.Controllers
         public LocationController(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> OnGet()
         {
-            return Json(new { data = _unitOfWork.Location.List() });
+            return Json(new { data = await _unitOfWork.Location.ListAsync(a => a.LocationID != null) });
         }
 
         [HttpDelete("{id}")]

@@ -21,15 +21,15 @@ namespace RV_Park_Reservation_System.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> OnGet(DateTime startDate, DateTime endDate)
         {          
-            var reservationList = _unitofWork.Reservation.List();
-            var customerList = _unitofWork.Customer.List();
-            var siteList = _unitofWork.Site.List();
-            var siteCategoryList = _unitofWork.Site_Category.List();
-            var statusList = _unitofWork.Reservation_Status.List();     
-            var siteRateList = _unitofWork.Site_Rate.List();
-            var vehicleTypeList = _unitofWork.Vehicle_Type.List();
+            var reservationList = await _unitofWork.Reservation.ListAsync(a => a.Id != null);
+            var customerList = await _unitofWork.Customer.ListAsync(a => a.Id != null);
+            var siteList = await _unitofWork.Site.ListAsync(a => a.SiteID != null);
+            var siteCategoryList = await _unitofWork.Site_Category.ListAsync(a => a.LocationID != null);
+            var statusList = await _unitofWork.Reservation_Status.ListAsync(a => a.ResStatusID != null);     
+            var siteRateList = await _unitofWork.Site_Rate.ListAsync(a => a.RateID != null);
+            var vehicleTypeList = await _unitofWork.Vehicle_Type.ListAsync(a => a.TypeID != null);
 
             var reservationQuery = from rev in reservationList
                                    join stat in statusList on rev.ResStatusID equals stat.ResStatusID

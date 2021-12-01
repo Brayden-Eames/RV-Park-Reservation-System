@@ -32,15 +32,15 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
         public int reservationID { get; set; }
 
-        public IActionResult OnGet(int? id, string? userId)
+        public async Task<IActionResult> OnGet(int? id, string? userId)
         {
             if (!User.Identity.IsAuthenticated || User.IsInRole(SD.CustomerRole))
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Upsert" });
             }
 
-            CustomerReservation = _unitOfWork.Reservation.Get(c => c.ResID == id);
-            CustomerInfo = _unitOfWork.Customer.Get(c => c.Id == userId);
+            CustomerReservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == id);
+            CustomerInfo = await _unitOfWork.Customer.GetAsync(c => c.Id == userId);
             return Page();
         }
 
