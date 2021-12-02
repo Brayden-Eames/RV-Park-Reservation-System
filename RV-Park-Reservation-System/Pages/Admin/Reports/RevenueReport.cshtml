@@ -1,6 +1,7 @@
 ﻿@page
 @model RV_Park_Reservation_System.Pages.Admin.Reports.RevenueReportModel
 @{
+    string file = (string)ViewData["File"];
     ViewData["Title"] = "Revenue Report";
 }
 
@@ -50,70 +51,127 @@
                     </form>
                 </div>
                 <hr />
-                <div class="row">
-                    <div class="col-12 col-md-4">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body p-0">
-                                <h5 class="card-title text-white bg-primary text-center p-3">INCOME</h5>
-                                <div class="px-3">
-                                    @for (int i = 0; i < Model.IncomeList.Count; i++)
-                                    {
-                                        <div class="row mb-2 px-3 align-content-center flex-nowrap">
-                                            <h6 class="col-6 m-0">@Model.IncomeList[i].Name: </h6><span class="m-0"> $@Model.IncomeList[i].Amount</span>
+                @if (Model.reportVisible)
+                {
+                    <div>
+                        <div class="row align-content-center justify-content-center mb-5">
+                            <div>
+                                <a href="@Model.downloadPath" class="btn btn-primary w-auto" download>TXT</a>
+                                <a onclick="javascript:downloadPDF()" class="btn btn-primary w-auto">PDF</a>
+                            </div>
+                            <h5 class="my-4 text-center">Date Range: @Model.startDate.ToShortDateString() - @Model.endDate.ToShortDateString()</h5>
+                            <div class="col-12 col-md-4 d-flex align-content-center justify-content-center">
+                                <div class="card" style="width: 18rem;">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title text-white bg-primary text-center p-3">INCOME</h5>
+                                        <div class="px-3">
+                                            @for (int i = 0; i < Model.IncomeList.Count; i++)
+                                            {
+                                                <div class="row mb-2 px-3 align-content-center flex-nowrap">
+                                                    <h6 class="col-6 m-0">@Model.IncomeList[i].Name: </h6><span class="m-0"> $@Model.IncomeList[i].Amount</span>
+                                                </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 d-flex align-content-center justify-content-center">
+                                <div class="card" style="width: 18rem;">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title text-white bg-primary text-center p-3">REFUNDS</h5>
+                                        <div class="px-3">
+                                            @for (int i = 0; i < Model.RefundList.Count; i++)
+                                            {
+                                                <div class="row mb-2 px-3 align-content-center flex-nowrap">
+                                                    <h6 class="col-6 m-0">@Model.RefundList[i].Name: </h6><span class="m-0"> $@Model.RefundList[i].Amount</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 d-flex align-content-center justify-content-center">
+                                <div class="card" style="width: 18rem;">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title text-white bg-primary text-center p-3">CHARGES</h5>
+                                        <div class="px-3">
+                                            @for (int i = 0; i < Model.ChargeList.Count; i++)
+                                            {
+                                                <div class="row mb-2 px-3 align-content-center flex-nowrap">
+                                                    <h6 class="col-6 m-0">@Model.ChargeList[i].Name: </h6><span class="m-0"> $@Model.ChargeList[i].Amount</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-content-center justify-content-center">
+                            <div class="col-12 col-md-4">
+                                <div class="card">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title text-white bg-primary text-center p-3">SUMMARY</h5>
+                                        <div class="px-3">
+                                            @for (int i = 0; i < Model.SummaryList.Count; i++)
+                                            {
+                                                <div class="row mb-2 px-3 align-content-center flex-nowrap">
+                                                    <h6 class="col-6 m-0">@Model.SummaryList[i].Name: </h6><span class="m-0"> $@Model.SummaryList[i].Amount</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body p-0">
-                                <h5 class="card-title text-white bg-primary text-center p-3">REFUNDS</h5>
-                                <div class="px-3">
-                                    @for (int i = 0; i < Model.RefundList.Count; i++)
-                                    {
-                                        <div class="row mb-2 px-3 align-content-center flex-nowrap">
-                                            <h6 class="col-6 m-0">@Model.RefundList[i].Name: </h6><span class="m-0"> $@Model.RefundList[i].Amount</span>
-                                        </div>
-                                    }
+                    <div id="report" style="display:none">
+                        <h5>DATE RANGE: @Model.startDate.ToShortDateString() - @Model.endDate.ToShortDateString()</h5>
+                        <br />
+                        <h5>INCOME:</h5>
+                        <p>
+                            @for (int i = 0; i < Model.IncomeList.Count; i++)
+                            {
+                                <div>
+                                    <b>@Model.IncomeList[i].Name: </b>$@Model.IncomeList[i].Amount
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body p-0">
-                                <h5 class="card-title text-white bg-primary text-center p-3">CHARGES</h5>
-                                <div class="px-3">
-                                    @for (int i = 0; i < Model.ChargeList.Count; i++)
-                                    {
-                                        <div class="row mb-2 px-3 align-content-center flex-nowrap">
-                                            <h6 class="col-6 m-0">@Model.ChargeList[i].Name: </h6><span class="m-0"> $@Model.ChargeList[i].Amount</span>
-                                        </div>
-                                    }
+                            }
+                        </p>
+                        <br />
+                        <br />
+                        <h5>REFUNDS:</h5>
+                        <p>
+                            @for (int i = 0; i < Model.RefundList.Count; i++)
+                            {
+                                <div>
+                                    <b>@Model.RefundList[i].Name: </b>$@Model.RefundList[i].Amount
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-md-4">
-                        <div class="card">
-                            <div class="card-body p-0">
-                                <h5 class="card-title text-white bg-primary text-center p-3">SUMMARY</h5>
-                                <div class="px-3">
-                                    @for (int i = 0; i < Model.SummaryList.Count; i++)
-                                    {
-                                        <div class="row mb-2 px-3 align-content-center flex-nowrap">
-                                            <h6 class="col-6 m-0">@Model.SummaryList[i].Name: </h6><span class="m-0"> $@Model.SummaryList[i].Amount</span>
-                                        </div>
-                                    }
+                            }
+                        </p>
+                        <br />
+                        <br />
+                        <h5>CHARGES:</h5>
+                        <p>
+                            @for (int i = 0; i < Model.ChargeList.Count; i++)
+                            {
+                                <div>
+                                    <b>@Model.ChargeList[i].Name: </b>$@Model.ChargeList[i].Amount
                                 </div>
-                            </div>
-                        </div>
+                            }
+                        </p>
+                        <br />
+                        <br />
+                        <h5>SUMMARY:</h5>
+                        <p>
+                            @for (int i = 0; i < Model.SummaryList.Count; i++)
+                            {
+                                <div>
+                                    <b>@Model.SummaryList[i].Name: </b>$@Model.SummaryList[i].Amount
+                                </div>
+                            }
+                        </p>
                     </div>
-                </div>
+                    <div id="editor"></div>
+                }
             </div>
         </div>
     </div>
@@ -126,7 +184,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-buttons/2.0.1/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-buttons/2.0.1/js/buttons.print.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.debug.js"></script>
+
     <script>
+        function downloadPDF() {
+            var doc = new jsPDF();
+            source = $('#report')[0];
+            specialElementHandlers = {
+                '#editor': function (element, renderer) {
+                    return true
+                }
+            };
+            doc.fromHTML(
+                source,
+                15,
+                15,
+                {
+                    'width': 170,
+                    'elementHandlers': specialElementHandlers
+                }
+            );
+            //doc.text('@file');
+            doc.save("report.pdf");
+        }
+
         function leapYear(year) {
             return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
         }

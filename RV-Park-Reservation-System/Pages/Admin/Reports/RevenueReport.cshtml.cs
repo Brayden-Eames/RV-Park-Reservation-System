@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RV_Park_Reservation_System.ViewModels;
@@ -13,8 +17,22 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reports
     public class RevenueReportModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _environment;
 
-        public RevenueReportModel(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+        public RevenueReportModel(IUnitOfWork unitOfWork, IWebHostEnvironment environment)
+        {
+            _unitOfWork = unitOfWork;
+            _environment = environment;
+        }
+
+        [BindProperty]
+        public bool reportVisible { get; set; }
+
+        [BindProperty]
+        public string file { get; set; }
+
+        [BindProperty]
+        public string downloadPath { get; set; }
 
         [BindProperty]
         public List<LineItemVM> IncomeList { get; set; }
@@ -36,6 +54,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reports
 
         public IActionResult OnGet()
         {
+            reportVisible = false;
             IncomeList = new List<LineItemVM>();
             RefundList = new List<LineItemVM>();
             ChargeList = new List<LineItemVM>();
@@ -49,7 +68,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reports
             {
                 return Page();
             }
-
+            reportVisible = true;
             var paymentList = await _unitOfWork.Payment.ListAsync(p => p.PayDate >= startDate && p.PayDate <= endDate);
             var payTypeList = await _unitOfWork.Payment_Type.ListAsync(a => a.PayTypeID != null);
             var payReasonList = await _unitOfWork.Payment_Reason.ListAsync(a => a.PayReasonID != null);
@@ -85,11 +104,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reports
             {
                 LineItemVM incomeItem = new LineItemVM();
                 incomeItem.Name = p.PayType;
-                incomeItem.Amount = income.Where(i => i.paymentType == p.PayType).Sum(i => i.total);
+                incomeItem.Amount = decimal.Round(income.Where(i => i.paymentType == p.PayType).Sum(i => i.total), 2);
                 IncomeList.Add(incomeItem);
                 LineItemVM refundItem = new LineItemVM();
                 refundItem.Name = p.PayType;
-                refundItem.Amount = refunds.Where(i => i.paymentType == p.PayType).Sum(i => i.total);
+                refundItem.Amount = decimal.Round(refunds.Where(i => i.paymentType == p.PayType).Sum(i => i.total), 2);
                 RefundList.Add(refundItem);
             }
 
@@ -99,39 +118,49 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reports
                 {
                     LineItemVM item = new LineItemVM();
                     item.Name = p.PayReasonName;
-                    item.Amount = charges.Where(i => i.paymentReason == p.PayReasonName).Sum(i => i.total);
+                    item.Amount = decimal.Round(charges.Where(i => i.paymentReason == p.PayReasonName).Sum(i => i.total), 2);
                     ChargeList.Add(item);
                 }
             }
+            string file = "Date Range: " + startDate.ToShortDateString() + " - " + endDate.ToShortDateString() + "\n";
 
             decimal total = 0;
-            foreach(LineItemVM i in IncomeList)
+            file += "INCOME:\n";
+            foreach (LineItemVM i in IncomeList)
             {
                 total += i.Amount;
+                file += i.Name + ": " + i.Amount + "\n";
             }
             LineItemVM incomeTotal = new LineItemVM();
             incomeTotal.Name = "Total";
             incomeTotal.Amount = total;
             IncomeList.Add(incomeTotal);
+            file += incomeTotal.Name + ": " + incomeTotal.Amount + "\n";
             total = 0;
+            file += "\n\nREFUNDS:\n";
             foreach (LineItemVM i in RefundList)
             {
                 total += i.Amount;
+                file += i.Name + ": " + i.Amount + "\n";
             }
             LineItemVM refundTotal = new LineItemVM();
             refundTotal.Name = "Total";
             refundTotal.Amount = total;
             RefundList.Add(refundTotal);
+            file += refundTotal.Name + ": " + refundTotal.Amount + "\n";
             total = 0;
+            file += "\n\nCHARGES:\n";
             foreach (LineItemVM i in ChargeList)
             {
                 total += i.Amount;
+                file += i.Name + ": " + i.Amount + "\n";
             }
             LineItemVM chargeTotal = new LineItemVM();
             chargeTotal.Name = "Total";
             chargeTotal.Amount = total;
             ChargeList.Add(chargeTotal);
-
+            file += chargeTotal.Name + ": " + chargeTotal.Amount + "\n";
+            file += "\n\nSUMMARY:\n";
             LineItemVM grossIncome = new LineItemVM();
             grossIncome.Name = "Gross Income";
             grossIncome.Amount += IncomeList.Find(i => i.Name == "Total").Amount;
@@ -140,15 +169,39 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reports
                 grossIncome.Amount += ChargeList.Find(i => i.Name == "Total").Amount;
             }
             SummaryList.Add(grossIncome);
+            file += grossIncome.Name + ": " + grossIncome.Amount + "\n";
             LineItemVM refundSummary = new LineItemVM();
             refundSummary.Name = "Refunds";
             refundSummary.Amount = refundTotal.Amount;
             SummaryList.Add(refundSummary);
+            file += refundSummary.Name + ": " + refundSummary.Amount + "\n";
             LineItemVM netIncome = new LineItemVM();
             netIncome.Name = "Net Income";
             netIncome.Amount = incomeTotal.Amount + refundTotal.Amount;
             SummaryList.Add(netIncome);
+            file += netIncome.Name + ": " + netIncome.Amount + "\n";
 
+            string wwwPath = this._environment.WebRootPath;
+            string path = Path.Combine(this._environment.WebRootPath, "Reports");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            else
+            {
+                Directory.Delete(path, true);
+                Directory.CreateDirectory(path);
+            }
+            string FullPath = Path.Combine(path, "report.txt");
+            using (FileStream stream = new FileStream(FullPath, FileMode.Create))
+            {
+                byte[] info = new UnicodeEncoding().GetBytes(file);
+                // Add some information to the file.
+                stream.Write(info, 0, info.Length);
+            }
+            downloadPath = "https://localhost:44371/" + "Reports/report.txt";
+            //downloadPath = FullPath;
+            ViewData["File"] = file;
             return Page();
         }
     }
