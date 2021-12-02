@@ -202,6 +202,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reports
             downloadPath = "https://localhost:44371/" + "Reports/report.txt";
             //downloadPath = FullPath;
             ViewData["File"] = file;
+            ViewData["StartDate"] = startDate.ToShortDateString();
+            ViewData["EndDate"] = endDate.ToShortDateString();
             return Page();
         }
     }

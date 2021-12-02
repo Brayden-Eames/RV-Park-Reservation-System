@@ -2,6 +2,8 @@
 @model RV_Park_Reservation_System.Pages.Admin.Reports.RevenueReportModel
 @{
     string file = (string)ViewData["File"];
+    string startDate = (string)ViewData["StartDate"];
+    string endDate = (string)ViewData["EndDate"];
     ViewData["Title"] = "Revenue Report";
 }
 
@@ -205,7 +207,8 @@
                 }
             );
             //doc.text('@file');
-            doc.save("report.pdf");
+            let report = "RevenueReport-" + '@startDate' + "-" + '@endDate' + ".pdf"
+            doc.save(report);
         }
 
         function leapYear(year) {
