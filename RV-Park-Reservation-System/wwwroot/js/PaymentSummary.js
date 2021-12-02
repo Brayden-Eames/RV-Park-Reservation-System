@@ -39,7 +39,7 @@ var host = window.location.protocol + "//" + window.location.host;
                 // This point will only be reached if there is an immediate error when
                 // confirming the payment. Show error to your customer (e.g., payment
                 // details incomplete)
-                console.log(error);
+                console.log('This is the error', error);
                 const messageContainer = document.querySelector('#error-message');
                 messageContainer.textContent = error.message;
             } else {

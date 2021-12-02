@@ -40,8 +40,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         [BindProperty]
         public Payment paymentObj { get; set; }
 
-        [BindProperty]
-        public ApplicationCore.Models.Customer customerObj { get; set; }
+        //[BindProperty]
+        //public ApplicationCore.Models.Customer customerObj { get; set; }
 
         [BindProperty]
         public int reservationID { get; set; }
@@ -80,7 +80,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                
                 paymentObj = reservationVM.paymentObj;
 
-                customerObj = reservationVM.customerObj;
+                //customerObj = reservationVM.customerObj;
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
                 //ReturnUrl = returnUrl;
 
@@ -99,8 +99,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             {
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
             }
-            returnUrl ??= Url.Content("~/"); //null-coalescing assignment operator ??= assigns the value of right-hand operand to its left-hand operand only if the left-hand is nulll
-            System.Threading.Thread.Sleep(2000);
+            //returnUrl ??= Url.Content("~/"); //null-coalescing assignment operator ??= assigns the value of right-hand operand to its left-hand operand only if the left-hand is nulll
+            //System.Threading.Thread.Sleep(2000);
 
             var service = new PaymentIntentService();
             PaymentIntent paymentIntent;
