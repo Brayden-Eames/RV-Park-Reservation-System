@@ -75,42 +75,10 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 }
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
 
-                newReservation = new Reservation();
-                paymentObj = new Payment();
-                //Add all attributes manually to the newReservation object, that way we can omit the reservation id (this allows the later code to create a brand new reservation)
-                newReservation.Customer = reservationVM.reservationObj.Customer;
-                newReservation.Id = reservationVM.reservationObj.Id;
-                newReservation.ResAcknowledgeValidPets = reservationVM.reservationObj.ResAcknowledgeValidPets;
-                newReservation.ResComment = reservationVM.reservationObj.ResComment;
-                newReservation.ResCreatedDate = reservationVM.reservationObj.ResCreatedDate;
-                newReservation.ResEndDate = reservationVM.reservationObj.ResEndDate;
-                newReservation.Reservation_Status = reservationVM.reservationObj.Reservation_Status;
-                newReservation.ResLastModifiedBy = reservationVM.reservationObj.ResLastModifiedBy;
-                newReservation.ResLastModifiedDate = reservationVM.reservationObj.ResLastModifiedDate;
-                newReservation.ResNumAdults = reservationVM.reservationObj.ResNumAdults;
-                newReservation.ResNumChildren = reservationVM.reservationObj.ResNumChildren;
-                newReservation.ResNumPets = reservationVM.reservationObj.ResNumPets;
-                newReservation.ResStartDate = reservationVM.reservationObj.ResStartDate;
-                newReservation.ResStatusID = reservationVM.reservationObj.ResStatusID;
-                newReservation.ResVehicleLength = reservationVM.reservationObj.ResVehicleLength;
-                newReservation.Site = reservationVM.reservationObj.Site;
-                newReservation.SiteID = reservationVM.reservationObj.SiteID;
-                newReservation.TypeID = reservationVM.reservationObj.TypeID;
-                newReservation.Vehicle_Type = reservationVM.reservationObj.Vehicle_Type;
-
-                //paymentObj = reservationVM.paymentObj;
-
-                paymentObj.CCReference = reservationVM.paymentObj.CCReference;
-                paymentObj.IsPaid = reservationVM.paymentObj.IsPaid;
-                paymentObj.PayDate = reservationVM.paymentObj.PayDate;
-                paymentObj.PayID = reservationVM.paymentObj.PayID;
-                paymentObj.PayLastModifiedBy = reservationVM.paymentObj.PayLastModifiedBy;
-                paymentObj.PayLastModifiedDate = reservationVM.paymentObj.PayLastModifiedDate;
-                paymentObj.Payment_Reason = reservationVM.paymentObj.Payment_Reason;
-                paymentObj.Payment_Type = reservationVM.paymentObj.Payment_Type;
-                paymentObj.PayReasonID = reservationVM.paymentObj.PayReasonID;
-                paymentObj.PayTotalCost = reservationVM.paymentObj.PayTotalCost;
-                paymentObj.PayTypeID = reservationVM.paymentObj.PayTypeID;
+                //Sets the reservation and payment objects from the session. 
+                newReservation = reservationVM.reservationObj;
+               
+                paymentObj = reservationVM.paymentObj;
 
                 customerObj = reservationVM.customerObj;
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
@@ -136,8 +104,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
             var service = new PaymentIntentService();
             PaymentIntent paymentIntent;
-            newReservation = new Reservation();
-            paymentObj = new Payment();
+            //newReservation = new Reservation();
+            //paymentObj = new Payment();
 
             for (int i = 0; i < 5; i++)
             {
@@ -151,34 +119,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 {
 
                     ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustFirstName == reservationVM.customerObj.CustFirstName && c.CustLastName == reservationVM.customerObj.CustLastName && c.CustEmail == reservationVM.customerObj.CustEmail);
-                    newReservation.Id = customer.Id;
-                    newReservation.ResLastModifiedBy = reservationVM.reservationObj.ResLastModifiedBy;
-                    newReservation.ResAcknowledgeValidPets = reservationVM.reservationObj.ResAcknowledgeValidPets;
-                    newReservation.ResComment = reservationVM.reservationObj.ResComment;
-                    newReservation.ResCreatedDate = reservationVM.reservationObj.ResCreatedDate;
-                    newReservation.ResEndDate = reservationVM.reservationObj.ResEndDate;
-                    newReservation.Reservation_Status = reservationVM.reservationObj.Reservation_Status;
-                    newReservation.ResLastModifiedBy = reservationVM.reservationObj.ResLastModifiedBy;
-                    newReservation.ResLastModifiedDate = reservationVM.reservationObj.ResLastModifiedDate;
-                    newReservation.ResNumAdults = reservationVM.reservationObj.ResNumAdults;
-                    newReservation.ResNumChildren = reservationVM.reservationObj.ResNumChildren;
-                    newReservation.ResNumPets = reservationVM.reservationObj.ResNumPets;
-                    newReservation.ResStartDate = reservationVM.reservationObj.ResStartDate;
-                    newReservation.ResStatusID = reservationVM.reservationObj.ResStatusID;
-                    newReservation.ResVehicleLength = reservationVM.reservationObj.ResVehicleLength;
-                    newReservation.SiteID = reservationVM.reservationObj.SiteID;
-                    newReservation.TypeID = reservationVM.reservationObj.TypeID;
-                    newReservation.Vehicle_Type = reservationVM.reservationObj.Vehicle_Type;
 
-                    //paymentObj.CCReference = reservationVM.paymentObj.CCReference;
-                    //paymentObj.IsPaid = reservationVM.paymentObj.IsPaid;
-                    //paymentObj.PayDate = reservationVM.paymentObj.PayDate;
-                    //paymentObj.PayLastModifiedBy = reservationVM.paymentObj.PayLastModifiedBy;
-                    //paymentObj.PayLastModifiedDate = reservationVM.paymentObj.PayLastModifiedDate;
-                    //paymentObj.Payment_Reason = reservationVM.paymentObj.Payment_Reason;
-                    //paymentObj.Payment_Type = reservationVM.paymentObj.Payment_Type;
-                    //paymentObj.PayReasonID = reservationVM.paymentObj.PayReasonID;
-                    paymentObj.PayTotalCost = reservationVM.paymentObj.PayTotalCost;
+                    newReservation.ResID = 0;
                     //paymentObj.PayTypeID = reservationVM.paymentObj.PayTypeID;
 
                     _unitOfWork.Reservation.Add(newReservation);
