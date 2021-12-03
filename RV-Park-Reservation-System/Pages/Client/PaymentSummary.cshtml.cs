@@ -56,6 +56,8 @@ namespace RV_Park_Reservation_System.Pages.Client
         public decimal amountDue { get; set; }
 
         public ReservationVM reservationVM { get; set; }
+
+        public longTermReservationVM longTermReservationVM { get; set; }
         #endregion
 
 
@@ -68,6 +70,10 @@ namespace RV_Park_Reservation_System.Pages.Client
             }
 
             //Checks if the session is null and returns an error if the session is null.    
+            if (HttpContext.Session.Get<longTermReservationVM>(SD.LongTermReservationSession) != null)
+            {
+                longTermReservationVM = HttpContext.Session.Get<longTermReservationVM>(SD.LongTermReservationSession); 
+            }
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
             { 
                 //Sets the error state. 
@@ -85,7 +91,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 //Gets the vehicle type for the summary page. 
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
 
-                if ((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays > 30)
+               /* if ((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays > 30)
                 {
                     DateTime endOfMonthStartDate = new DateTime(reservationVM.reservationObj.ResStartDate.Year,
                                                        reservationVM.reservationObj.ResStartDate.Month,
@@ -113,7 +119,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                     {
                         amountDue = 700;
                     }
-                }
+                }*/
 
             }
             else
@@ -157,15 +163,15 @@ namespace RV_Park_Reservation_System.Pages.Client
                     ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
 
                     //Finalizes the payment object. 
-                    var reservations = _unitOfWork.Reservation.List().Where(r => r.Customer == customer).Last();
-                    reservationVM.paymentObj.ResID = reservations.ResID;
+                    
+                    
                     reservationVM.paymentObj.IsPaid = true;
-                    _unitOfWork.Payment.Add(reservationVM.paymentObj);
+                    _unitOfWork.Payment.Update(reservationVM.paymentObj);
                     _unitOfWork.Commit();
 
                     //Updates the reservation to a scheduled status. 
-                    reservations.ResStatusID = 9;
-                    _unitOfWork.Reservation.Update(reservations);
+                    reservationVM.reservationObj.ResStatusID = 9;
+                    _unitOfWork.Reservation.Update(reservationVM.reservationObj);
                     _unitOfWork.Commit();
 
                     //Clears the session. 
@@ -185,7 +191,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                         user.CustEmail,
                         "FamCamp Reservation Confirmation",
                         $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account. " +
-                        $"Your reservation confirmation number is " + reservations.ResID.ToString() + "."
+                        $"Your reservation confirmation number is " + reservationVM.reservationObj.ResID.ToString() + "."
                         );
 
 

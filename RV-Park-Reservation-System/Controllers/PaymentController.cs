@@ -25,7 +25,7 @@ namespace RV_Park_Reservation_System.Controllers
         [HttpGet]
         public async Task<ActionResult> OnGet()
         {
-            double paymentGiven = Convert.ToDouble(paymentAmount);
+           
 
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null )
             {
@@ -61,20 +61,6 @@ namespace RV_Park_Reservation_System.Controllers
                 {
                     var intent = new Stripe.PaymentIntentService();
                     var payment = intent.Get(reservationVM.paymentObj.CCReference);
-                    if (paymentGiven != 0)
-                    {
-                        var options = new ChargeCreateOptions
-                        {
-                            Amount = Convert.ToInt32(paymentGiven * 100),
-                            Currency = "usd",
-
-
-                        };
-                        var service = new ChargeService();
-                        Charge charge = service.Create(options);
-                        
-
-                    }
                     
                     return Json(new { client_secret = payment.ClientSecret });
                 }

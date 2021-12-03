@@ -11,8 +11,8 @@ function loadPayment() {
     };
 
     //Gets the payment intent client secret. 
-    var data = { paymentAmount: document.getElementById('paymentAmount').value }
-    $.getJSON("/api/Payment", data, function () {
+    
+    $.getJSON("/api/Payment", function () {
     }).done(function (payment) {
         const { client_secret: clientSecret } = payment;
         const elements = stripe.elements({ clientSecret, appearance });
@@ -65,8 +65,8 @@ function loadPayment() {
     };
 
     //Gets the payment intent client secret. 
-    var data = { paymentAmount: document.getElementById('paymentAmount').value}
-    $.getJSON("/api/Payment",data, function () {
+   
+    $.getJSON("/api/Payment", function () {
     }).done(function (payment) {
         const { client_secret: clientSecret } = payment;
         const elements = stripe.elements({ clientSecret, appearance });
