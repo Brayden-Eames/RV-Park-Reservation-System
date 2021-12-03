@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -75,6 +76,42 @@ namespace RV_Park_Reservation_System.Controllers
                                           
             return Json(new { data = reservationActivityList});                     
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateFinishedReservationStatuses()
+        {
+            try
+            {
+                List<Reservation> allOnGoingReservations = new();
+
+                allOnGoingReservations = (List<Reservation>)_unitofWork.Reservation.List(r => r.ResStatusID == 4).ToList();
+
+                if(allOnGoingReservations == null)
+                {
+                    return Json(new { success = false, message = "Error: No Reservations with Status 'OnGoing' Found" });
+                }
+
+                var today = DateTime.Now;
+
+                foreach(Reservation res in allOnGoingReservations)
+                {
+                    if(res.ResEndDate.Date == today.Date)
+                    {                        
+                        res.ResStatusID = 3;
+                        _unitofWork.Reservation.Update(res);
+                    }
+                }
+
+                _unitofWork.Commit();
+
+               return Json(new { success = true, message = "Reservations Statuses Changed to Completed" });
+               
+            }
+            catch(Exception e)
+            {
+               return Json(new { success = false, message = "Error: "+ e.Message });
+            }
+        }                
 
     }
 }
