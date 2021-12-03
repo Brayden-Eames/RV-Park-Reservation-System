@@ -164,26 +164,28 @@ namespace RV_Park_Reservation_System.Pages.Client
 
                     longTermReservationVM longTermReservationVM = new longTermReservationVM()
                     {
-                        reservationObj = new Reservation[monthDiff +2],
+                        reservationObj = new Reservation(),
                         paymentObj = new Payment[monthDiff + 2],
 
                     };
-                    if ((EndDate- startOfMonthEndDate).TotalDays*25 > 700 )
-                    {
-                        monthDiff++;
-                    }
 
+                    int resid = await createReservation(StartDate, EndDate);
+                    reservationVM.reservationObj = _unitOfWork.Reservation.Get(r => r.ResID == resid);
+                    reservationVM.reservationObj.ResStatusID = 10;
+                    _unitOfWork.Reservation.Update(reservationVM.reservationObj);
+                    await _unitOfWork.CommitAsync();
                     if (vehicleType != 7)
                     {
                         decimal startCost = (decimal)(Math.Ceiling((endOfMonthStartDate - StartDate).TotalDays) + 1) * 25;
-                        int resid = await createReservation(StartDate, endOfMonthStartDate, startCost);
-                        reservationVM.reservationObj = _unitOfWork.Reservation.Get(r => r.ResID == resid);
-                        reservationVM.paymentObj = _unitOfWork.Payment.Get(p => p.ResID == resid);
+                        
+                        int startpayment = await createPayment(startCost, resid);
 
-                        HttpContext.Session.Clear();
+                        reservationVM.paymentObj = _unitOfWork.Payment.Get(p => p.PayID == startpayment);
+
+
                         //Sets the Reservation view model in a session. 
                         HttpContext.Session.Set(SD.ReservationSession, reservationVM);
-                        longTermReservationVM.reservationObj[0] = reservationVM.reservationObj;
+                        longTermReservationVM.reservationObj = reservationVM.reservationObj;
                         longTermReservationVM.paymentObj[0] = reservationVM.paymentObj;
 
 
@@ -192,7 +194,12 @@ namespace RV_Park_Reservation_System.Pages.Client
                             monthDiff++;
                             startOfMonthEndDate = EndDate;
                         }
-                        if (monthDiff >=1)
+                        for (int i = 0; i < monthDiff; i++)
+                        {
+                            int payID = await createPayment(700, resid);
+                            longTermReservationVM.paymentObj[i + 1] = _unitOfWork.Payment.Get(p => p.PayID == payID);
+                        }
+                       /* if (monthDiff >=1)
                         {
 
                             for (int i = 0; i < monthDiff; i++)
@@ -215,23 +222,33 @@ namespace RV_Park_Reservation_System.Pages.Client
 
 
                             }
-                        }
+                        }*/
                         if ((EndDate - startOfMonthEndDate).TotalDays != 0)
                         {
                             decimal endCost = (decimal)(Math.Floor((EndDate - startOfMonthEndDate).TotalDays)) * 25;
-                            int endResId = await createReservation(startOfMonthEndDate, EndDate, endCost);
-                            longTermReservationVM.reservationObj[longTermReservationVM.reservationObj.Count()-1] = _unitOfWork.Reservation.Get(r => r.ResID == endResId);
-                            longTermReservationVM.paymentObj[longTermReservationVM.paymentObj.Count()-1] = _unitOfWork.Payment.Get(p => p.ResID == endResId);
+                            int payid = await createPayment(endCost, resid);
+                            
+                            longTermReservationVM.paymentObj[longTermReservationVM.paymentObj.Count()-1] = _unitOfWork.Payment.Get(p => p.PayID == payid);
 
                         }
+
+                        
                         
                         //Sets the Reservation view model in a session. 
                         HttpContext.Session.Set(SD.LongTermReservationSession, longTermReservationVM);
                     }
                     else
                     {
-                        decimal startCost = (decimal)(Math.Ceiling((endOfMonthStartDate - StartDate).TotalDays) + 1) * 17;
-                        decimal endCost = (decimal)(Math.Floor((EndDate - startOfMonthEndDate).TotalDays)) * 17;
+                        decimal cost = (decimal)(Math.Round((EndDate - StartDate).TotalDays) * 17);
+                        int payid = await createPayment(cost, resid);
+                        reservationVM.reservationObj = _unitOfWork.Reservation.Get(r => r.ResID == resid);
+                        reservationVM.paymentObj = _unitOfWork.Payment.Get(p => p.PayID == payid);
+
+
+                        //Sets the Reservation view model in a session. 
+                        HttpContext.Session.Set(SD.ReservationSession, reservationVM);
+
+
                     }
 
 
@@ -250,31 +267,9 @@ namespace RV_Park_Reservation_System.Pages.Client
                 else
                 {
                     //Creates the reservation object based on the user input. 
-                    reservationVM.reservationObj.ResAcknowledgeValidPets = breedPolicy;
-                    reservationVM.reservationObj.ResStartDate = StartDate;
-                    reservationVM.reservationObj.ResEndDate = EndDate;
-                    reservationVM.reservationObj.ResNumAdults = numberOfAdults;
-                    reservationVM.reservationObj.ResNumChildren = numberOfChildren;
-                    reservationVM.reservationObj.ResNumPets = numberOfPets;
-                    reservationVM.reservationObj.TypeID = vehicleType;
-                    reservationVM.reservationObj.ResCreatedDate = DateTime.Now;
-                    reservationVM.reservationObj.SiteID = siteid;
-                    reservationVM.reservationObj.ResStatusID = 1;
-                    reservationVM.reservationObj.ResLastModifiedBy = User.Identity.Name;
-                    reservationVM.reservationObj.ResVehicleLength = vehicleLength;
+                    int resid = await createReservation(StartDate, EndDate);
+                    reservationVM.reservationObj = _unitOfWork.Reservation.Get(r=> r.ResID == resid);
 
-                    reservationVM.reservationObj.Id = customer.Id;
-                    _unitOfWork.Reservation.Add(reservationVM.reservationObj);
-                    _unitOfWork.Commit();
-
-
-                    //Creates the payment object based on the user input. 
-                    reservationVM.paymentObj.PayDate = DateTime.Now;
-                    reservationVM.paymentObj.PayLastModifiedBy = User.Identity.Name;
-                    reservationVM.paymentObj.PayLastModifiedDate = DateTime.Now;
-                    reservationVM.paymentObj.PayReasonID = 1;
-                    reservationVM.paymentObj.PayTypeID = 1;
-                    reservationVM.paymentObj.IsPaid = false;
                     //Calculates the total cost based on the type of vehicle and amount of days. 
                     if (reservationVM.reservationObj.TypeID == 7)//Type 7 is the tent space. 
                     {
@@ -285,26 +280,10 @@ namespace RV_Park_Reservation_System.Pages.Client
                         reservationVM.paymentObj.PayTotalCost = (decimal)(Math.Round((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays) * 25);
 
                     }
-                    //Checks if a payment reference already exist or not. 
-                    if (reservationVM.paymentObj.CCReference == null)
-                    {
-                        //Creates a payment intent through stripes api service. 
-                        var options = new PaymentIntentCreateOptions
-                        {
-                            Amount = Convert.ToInt32(reservationVM.paymentObj.PayTotalCost * 100),
-                            Currency = "usd",
+                    int payid = await createPayment(reservationVM.paymentObj.PayTotalCost, resid);
 
-                            PaymentMethodTypes = new List<string>
-                        {
-                          "card",
-                        },
-                        };
-
-                        var service = new PaymentIntentService();
-                        var paymentIntent = service.Create(options);
-                        reservationVM.paymentObj.CCReference = paymentIntent.Id;
-                    }
-
+                    reservationVM.paymentObj = _unitOfWork.Payment.Get(p => p.PayID == payid);
+                    
                     //Sets the Reservation view model in a session. 
                     HttpContext.Session.Set(SD.ReservationSession, reservationVM);
 
@@ -330,6 +309,7 @@ namespace RV_Park_Reservation_System.Pages.Client
             //Gets all reservations and deletes the reservations that are pending and greater than 15 minutes old. 
             var reservations = _unitOfWork.Reservation.List();
             reservations = reservations.Where(r => r.ResStatusID == 1 && (DateTime.Now - r.ResCreatedDate).TotalMinutes > 15);
+
             _unitOfWork.Reservation.Delete(reservations);
         }
 
@@ -340,10 +320,9 @@ namespace RV_Park_Reservation_System.Pages.Client
         }
 
 
-        public async Task<int> createReservation(DateTime startDate, DateTime endDate, decimal cost)
+        public async Task<int> createReservation(DateTime startDate, DateTime endDate)
         {
             Reservation Res = new Reservation();
-            Payment ResPayment = new Payment();
             ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
 
 
@@ -364,6 +343,12 @@ namespace RV_Park_Reservation_System.Pages.Client
             _unitOfWork.Commit();
 
             //Creates the payment object based on the user input. 
+            return Res.ResID;
+        }
+        public async Task<int> createPayment(decimal cost, int resID)
+        {
+            Payment ResPayment = new Payment();
+
             ResPayment.PayDate = DateTime.Now;
             ResPayment.PayLastModifiedBy = User.Identity.Name;
             ResPayment.PayLastModifiedDate = DateTime.Now;
@@ -371,16 +356,7 @@ namespace RV_Park_Reservation_System.Pages.Client
             ResPayment.PayTypeID = 1;
             ResPayment.IsPaid = false;
             ResPayment.PayTotalCost = cost;
-            /*if (Res.TypeID == 7)//Type 7 is the tent space. 
-            {
-                ResPayment.PayTotalCost = (decimal)(Math.Ceiling((endOfMonthStartDate - StartDate).TotalDays) + 1) * 17;
-            }
-            else
-            {
-                startResPayment.PayTotalCost = (decimal)(Math.Ceiling((endOfMonthStartDate - StartDate).TotalDays) + 1) * 25;
-
-            }*/
-            ResPayment.ResID = _unitOfWork.Reservation.List().Where(r => r.ResStartDate == Res.ResStartDate && r.ResEndDate == Res.ResEndDate && r.Id == Res.Id).Last().ResID ;
+            ResPayment.ResID = resID;
             if (ResPayment.CCReference == null)
             {
                 //Creates a payment intent through stripes api service. 
@@ -401,7 +377,7 @@ namespace RV_Park_Reservation_System.Pages.Client
             }
             _unitOfWork.Payment.Add(ResPayment);
             await _unitOfWork.CommitAsync();
-            return ResPayment.ResID;
+            return ResPayment.PayID;
         }
     }
 }

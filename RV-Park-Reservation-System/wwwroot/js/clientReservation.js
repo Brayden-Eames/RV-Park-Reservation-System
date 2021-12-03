@@ -23,9 +23,11 @@ function loadList() {
 				"render": function (data) {
 					return `<div class="text-center">
                             <a href="/Client/Upsert?id=${data}"
-                            class ="btn btn-success text-white style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i>Edit</a>
+                            class ="btn btn-success text-white" style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i>Edit</a>
                             <a onClick=Delete('/api/clientReservation/'+${data})
                             class ="btn btn-danger text-white style="cursor:pointer; width=100px;"> <i class="far fa-trash-alt"></i>Cancel</a>
+							<a href="/Client/UpsertPayment?id=${data}"
+							class ="btn btn-info text-white" style="cursor:pointer; width=100px;"> <i class="far fa-edit"></i>Pay</a>
                             </div>`;
 				},
 

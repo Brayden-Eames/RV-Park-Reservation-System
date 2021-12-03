@@ -58,6 +58,9 @@ namespace RV_Park_Reservation_System.Pages.Client
         public ReservationVM reservationVM { get; set; }
 
         public longTermReservationVM longTermReservationVM { get; set; }
+
+        public decimal totalAmount { get; set; }
+
         #endregion
 
 
@@ -72,7 +75,11 @@ namespace RV_Park_Reservation_System.Pages.Client
             //Checks if the session is null and returns an error if the session is null.    
             if (HttpContext.Session.Get<longTermReservationVM>(SD.LongTermReservationSession) != null)
             {
-                longTermReservationVM = HttpContext.Session.Get<longTermReservationVM>(SD.LongTermReservationSession); 
+                longTermReservationVM = HttpContext.Session.Get<longTermReservationVM>(SD.LongTermReservationSession);
+                for (int i = 0; i < longTermReservationVM.paymentObj.Count(); i++)
+                {
+                    totalAmount += longTermReservationVM.paymentObj[i].PayTotalCost;
+                }
             }
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
             { 
@@ -170,9 +177,20 @@ namespace RV_Park_Reservation_System.Pages.Client
                     _unitOfWork.Commit();
 
                     //Updates the reservation to a scheduled status. 
-                    reservationVM.reservationObj.ResStatusID = 9;
-                    _unitOfWork.Reservation.Update(reservationVM.reservationObj);
-                    _unitOfWork.Commit();
+                    if (reservationVM.reservationObj.ResStatusID == 10)
+                    {
+                        reservationVM.reservationObj.ResStatusID = 11;
+                        _unitOfWork.Reservation.Update(reservationVM.reservationObj);
+                        _unitOfWork.Commit();
+                    }
+                    else if (reservationVM.reservationObj.ResStatusID == 1)
+                    {
+                        reservationVM.reservationObj.ResStatusID = 9;
+                        _unitOfWork.Reservation.Update(reservationVM.reservationObj);
+                        _unitOfWork.Commit();
+                    }
+
+
 
                     //Clears the session. 
                     HttpContext.Session.Clear();

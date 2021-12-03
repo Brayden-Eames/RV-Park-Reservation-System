@@ -56,19 +56,20 @@
                             Vehicle length: @Model.newReservation.ResVehicleLength
                         </div>
                     </div>
-                    <div class="row pt-4  text-center">
-                        <div class="col-12">
-                            total Cost: @Model.paymentObj.PayTotalCost.ToString()
-                        </div>
-                    </div>
+
                     @if ((Model.reservationVM.reservationObj.ResEndDate - Model.reservationVM.reservationObj.ResStartDate).TotalDays > 30)
                     {
                         <div class="row pt-4  text-center">
-                            <div class="col-6">Amount Due: @Model.amountDue </div>
-                            <div class="col-6">
-                                <label>Please enter payment amount. </label>
-                                <input onchange="loadPayment();" asp-for="paymentAmount" id="paymentAmount"  />
-                                
+                            <div class="col-6">Amount Due: @Model.reservationVM.paymentObj.PayTotalCost </div>
+                            <div class="col-6">total Cost: @Model.totalAmount</div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row pt-4  text-center">
+                            <div class="col-12">
+                                total Cost: @Model.paymentObj.PayTotalCost.ToString()
                             </div>
                         </div>
                     }
