@@ -25,6 +25,8 @@ namespace RV_Park_Reservation_System.Controllers
         [HttpGet]
         public async Task<ActionResult> OnGet()
         {
+           
+
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null )
             {
 
@@ -42,6 +44,7 @@ namespace RV_Park_Reservation_System.Controllers
                         {
                           "card",
                         },
+                        
                     };
 
                     var service = new PaymentIntentService();
@@ -58,6 +61,7 @@ namespace RV_Park_Reservation_System.Controllers
                 {
                     var intent = new Stripe.PaymentIntentService();
                     var payment = intent.Get(reservationVM.paymentObj.CCReference);
+                    
                     return Json(new { client_secret = payment.ClientSecret });
                 }
                 

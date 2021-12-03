@@ -40,7 +40,7 @@ namespace RV_Park_Reservation_System.Controllers
         public async Task<IActionResult> OnGet()
         {
             var customer = await _unitOfWork.Customer.GetAsync(c => c.CustEmail == User.Identity.Name);
-            return Json(new { data = _unitOfWork.Reservation.List().Where(c=>c.Customer == customer && c.ResStatusID == 9) });
+            return Json(new { data = _unitOfWork.Reservation.List().Where(c => c.Customer == customer && (c.ResStatusID == 9 || c.ResStatusID == 11)) });
         }
 
 
@@ -50,55 +50,187 @@ namespace RV_Park_Reservation_System.Controllers
         {
             //Gets the payment and reservation object from the Database.
             var objFromDb = _unitOfWork.Reservation.Get(c => c.ResID == id);
-            var payObj = _unitOfWork.Payment.Get(p => p.ResID == id);
+            bool result = false;
 
-            //Checks if the user paid or not. 
-            if (payObj.IsPaid == false)
+            if (objFromDb.ResStatusID == 11)
             {
-                return Json(new { success = false, message = "Reservation is not paid." });
-            }
+                var payobj = _unitOfWork.Payment.List().Where(p => p.ResID == objFromDb.ResID);
+                var unpaidObjects = payobj.Where(p => p.IsPaid == false);
+                _unitOfWork.Payment.Delete(unpaidObjects);
+                var paidObjects = payobj.Where(p => p.IsPaid == true);
+                if (paidObjects.Count() == 1)
+                {
+                    int refundAmount = 0;
+                    if ((objFromDb.ResStartDate - DateTime.Now).TotalDays >= 4)
+                    {
+                        refundAmount = (int)(paidObjects.First().PayTotalCost * 100) - 1000;
+                    }
+                    else if ((objFromDb.ResStartDate - DateTime.Now).TotalDays < 4)
+                    {
+                        refundAmount = (int)(paidObjects.First().PayTotalCost * 100) - 2500;
+                    }
 
-            //Gets the stripe key and payment intent for the selected user. 
-            StripeConfiguration.ApiKey = _stripe.Value.SecretKey;
-            var intent = new Stripe.PaymentIntentService();
-            var payment = intent.Get(payObj.CCReference);
-            
-            //Calculates the refund amount based on the policy. 
-            int refundAmount = 0 ;
-            if ((objFromDb.ResStartDate - DateTime.Now).TotalDays >= 4)
-            {
-                refundAmount = (int)(payObj.PayTotalCost * 100) - 1000;
-            }
-            else if ((objFromDb.ResStartDate -DateTime.Now  ).TotalDays < 4)
-            {
-                refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
-            }
-            
-            //Checks if user is cancelling mid reservation and calculates refund based on remaining days. 
-            if ((objFromDb.ResStartDate-DateTime.Now).TotalDays <0)
-            {
-                int daysLeft = (int)Math.Round((DateTime.Now- objFromDb.ResStartDate).TotalDays);
+                    //Checks if user is cancelling mid reservation and calculates refund based on remaining days. 
+                    if ((objFromDb.ResStartDate - DateTime.Now).TotalDays < 0)
+                    {
+                        int daysLeft = (int)Math.Round((DateTime.Now - objFromDb.ResStartDate).TotalDays);
 
-                int totalRefund = daysLeft * 2500;
-                refundAmount = refundAmount - totalRefund;
-                
-            }
+                        int totalRefund = daysLeft * 2500;
+                        refundAmount = refundAmount - totalRefund;
 
-            //Checks if user is cancelling on a special event. 
-            var specialEvents = _unitOfWork.Special_Event.List();
-            foreach (var events in specialEvents )
+                    }
+
+                    //Checks if user is cancelling on a special event. 
+                    var specialEvents = _unitOfWork.Special_Event.List();
+                    foreach (var events in specialEvents)
+                    {
+                        if ((objFromDb.ResStartDate <= events.EventStartDate && objFromDb.ResEndDate >= events.EventStartDate)
+                                             || (objFromDb.ResStartDate <= events.EventEndDate && objFromDb.ResEndDate >= events.EventEndDate) ||
+                                             ((objFromDb.ResStartDate > events.EventStartDate && objFromDb.ResEndDate > events.EventStartDate)
+                                             && (objFromDb.ResStartDate < events.EventEndDate && objFromDb.ResEndDate < events.EventEndDate)))
+                        {
+                            refundAmount = (int)(paidObjects.First().PayTotalCost * 100) - 2500;
+                        }
+                    }
+
+                    result = refundReservation(paidObjects.First().PayID, objFromDb.ResID, refundAmount);
+                }
+                else
+                {
+
+                    int refundAmount = 0;
+                    if ((objFromDb.ResStartDate - DateTime.Now).TotalDays >= 4)
+                    {
+                        refundAmount = (int)(paidObjects.First().PayTotalCost * 100) - 1000;
+                    }
+                    else if ((objFromDb.ResStartDate - DateTime.Now).TotalDays < 4)
+                    {
+                        refundAmount = (int)(paidObjects.First().PayTotalCost * 100) - 2500;
+                    }
+
+                    //Checks if user is cancelling mid reservation and calculates refund based on remaining days. 
+                    if ((objFromDb.ResStartDate - DateTime.Now).TotalDays < 0)
+                    {
+                        int daysLeft = (int)Math.Round((DateTime.Now - objFromDb.ResStartDate).TotalDays);
+
+                        int totalRefund = daysLeft * 2500;
+                        refundAmount = refundAmount - totalRefund;
+
+                    }
+
+                    //Checks if user is cancelling on a special event. 
+                    var specialEvents = _unitOfWork.Special_Event.List();
+                    foreach (var events in specialEvents)
+                    {
+                        if ((objFromDb.ResStartDate <= events.EventStartDate && objFromDb.ResEndDate >= events.EventStartDate)
+                                             || (objFromDb.ResStartDate <= events.EventEndDate && objFromDb.ResEndDate >= events.EventEndDate) ||
+                                             ((objFromDb.ResStartDate > events.EventStartDate && objFromDb.ResEndDate > events.EventStartDate)
+                                             && (objFromDb.ResStartDate < events.EventEndDate && objFromDb.ResEndDate < events.EventEndDate)))
+                        {
+                            refundAmount = (int)(paidObjects.First().PayTotalCost * 100) - 2500;
+                        }
+                    }
+
+                    result = refundReservation(paidObjects.First().PayID, objFromDb.ResID, refundAmount);
+                    var paidList = paidObjects.ToList();
+                    for (int i = 1; i < paidList.Count(); i++)
+                    {
+                        result = refundReservation(paidList[i].PayID, objFromDb.ResID, (int)(paidList[i].PayTotalCost * 100));
+                    }
+                }
+            }
+            else
             {
-                if ((objFromDb.ResStartDate <= events.EventStartDate && objFromDb.ResEndDate >= events.EventStartDate)
-                                     || (objFromDb.ResStartDate <= events.EventEndDate && objFromDb.ResEndDate >= events.EventEndDate) ||
-                                     ((objFromDb.ResStartDate > events.EventStartDate && objFromDb.ResEndDate > events.EventStartDate) 
-                                     && (objFromDb.ResStartDate < events.EventEndDate && objFromDb.ResEndDate < events.EventEndDate)))
+                var payObj = _unitOfWork.Payment.Get(p => p.ResID == id);
+                if (payObj.IsPaid == false)
+                {
+                    return Json(new { success = false, message = "Reservation is not paid." });
+                }
+
+                //Gets the stripe key and payment intent for the selected user. 
+
+
+                //Calculates the refund amount based on the policy. 
+                int refundAmount = 0;
+                if ((objFromDb.ResStartDate - DateTime.Now).TotalDays >= 4)
+                {
+                    refundAmount = (int)(payObj.PayTotalCost * 100) - 1000;
+                }
+                else if ((objFromDb.ResStartDate - DateTime.Now).TotalDays < 4)
                 {
                     refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
                 }
+
+                //Checks if user is cancelling mid reservation and calculates refund based on remaining days. 
+                if ((objFromDb.ResStartDate - DateTime.Now).TotalDays < 0)
+                {
+                    int daysLeft = (int)Math.Round((DateTime.Now - objFromDb.ResStartDate).TotalDays);
+
+                    int totalRefund = daysLeft * 2500;
+                    refundAmount = refundAmount - totalRefund;
+
+                }
+
+                //Checks if user is cancelling on a special event. 
+                var specialEvents = _unitOfWork.Special_Event.List();
+                foreach (var events in specialEvents)
+                {
+                    if ((objFromDb.ResStartDate <= events.EventStartDate && objFromDb.ResEndDate >= events.EventStartDate)
+                                         || (objFromDb.ResStartDate <= events.EventEndDate && objFromDb.ResEndDate >= events.EventEndDate) ||
+                                         ((objFromDb.ResStartDate > events.EventStartDate && objFromDb.ResEndDate > events.EventStartDate)
+                                         && (objFromDb.ResStartDate < events.EventEndDate && objFromDb.ResEndDate < events.EventEndDate)))
+                    {
+                        refundAmount = (int)(payObj.PayTotalCost * 100) - 2500;
+                    }
+                }
+
+                result =  refundReservation(payObj.PayID, objFromDb.ResID, refundAmount);
+
+                //Creates the refund object using stripe and adds the refund amount. 
+              
             }
 
-            //Creates the refund object using stripe and adds the refund amount. 
-            if (refundAmount !=0 )
+
+            //Checks if the user paid or not. 
+
+
+            if (result)
+            {
+                //Sends email to user to confirm cancellation. 
+                var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Page(
+                    "/Client/MyReservations",
+                    pageHandler: null,
+                    values: new { area = "", code },
+                    protocol: Request.Scheme);
+
+                await _emailSender.SendEmailAsync(
+                    user.CustEmail,
+                    "FamCamp Reservation Cancel Confirmation",
+                    $"This is a confirmation that your reservation is canceled and refunded. ");
+
+
+                return Json(new { success = true, message = "Cancel Successful!" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Error while deleting!" });
+            }
+            
+        }
+
+        public bool refundReservation(int payID,int resID, int refundAmount) 
+        {
+
+            StripeConfiguration.ApiKey = _stripe.Value.SecretKey;
+            var objFromDb = _unitOfWork.Reservation.Get(c => c.ResID == resID);
+            var payObj = _unitOfWork.Payment.Get(p => p.PayID == payID);
+            var intent = new Stripe.PaymentIntentService();
+            var payment = intent.Get(payObj.CCReference);
+
+            if (refundAmount != 0)
             {
                 var refunds = new RefundService();
                 var refundOptions = new RefundCreateOptions
@@ -113,7 +245,7 @@ namespace RV_Park_Reservation_System.Controllers
             //Updates the payment and reservation objects based on the refund. 
             if (objFromDb == null)
             {
-                return Json(new { success = false, message = "Error while deleting!" });
+                return false;
             }
             objFromDb.ResStatusID = 2;
             _unitOfWork.Reservation.Update(objFromDb);
@@ -125,25 +257,9 @@ namespace RV_Park_Reservation_System.Controllers
             refunded.PayReasonID = 4;
             _unitOfWork.Payment.Add(refunded);
             _unitOfWork.Commit();
-
-
-            //Sends email to user to confirm cancellation. 
-            var user = await _userManager.FindByEmailAsync(User.Identity.Name);
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Page(
-                "/Client/MyReservations",
-                pageHandler: null,
-                values: new { area = "", code },
-                protocol: Request.Scheme);
-
-            await _emailSender.SendEmailAsync(
-                user.CustEmail,
-                "FamCamp Reservation Cancel Confirmation",
-                $"This is a confirmation that your reservation is canceled and refunded. ");
-
-
-            return Json(new { success = true, message = "Cancel Successful" });
+            return true;
         }
+        
+
     }
 }
