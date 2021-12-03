@@ -154,7 +154,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 }
             }
 
-                return RedirectToPage("/Admin/Reservations/AdminPaymentSummary", new { error = true });
+                return RedirectToPage("/Admin/Reservations/AdminUpdateSummary", new { error = true });
 
             
         }

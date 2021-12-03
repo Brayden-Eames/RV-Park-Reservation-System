@@ -2,6 +2,40 @@
 // See your keys here: https://dashboard.stripe.com/apikeys
 const stripe = Stripe('pk_test_51JhX39C1OcDeDQ0XknryEu26l0Sh687xS7zBdQ6dFnw2Og5NI52bMrinthhk1S5cU8PhRkwJspsSQ1UmXmUfFwUV00kNdmAsJ0');
 var host = window.location.protocol + "//" + window.location.host;
+function Warning() {
+    swal({
+        title: "Are you sure?",
+        text: "This will delete your old reservation and create you a new one. This process cannot be undone!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    }).then(function (willDelete) {
+        if (willDelete) {
+            console.log(document.getElementById('resID').value);
+            $.ajax({
+                type: 'DELETE',
+                url: '/api/adminReservationUpdate/' + document.getElementById('resID').value,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+
+                    }
+                    else {
+                        toastr.error(data.message);
+                    }
+                }
+            }).done(function () {
+
+                document.getElementById("payment-form").submit();
+                return true;
+
+            });
+        }
+        else {
+            return false;
+        }
+    })
+}
 
 //Loads the stripe elements in the page when a payment intent exists. 
 (async () => {
@@ -23,7 +57,9 @@ var host = window.location.protocol + "//" + window.location.host;
         const form = document.getElementById('payment-form');
 
         form.addEventListener('submit', async (event) => {
-
+            //event.preventDefault();
+            console.log('paymentSummaryjs');
+            
             const { error } = await stripe.confirmPayment({
                 //`Elements` instance that was used to create the Payment Element
                 elements,

@@ -73,6 +73,7 @@
                             <label>3. A cancellation email will be sent, containing details of your refund amount.</label>
                             <label>4. A confirmation email will be sent for your new reservation with updated dates and sites.</label>
                         </div>
+                        <input type="hidden" asp-for="reservationVM.reservationObj.ResID" id="resID" />
                         <hr />
                         <input type="hidden" id="paymentIntent" asp-for="paymentID" />
                         <div class="mb-5" id="payment-element">
@@ -80,7 +81,7 @@
                         </div>
                         <div class="row list-group-horizontal">
                             <div class="col-md-6">
-                                <input type="button" class="btn mt-2 mb-2 container-fluid btn-primary" id="submitOption"/>
+                                <input type="button" class="btn mt-2 mb-2 container-fluid btn-primary" onclick="Warning();" id="submitOption"/>
                                     <i class="fas fa-shopping-cart"></i>Checkout
                                 </input>
                                 <div id="error-message">
@@ -106,58 +107,7 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/PaymentSummary.js"></script>
-    <script>
-          $("#submitOption").on("click", function (e) {
-            e.preventDefault();
-            swal({
-                title: "Are you sure?",
-                text: "This will delete your old reservation and create you a new one. This process cannot be undone!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true
-            }).then(function (willDelete) {
-                if (willDelete) {
-
-                    $.ajax({
-                        type: 'DELETE',
-                        url: '/api/adminReservationUpdate/' + @Model.reservationVM.reservationObj.ResID,
-                        success: function (data) {
-                            if (data.success) {
-                                toastr.success(data.message);
-
-                            }
-                            else {
-                                toastr.error(data.message);
-                            }
-                        }
-                    }).done(function () {
-
-                        document.getElementById("payment-form").submit(); 
-                        return true;
-
-                    });
-                }
-                else {
-                    return false;
-                }
-            })
-        })
-        //var data = { resID: document.getElementById('reservationsID').value };
-
-        //$.getJSON("/api/AdminReservationUpdate", data, function () {
-        //})
-
-
-//        var choice = option;
-//        $.ajax({
-//            dataType: "json",
-//            url: '/api/adminReservationUpdate/' + choice
-///*            data: choice*/
-//        });
-    
-
-    </script>
+    <script src="~/js/adminPaymentSummary.js"></script>
 
     <partial name="_ValidationScriptsPartial" />
 }

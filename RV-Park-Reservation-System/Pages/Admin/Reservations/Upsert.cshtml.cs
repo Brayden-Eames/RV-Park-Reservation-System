@@ -134,7 +134,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     //paymentUpdateObj = new Payment()
                 };
 
-                reservation.Site = siteObj;
+/*                reservation.Site = siteObj;
                 reservation.Site.SiteNumber = siteObj.SiteNumber;
                 reservation.ResStartDate = CustomerReservation.ResStartDate;
                 reservation.ResEndDate = CustomerReservation.ResEndDate;
@@ -155,27 +155,27 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservationVM.paymentObj.IsPaid = false;
                 reservationVM.paymentObj.PayTotalCost = totalCost;
 
-                reservationVM.paymentObj.CCReference = null;
+                reservationVM.paymentObj.CCReference = null;*/
 
 
-                    //var options = new PaymentIntentCreateOptions
-                    //{
-                    //    Amount = Convert.ToInt32(totalCost * 100),
-                    //    Currency = "usd",
+                //var options = new PaymentIntentCreateOptions
+                //{
+                //    Amount = Convert.ToInt32(totalCost * 100),
+                //    Currency = "usd",
 
-                    //    PaymentMethodTypes = new List<string>
-                    //        {
-                    //            "card",
-                    //        },
-                    //};
+                //    PaymentMethodTypes = new List<string>
+                //        {
+                //            "card",
+                //        },
+                //};
 
 
 
-                    //var service = new PaymentIntentService();
-                    //var paymentIntent = service.Create(options);
-                    //reservationVM.paymentObj.CCReference = paymentIntent.Id;
-                
+                //var service = new PaymentIntentService();
+                //var paymentIntent = service.Create(options);
+                //reservationVM.paymentObj.CCReference = paymentIntent.Id;
 
+                HttpContext.Session.Clear();
                 HttpContext.Session.Set(SD.ReservationSession, reservationVM); //uses the ReservationSession string to handle this separate from regular sessions.
 
                 return RedirectToPage("./AdminUpdateSummary"); //redirect to the admin page
