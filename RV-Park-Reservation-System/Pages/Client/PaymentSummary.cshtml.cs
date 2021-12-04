@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -50,7 +51,16 @@ namespace RV_Park_Reservation_System.Pages.Client
 
         public bool Error { get; set; } = false;
 
+        public decimal paymentAmount { get; set; }
+
+        public decimal amountDue { get; set; }
+
         public ReservationVM reservationVM { get; set; }
+
+        public longTermReservationVM longTermReservationVM { get; set; }
+
+        public decimal totalAmount { get; set; }
+
         #endregion
 
 
@@ -63,6 +73,14 @@ namespace RV_Park_Reservation_System.Pages.Client
             }
 
             //Checks if the session is null and returns an error if the session is null.    
+            if (HttpContext.Session.Get<longTermReservationVM>(SD.LongTermReservationSession) != null)
+            {
+                longTermReservationVM = HttpContext.Session.Get<longTermReservationVM>(SD.LongTermReservationSession);
+                for (int i = 0; i < longTermReservationVM.paymentObj.Count(); i++)
+                {
+                    totalAmount += longTermReservationVM.paymentObj[i].PayTotalCost;
+                }
+            }
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
             { 
                 //Sets the error state. 
@@ -79,6 +97,36 @@ namespace RV_Park_Reservation_System.Pages.Client
 
                 //Gets the vehicle type for the summary page. 
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
+
+               /* if ((reservationVM.reservationObj.ResEndDate - reservationVM.reservationObj.ResStartDate).TotalDays > 30)
+                {
+                    DateTime endOfMonthStartDate = new DateTime(reservationVM.reservationObj.ResStartDate.Year,
+                                                       reservationVM.reservationObj.ResStartDate.Month,
+                                                       DateTime.DaysInMonth(reservationVM.reservationObj.ResStartDate.Year,
+                                                                            reservationVM.reservationObj.ResStartDate.Month));
+                    DateTime nextMonthStartDate = new DateTime(reservationVM.reservationObj.ResStartDate.Year,
+                                   reservationVM.reservationObj.ResStartDate.Month + 1,
+                                   DateTime.DaysInMonth(reservationVM.reservationObj.ResStartDate.Year,
+                                                        reservationVM.reservationObj.ResStartDate.Month));
+                    DateTime startOfMonthEndDate = new DateTime(reservationVM.reservationObj.ResEndDate.Year,
+                                                                reservationVM.reservationObj.ResEndDate.Month, 1);
+                    var totalDayDiff = Math.Ceiling((endOfMonthStartDate - reservationVM.reservationObj.ResStartDate).TotalDays) + 1 + Math.Floor((reservationVM.reservationObj.ResEndDate - startOfMonthEndDate).TotalDays);
+                    var monthDiff = getMonthDifference(nextMonthStartDate, startOfMonthEndDate);
+                    DateTime today = DateTime.Now;
+
+                    if (today <= endOfMonthStartDate)
+                    {
+                        amountDue = (decimal)(Math.Ceiling((endOfMonthStartDate - reservationVM.reservationObj.ResStartDate).TotalDays)+ 1) * 25 ;
+                    }
+                    else if (today > startOfMonthEndDate )
+                    {
+                        amountDue = (decimal)(Math.Floor((reservationVM.reservationObj.ResEndDate - startOfMonthEndDate).TotalDays)) * 25;
+                    }
+                    else
+                    {
+                        amountDue = 700;
+                    }
+                }*/
 
             }
             else
@@ -122,16 +170,27 @@ namespace RV_Park_Reservation_System.Pages.Client
                     ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
 
                     //Finalizes the payment object. 
-                    var reservations = _unitOfWork.Reservation.List().Where(r => r.Customer == customer).Last();
-                    reservationVM.paymentObj.ResID = reservations.ResID;
+                    
+                    
                     reservationVM.paymentObj.IsPaid = true;
-                    _unitOfWork.Payment.Add(reservationVM.paymentObj);
+                    _unitOfWork.Payment.Update(reservationVM.paymentObj);
                     _unitOfWork.Commit();
 
                     //Updates the reservation to a scheduled status. 
-                    reservations.ResStatusID = 9;
-                    _unitOfWork.Reservation.Update(reservations);
-                    _unitOfWork.Commit();
+                    if (reservationVM.reservationObj.ResStatusID == 10)
+                    {
+                        reservationVM.reservationObj.ResStatusID = 11;
+                        _unitOfWork.Reservation.Update(reservationVM.reservationObj);
+                        _unitOfWork.Commit();
+                    }
+                    else if (reservationVM.reservationObj.ResStatusID == 1)
+                    {
+                        reservationVM.reservationObj.ResStatusID = 9;
+                        _unitOfWork.Reservation.Update(reservationVM.reservationObj);
+                        _unitOfWork.Commit();
+                    }
+
+
 
                     //Clears the session. 
                     HttpContext.Session.Clear();
@@ -150,7 +209,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                         user.CustEmail,
                         "FamCamp Reservation Confirmation",
                         $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account. " +
-                        $"Your reservation confirmation number is " + reservations.ResID.ToString() + "."
+                        $"Your reservation confirmation number is " + reservationVM.reservationObj.ResID.ToString() + "."
                         );
 
 
@@ -164,5 +223,12 @@ namespace RV_Park_Reservation_System.Pages.Client
             return RedirectToPage("/Client/PaymentSummary", new { error = true });
 
         }
+
+        public static int getMonthDifference(DateTime startDate, DateTime endDate)
+        {
+            int monthsApart = 12 * (startDate.Year - endDate.Year) + startDate.Month - endDate.Month;
+            return Math.Abs(monthsApart);
+        }
+
     }
 }

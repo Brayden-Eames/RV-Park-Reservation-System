@@ -6,6 +6,7 @@
 @{
 }
 
+
 <div class="container ">
     @if (Model.Error == true)
     {
@@ -55,11 +56,24 @@
                             Vehicle length: @Model.newReservation.ResVehicleLength
                         </div>
                     </div>
-                    <div class="row pt-4  text-center">
-                        <div class="col-12">
-                            total Cost: @Model.paymentObj.PayTotalCost.ToString()
+
+                    @if ((Model.reservationVM.reservationObj.ResEndDate - Model.reservationVM.reservationObj.ResStartDate).TotalDays > 30)
+                    {
+                        <div class="row pt-4  text-center">
+                            <div class="col-6">Amount Due: @Model.reservationVM.paymentObj.PayTotalCost </div>
+                            <div class="col-6">total Cost: @Model.totalAmount</div>
+
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="row pt-4  text-center">
+                            <div class="col-12">
+                                total Cost: @Model.paymentObj.PayTotalCost.ToString()
+                            </div>
+                        </div>
+                    }
+
                 </div>
                 <div class="col-md-6 border-left  pt-3 ">
                     <form method="post" class="p-2" id="payment-form">

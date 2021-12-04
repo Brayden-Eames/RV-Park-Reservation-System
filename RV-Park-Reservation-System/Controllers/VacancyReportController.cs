@@ -25,11 +25,11 @@ namespace RV_Park_Reservation_System.Controllers
 
             var reservationList = await _unitofWork.Reservation.ListAsync(a => a.Id != null);
             var customerList = await _unitofWork.Customer.ListAsync(a => a.Id != null);
-            var siteList = await _unitofWork.Site.ListAsync(a => a.SiteID != null);
-            var siteCategoryList = await _unitofWork.Site_Category.ListAsync(a => a.LocationID != null);
-            var statusList = await _unitofWork.Reservation_Status.ListAsync(a => a.ResStatusID != null);
-            var siteRateList = await _unitofWork.Site_Rate.ListAsync(a => a.RateID != null);
-            var vehicleTypeList = await _unitofWork.Vehicle_Type.ListAsync(a => a.TypeID != null);
+            var siteList = await _unitofWork.Site.ListAsync(a => a.SiteID != 0);
+            var siteCategoryList = await _unitofWork.Site_Category.ListAsync(a => a.LocationID != 0);
+            var statusList = await _unitofWork.Reservation_Status.ListAsync(a => a.ResStatusID != 0);
+            var siteRateList = await _unitofWork.Site_Rate.ListAsync(a => a.RateID != 0);
+            var vehicleTypeList = await _unitofWork.Vehicle_Type.ListAsync(a => a.TypeID != 0);
 
             //GET SITE LIST
             var siteQuery = from site in siteList

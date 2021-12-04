@@ -58,9 +58,8 @@ function checkDates() {
 
     //Checks the start date is before the end date. 
     if (document.getElementById('startDate').value != "" && document.getElementById('endDate').value != "") {
-        if (document.getElementById('startDate').value > document.getElementById('endDate').value) {
+        if (startDate > endDate) {
             swal('Error', 'Please select an end date that is past the start date for this reservation', 'error')
-
             return false;
         }
         //Calculates the total days between the start and end date. 
@@ -89,9 +88,8 @@ function checkinput() {
 
     //Checks start date is less than end date
     if (document.getElementById('startDate').value != "" && document.getElementById('endDate').value != "") {
-        if (document.getElementById('startDate').value > document.getElementById('endDate').value) {
+        if (startDate > endDate) {
             swal('Error', 'Please select an end date that is past the start date for this reservation', 'error')
-
             return false;
         }
     }
@@ -103,11 +101,12 @@ function checkinput() {
             swal('warning', 'Maximum length of stay April-October is 14 consecutive days except for those traveling on PCS orders. Long term stays are allowed October 15th-April 1st. For detailed information on this policy, please contact the FamCamp Office.', 'warning')
             return false;
         }
-
+        //checks if > 14 days between reservations
+        checkBuffer();
     }
 
-    //checks if > 14 days between reservations
-    checkBuffer();
+  
+
     if (reservationBufferCount > 0) {
         return false;
     }

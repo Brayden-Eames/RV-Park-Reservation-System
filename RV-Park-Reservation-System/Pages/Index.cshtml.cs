@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Infrastructure.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace RV_Park_Reservation_System.Pages
@@ -12,9 +14,14 @@ namespace RV_Park_Reservation_System.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            if (User.IsInRole(SD.AdminRole) || User.IsInRole(SD.EmployeeRole))
+            {
+                return RedirectToPage("./Admin/Index");
+            }
 
+            return Page();
         }
     }
 }
