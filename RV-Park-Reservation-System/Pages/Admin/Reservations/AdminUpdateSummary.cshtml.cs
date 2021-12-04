@@ -40,9 +40,6 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         [BindProperty]
         public Payment paymentObj { get; set; }
 
-        //[BindProperty]
-        //public ApplicationCore.Models.Customer customerObj { get; set; }
-
         [BindProperty]
         public int reservationID { get; set; }
 
@@ -76,20 +73,13 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
 
                 //Sets the reservation and payment objects from the session. 
-                newReservation = reservationVM.reservationObj;
-               
+                newReservation = reservationVM.reservationObj;              
                 paymentObj = reservationVM.paymentObj;
-
-                //customerObj = reservationVM.customerObj;
                 vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
-                //ReturnUrl = returnUrl;
-
             }
             else
             {
-
                 Error = true;
-
             }
             return Page();
         }

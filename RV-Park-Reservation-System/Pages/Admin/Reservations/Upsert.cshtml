@@ -13,8 +13,6 @@
     <input type="hidden" id="totalCost"value="@Model.totalCost" asp-for="@Model.totalCost" />
     <input type="hidden" value="@Model.CustomerInfo.CustFirstName" asp-for="@Model.CustomerInfo.CustFirstName" />
     <input type="hidden" value="@Model.CustomerInfo.CustLastName" asp-for="@Model.CustomerInfo.CustLastName" />
-    @*<input type="hidden" id="totalCost" asp-for="totalCost" />*@
-    @*<input type="hidden" value="@Model.CustomerReservation.Reservation_Status" asp-for="@Model.CustomerReservation.Reservation_Status" />*@
     <input type="hidden" value="@Model.CustomerReservation.ResStatusID" asp-for="reservationStatusID" />
 
 
@@ -43,7 +41,7 @@
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Vehicle Type</span>
-                <input type="text" class="form-control" id="ddlVehicleType" placeholder="Vehicle Type" onload="vehicleTypeCheck(@Model.CustomerReservation.TypeID)" asp-for="@Model.CustomerReservation.TypeID" value="" readonly>
+                <input type="text" class="form-control" id="ddlVehicleType" placeholder="Vehicle Type" @*onload="vehicleTypeCheck(@Model.CustomerReservation.TypeID)"*@ asp-for="@Model.CustomerReservation.TypeID" value="@Model.custVehicleType.TypeName" readonly>
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Vehicle Length (ft)</span>
@@ -122,19 +120,19 @@
                 <label class="pl-2">Edit Reservation Dates and Site Number</label>
                 <div class="input-group mt-3">
                     <span class="input-group-text" id="">New Start Date</span>
-                    <input class="form-control datepicker container-fluid pt-1 pb-1" onchange="clearEndDate(); checkDates();" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")">
-                </div>
+                    <input class="form-control pt-1 pb-1" onchange="clearEndDate(); checkDates();" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")" readonly>
+                </div>@*datepicker container-fluid <- this goes inside the class="" above*@
                 <div class="input-group mt-3">
                     <span class="input-group-text" id="">New End Date</span>
-                    <input class="form-control datepicker container-fluid pt-1 pb-1" onchange="checkDates();" placeholder="End Date" id="endDate" type="datetime" asp-for="@Model.CustomerReservation.ResEndDate" value="@Model.CustomerReservation.ResEndDate.ToString("MM/dd/yyyy")">
-                </div>
+                    <input class="form-control pt-1 pb-1" onchange="checkDates();" placeholder="End Date" id="endDate" type="datetime" asp-for="@Model.CustomerReservation.ResEndDate" value="@Model.CustomerReservation.ResEndDate.ToString("MM/dd/yyyy")" readonly>
+                </div>@*datepicker container-fluid <- this goes inside the class="" above*@
                 <div class="row justify-content-center mt-3 mb-3" id="btnSeeReservations">
                     <div class="col-md-12">
-                        <button onclick="loadReservations();" type="button" class="btn container-fluid btn-primary">See Available Lots</button>
+                        <button @*onclick="loadReservations();"*@ type="button" class="btn container-fluid btn-primary">See Available Lots</button>
                     </div>
                 </div>
                 <div style="display: none" id="ddlSitesDiv" class="row justify-content-center ">
-                    <div class="col-md-12 mt-2 ">
+                    <div class="col-md-12 mt-2 disabled">
                         <label class="pl-2">Campsite location</label>
                         <select onchange="continuePayment(); hideUpdateBtn();" asp-for="siteid" id="ddlSites" class="form-control">
                             <option value="0">- Please Select a camp site - </option>
@@ -206,10 +204,5 @@
                     }
                 });
         })
-
-        window.onload = vehicleTypeCheck(@Model.CustomerReservation.TypeID);
-        //document.getElementById("submitUpdate").onclick = function () {
-        //    document.getElementById("actionForm").submit();
-        //}
     </script>
 }

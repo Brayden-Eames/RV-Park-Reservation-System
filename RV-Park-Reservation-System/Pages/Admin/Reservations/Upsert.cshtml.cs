@@ -70,6 +70,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
         public ReservationVM reservationVM { get; set; }
 
+        public Vehicle_Type custVehicleType { get; set; }
+
 
         //Add in member variables similar to how the AdminReservation Create page does it.  Revamp the Upsert frontend to use this functionality as well. 
 
@@ -90,6 +92,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
 
             lstReservationStatus = _unitOfWork.Reservation_Status.List().Select(s => new SelectListItem { Value = s.ResStatusID.ToString(), Text = s.ResStatusName });
+
+            //custVehicleType = _unitOfWork.Vehicle_Type.GetAsync(v => v.TypeID == CustomerReservation.TypeID);
+            custVehicleType = await _unitOfWork.Vehicle_Type.GetAsync(v => v.TypeID == CustomerReservation.TypeID);
+
+
             return Page();
         }
 
@@ -123,7 +130,6 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID);
                 var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == siteid);
                 var paymentObject = await _unitOfWork.Payment.GetAsync(p => p.ResID == CustomerReservation.ResID);
-                //var paymentUpdateObject = new Payment();/* await _unitOfWork.Payment.GetAsync(p => p.ResID == CustomerReservation.ResID);*/
                 var customerInfoObj = await _unitOfWork.Customer.GetAsync(c => c.CustFirstName == CustomerInfo.CustFirstName && c.CustLastName == CustomerInfo.CustLastName);
 
                 reservationVM = new ReservationVM()
@@ -133,6 +139,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     customerObj = customerInfoObj,
                     //paymentUpdateObj = new Payment()
                 };
+                //This entire functionality is being disabled due to problems with implementing it. 
 
 /*                reservation.Site = siteObj;
                 reservation.Site.SiteNumber = siteObj.SiteNumber;
