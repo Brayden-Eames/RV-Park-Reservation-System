@@ -112,6 +112,7 @@
             <br />
             <a class="btn btn-danger form-control mt-2 mb-2 text-light" id="deleteRecord">Cancel Reservation</a>
             <br />
+            <a class="btn btn-info form-control mt-2 mb-2 text-light" id="" asp-route-id="@Model.reservationID" asp-page="/Admin/Reservations/MakePayment">Make Payment</a>
             <label class="pl-2 mt-2">Update Reservation Status</label>
             @Html.DropDownListFor(s => s.CustomerReservation.ResStatusID, Model.lstReservationStatus, new { @class = "form-control text-center", @id = "ddlResStatus" })
             <br />
