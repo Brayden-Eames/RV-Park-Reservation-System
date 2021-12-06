@@ -27,24 +27,12 @@ namespace RV_Park_Reservation_System.Pages.Admin
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Index" });
             }
-            
-            Success = success;
-            Message = message;
-            ReservationList = _unitofWork.Reservation.List(r => r.ResStatusID == 1 || r.ResStatusID == 4 || r.ResStatusID == 9); //9 for scheduled 4 for On Going
-            AdminReservationObject = new AdminReservationVM()
-            {
-                Reservations = _unitofWork.Reservation.List(),
-                ListOfCustomers = _unitofWork.Customer.List(),
-                ListOfSites = _unitofWork.Site.List(),
-                DODAffiliationList = _unitofWork.DOD_Affiliation.List(),
-                ServiceStatusTypes = _unitofWork.Service_Status_Type.List()
-            };
 
             return Page();
         }
 
         public async Task<IActionResult> OnPost(int? id)
-        {
+        {           
             return RedirectToPage("./Upsert", new { reservationID = id });
         }
     }

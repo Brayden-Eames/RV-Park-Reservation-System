@@ -1,5 +1,5 @@
 ﻿@page
-@model RV_Park_Reservation_System.Pages.Admin.Reservations.AdminCashSummaryModel
+@model RV_Park_Reservation_System.Pages.Admin.Reservations.AdminUpdateSummaryModel
 @using Infrastructure.Services
 @using Microsoft.Extensions.Options
 @inject IOptions<Infrastructure.Services.StripeSettings> Stripe
@@ -23,9 +23,9 @@
             <div class="row  border rounded">
                 <div class="col-md-6 pt-3  ">
                     <div class="row">
-                        <div class=" col-12 text-center"><h2>Admin Reservation Summary</h2></div>
+                        <div class=" col-12 text-center"><h2>Reservation Update Summary</h2></div>
                         <hr />
-
+                        <input id="reservationsID" type="hidden" value="@Model.newReservation.ResID" />
                     </div>
                     <div class="row text-center">
                         <div class="col-md-12">
@@ -57,23 +57,33 @@
                     </div>
                     <div class="row pt-4  text-center">
                         <div class="col-12">
-                            Total Cost: $@Model.paymentObj.PayTotalCost.ToString()
+                            Total Cost:  $@Model.paymentObj.PayTotalCost.ToString()
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 border-left  pt-3 ">
-                    <div class="row">
-                        <div class=" col-12 text-center"><h2>Cash Payment</h2></div>
+                    <form method="post" id="payment-form">
+                        <div class="row">
+                            <div class=" col-12 text-center pb-0"><h2>Payment</h2></div>
+                            <hr class="col-md-12" />
+                            <h4 class="bg-danger text-center text-light">IMPORTANT NOTICE!</h4>
+                            <label>By changing your reservation dates and site, the following things will occur:</label>
+                            <label>1. Our system will cancel and refund your current reservation.</label>
+                            <label>2. Using your current reservation data, a new reservation will be created with the updated dates and site.</label>
+                            <label>3. A cancellation email will be sent, containing details of your refund amount.</label>
+                            <label>4. A confirmation email will be sent for your new reservation with updated dates and sites.</label>
+                        </div>
+                        <input type="hidden" asp-for="reservationVM.reservationObj.ResID" id="resID" />
                         <hr />
-
-                    </div>
-                    <form method="post" class="p-2" id="payment-form">
                         <input type="hidden" id="paymentIntent" asp-for="paymentID" />
+                        <div class="mb-5" id="payment-element">
+                            <!-- Elements will create form elements here -->
+                        </div>
                         <div class="row list-group-horizontal">
                             <div class="col-md-6">
-                                <button type="submit" class="btn mt-2 mb-2 container-fluid btn-primary" id="submit">
+                                <input type="button" class="btn mt-2 mb-2 container-fluid btn-primary" onclick="Warning();" id="submitOption"/>
                                     <i class="fas fa-shopping-cart"></i>Checkout
-                                </button>
+                                </input>
                                 <div id="error-message">
                                     <!-- Display error message to your customers here -->
                                 </div>
@@ -97,10 +107,8 @@
 </div>
 
 @section Scripts{
-    @*<script src="~/js/PaymentSummary.js"></script>*@
+    <script src="~/js/adminPaymentSummary.js"></script>
 
     <partial name="_ValidationScriptsPartial" />
 }
-
-
 
