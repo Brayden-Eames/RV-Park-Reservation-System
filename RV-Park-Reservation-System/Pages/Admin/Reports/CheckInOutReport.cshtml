@@ -24,7 +24,7 @@
                     <div class="col-12 col-lg-9">
                         <span class="row">
                             <span class="text-right">
-                                <button id="btn_today" class="btn btn-success mb-1 mr-lg-4" onclick="changeReservationStatusHandler()" asp->Complete Today's Reservations</button>
+                                <button class="btn btn-success mb-1 mr-lg-4" onclick="changeReservationStatusHandler()">Complete Today's Reservations</button>
                                 <button id="btn_today" class="btn btn-primary mb-1" onclick="setCheckInDay(0)">Today</button>
                                 <button id="btn_tomorrow" class="btn btn-primary mb-1" onclick="setCheckInDay(1)">Tomorrow</button>
                                 <button id="btn_three" class="btn btn-primary mb-1" onclick="setCheckInDay(2)">3 Days</button>
@@ -87,41 +87,22 @@
             })
         })
 
-        window.addEventListener('load', setDefaultDaysInInput());
-
-        function setDefaultDaysInInput() {
-            let today = new Date();
-            today.setDate(today.getDate() - 1);
-            document.getElementById('startDate').valueAsDate = today;
-
-            let endInput = document.getElementById('endDate');
-            let thirdDay = today;
-            thirdDay.setDate(thirdDay.getDate() + 3);
-            endInput.valueAsDate = thirdDay;
-
-            document.getElementById('historicStartDate').valueAsDate = today;
-
-            let thirtyDay = today;
-            thirtyDay.setDate(thirtyDay.getDate() + 30);
-            document.getElementById('historicEndDate').valueAsDate = thirtyDay;
-
-        }
-
         
         function setCheckInDay(plusDays) {
+           //get the input fields for check in and check out filters
             let checkIn = document.getElementById('CheckIn');
             let checkOut = document.getElementById('CheckOut');
             let thisDay = new Date();
             let nextDay = new Date();
-            let enterEvent = new CustomEvent('keyup');
+            let enterEvent = new CustomEvent('keyup'); //this is needed to trigger an event as if the user clicked enter. 
             enterEvent.which = 13; //13 is to trigger enter key event
             enterEvent.keyCode = 13;
 
-            if (plusDays === 1) {
+            if (plusDays === 1) { //this is for Tomorrow button click
                 thisDay.setDate(thisDay.getDate() + plusDays);
             }
             checkIn.value = thisDay.getMonth() + 1 + '/' + thisDay.getDate() + '/' + thisDay.getFullYear();
-            if (plusDays < 2) {
+            if (plusDays < 2) {  //this is for today button click
                 checkOut.value = '';
                 checkOut.focus();
                 checkOut.dispatchEvent(enterEvent);
@@ -129,7 +110,7 @@
             checkIn.focus();
             checkIn.dispatchEvent(enterEvent);
 
-            if (plusDays > 1) {
+            if (plusDays > 1) { //this is for 3 day button click 
                 nextDay.setDate(nextDay.getDate() + plusDays);
                 checkOut.value = nextDay.getMonth() + 1 + '/' + nextDay.getDate() + '/' + nextDay.getFullYear();
                 checkOut.focus();
@@ -137,7 +118,8 @@
             }
         }
 
-        function changeReservationStatusHandler() {
+        //this is used to change the status of all reservatoins that are checking out today form Ongoing status to Completed status.
+        function changeReservationStatusHandler() { 
             $.ajax({
                 type: 'POST',
                 url: '/api/reports',

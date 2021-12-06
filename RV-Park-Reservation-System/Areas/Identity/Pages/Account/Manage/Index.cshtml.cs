@@ -90,6 +90,7 @@ namespace RV_Park_Reservation_System.Areas.Identity.Pages.Account.Manage
             updatedUser.CustLastModifiedBy = userAccountVM.user.CustFirstName + " " + userAccountVM.user.CustLastName;
             updatedUser.CustLastModifiedDate = DateTime.Now;       
 
+            //need to do this all asynchronously or else it causes conflicts
             await _userManager.UpdateNormalizedEmailAsync(updatedUser);
             await _userManager.UpdateNormalizedUserNameAsync(updatedUser);
             var result = await _userManager.UpdateAsync(updatedUser);                     

@@ -17,13 +17,11 @@ namespace RV_Park_Reservation_System.Pages.Client
 {
     public class UpsertModel : PageModel
     {
-        private readonly IUnitOfWork _unitOfWork;
-        //private readonly UserManager<ApplicationCore.Models.Customer> _userManager;
+        private readonly IUnitOfWork _unitOfWork;        
 
         public UpsertModel(IUnitOfWork unitOfWork /*UserManager<ApplicationCore.Models.Customer> userManager*/)
         {
-            _unitOfWork = unitOfWork;
-            //_userManager = userManager;
+            _unitOfWork = unitOfWork;            
         }
 
         //passing the 'ResID' in through the reservations.cshtml, we can then use that to go through unitofWork and retrieve that reservation, and by extension the customer's info

@@ -1,7 +1,5 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RV_Park_Reservation_System.ViewModels;
 using System;
@@ -11,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace RV_Park_Reservation_System.Controllers
 {
+    //this controller was first created for multiple reports but then later changed. Now its just for the Up Coming Activity Report (Check In/Out Report)
     [Route("api/[controller]")]
     [ApiController]
-    public class ReportsController : Controller
+    public class ReportsController : Controller  
     {
         private readonly IUnitOfWork _unitofWork;        
         public ReportsController(IUnitOfWork unitofWork)
@@ -32,6 +31,7 @@ namespace RV_Park_Reservation_System.Controllers
             var siteRateList = await _unitofWork.Site_Rate.ListAsync(a => a.RateID != null);
             var vehicleTypeList = await _unitofWork.Vehicle_Type.ListAsync(a => a.TypeID != null);
 
+            //get all the reservations
             var reservationQuery = from rev in reservationList
                                    join stat in statusList on rev.ResStatusID equals stat.ResStatusID
                                    join veh in vehicleTypeList on rev.TypeID equals veh.TypeID 
@@ -42,12 +42,13 @@ namespace RV_Park_Reservation_System.Controllers
                                    into reservation
                                    from subItem in reservation.DefaultIfEmpty()
                                    select new {
+                                       //this allows us to rename the data fields for later convenience when we receive the data.
                                        id = rev.ResID,
                                        name = cust.CustFirstName + " " + cust.CustLastName,                                                                             
                                        siteNumber = sit.SiteNumber, 
                                        checkIn = rev.ResStartDate.Month + "/" + rev.ResStartDate.Day + "/" + rev.ResStartDate.Year,
                                        checkOut = rev.ResEndDate.Month + "/" + rev.ResEndDate.Day + "/" + rev.ResEndDate.Year,
-                                       nights = rev.ResEndDate.Ticks - rev.ResStartDate.Ticks, //gets the difference of ticks
+                                       nights = rev.ResEndDate.Ticks - rev.ResStartDate.Ticks, //gets the difference of ticks 
                                        status = stat.ResStatusName                                   
                                    };
 
@@ -56,7 +57,7 @@ namespace RV_Park_Reservation_System.Controllers
 
             foreach (var v in reservationQuery)
             {
-                if (v.status != "Cancelled" && v.status != "Completed")
+                if (v.status != "Cancelled" && v.status != "Completed") //filter out finished reservations
                 {
                     TimeSpan nightSpan = new TimeSpan(v.nights); //converts ticks to a timespan                    
                     
@@ -69,7 +70,7 @@ namespace RV_Park_Reservation_System.Controllers
                     row.nights = nightSpan.Days + 1;
                     row.status = v.status;
 
-                    reservationActivityList.Add(row);
+                    reservationActivityList.Add(row); 
                 }
 
             }
@@ -77,11 +78,16 @@ namespace RV_Park_Reservation_System.Controllers
             return Json(new { data = reservationActivityList});                     
         }
 
+
+        //this Post call is used to change the reservation status from Ongoing to Completed. 
+        //currently this is done manually but in the future a script could be made to do this every night at midnight.
+
         [HttpPost]
         public async Task<IActionResult> UpdateFinishedReservationStatuses()
         {
             try
             {
+                //get all the reservations
                 List<Reservation> allOnGoingReservations = new();
 
                 allOnGoingReservations = (List<Reservation>)_unitofWork.Reservation.List(r => r.ResStatusID == 4).ToList();
@@ -95,7 +101,7 @@ namespace RV_Park_Reservation_System.Controllers
 
                 foreach(Reservation res in allOnGoingReservations)
                 {
-                    if(res.ResEndDate.Date == today.Date)
+                    if(res.ResEndDate.Date == today.Date)  //if the check out Date is today, change the status of the reservation to completed.
                     {                        
                         res.ResStatusID = 3;
                         _unitofWork.Reservation.Update(res);

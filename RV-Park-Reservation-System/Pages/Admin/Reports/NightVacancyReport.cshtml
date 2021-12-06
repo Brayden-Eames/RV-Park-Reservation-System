@@ -88,6 +88,7 @@
 
         window.addEventListener('load', setDefaultDaysInInput());
 
+        //this sets the default day's input boxes
         function setDefaultDaysInInput() {
             let today = new Date();
             today.setDate(today.getDate() - 1);
@@ -96,45 +97,8 @@
             let endInput = document.getElementById('endDate');
             let thirdDay = today;
             thirdDay.setDate(thirdDay.getDate() + 3);
-            endInput.valueAsDate = thirdDay;
-
-            document.getElementById('historicStartDate').valueAsDate = today;
-
-            let thirtyDay = today;
-            thirtyDay.setDate(thirtyDay.getDate() + 30);
-            document.getElementById('historicEndDate').valueAsDate = thirtyDay;
-
-        }
-
-
-        function setCheckInDay(plusDays) {
-            let checkIn = document.getElementById('CheckIn');
-            let checkOut = document.getElementById('CheckOut');
-            let thisDay = new Date();
-            let nextDay = new Date();
-            let enterEvent = new CustomEvent('keyup');
-            enterEvent.which = 13; //13 is to trigger enter key event
-            enterEvent.keyCode = 13;
-
-            if (plusDays === 1) {
-                thisDay.setDate(thisDay.getDate() + plusDays);
-            }
-            checkIn.value = thisDay.getMonth() + 1 + '/' + thisDay.getDate() + '/' + thisDay.getFullYear();
-            if (plusDays < 2) {
-                checkOut.value = '';
-                checkOut.focus();
-                checkOut.dispatchEvent(enterEvent);
-            }
-            checkIn.focus();
-            checkIn.dispatchEvent(enterEvent);
-
-            if (plusDays > 1) {
-                nextDay.setDate(nextDay.getDate() + plusDays);
-                checkOut.value = nextDay.getMonth() + 1 + '/' + nextDay.getDate() + '/' + nextDay.getFullYear();
-                checkOut.focus();
-                checkOut.dispatchEvent(enterEvent);
-            }
-        }
+            endInput.valueAsDate = thirdDay;           
+        }       
 
 
     </script>
