@@ -20,7 +20,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.DODAffiliations
 
         public IActionResult OnGet(int? id)
         {
-            if (!User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)  //Check id the user is Authenticated
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/DODAffiliations/Upsert" });
             }

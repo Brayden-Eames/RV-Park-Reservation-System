@@ -133,11 +133,11 @@ namespace RV_Park_Reservation_System.Pages.Client
                 TimeSpan EndTime = new TimeSpan(12, 0, 0);
                 EndDate = EndDate.Date + EndTime;
 
-                ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
+                ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name); //Gets User From Customer Email
                 
 
 
-
+                //If User Selects more than 30 days
                 if ((EndDate - StartDate).TotalDays >= 30)
                 {
 

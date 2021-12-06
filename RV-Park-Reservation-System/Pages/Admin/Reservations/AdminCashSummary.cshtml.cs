@@ -84,17 +84,17 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
             }
 
-             ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c =>c.CustFirstName == reservationVM.customerObj.CustFirstName && c.CustLastName == reservationVM.customerObj.CustLastName && c.CustEmail == reservationVM.customerObj.CustEmail);
+             ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c =>c.CustFirstName == reservationVM.customerObj.CustFirstName && c.CustLastName == reservationVM.customerObj.CustLastName && c.CustEmail == reservationVM.customerObj.CustEmail); //Get user from their First Name, last Name and their Email
              reservationVM.reservationObj.Id = customer.Id; 
-              _unitOfWork.Reservation.Add(reservationVM.reservationObj);
+              _unitOfWork.Reservation.Add(reservationVM.reservationObj);  //Adding reservation View model to reservation Table
             await _unitOfWork.CommitAsync();
 
-             var reservations = _unitOfWork.Reservation.List().Where(r => r.Customer == customer).Last();
+             var reservations = _unitOfWork.Reservation.List().Where(r => r.Customer == customer).Last();  //Getting list of reservation for the user
              reservationVM.paymentObj.ResID = reservations.ResID;
-             reservationVM.paymentObj.IsPaid = true;
-             _unitOfWork.Payment.Add(reservationVM.paymentObj);
+             reservationVM.paymentObj.IsPaid = true;  //Payment Status is paid for cash 
+             _unitOfWork.Payment.Add(reservationVM.paymentObj); //Adding Payment object through reservation viewmodel 
              await _unitOfWork.CommitAsync();
-             HttpContext.Session.Clear();
+             HttpContext.Session.Clear(); //Clearing Session 
 
              var user = await _userManager.FindByEmailAsync(reservationVM.customerObj.CustEmail);
              var code = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -105,7 +105,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                  values: new { area = "", code },
                  protocol: Request.Scheme);
 
-             await _emailSender.SendEmailAsync(
+             await _emailSender.SendEmailAsync(  //Sending confirmation Email for the reservation 
                  user.CustEmail,
                  "FamCamp Reservation Confirmation",
                  $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account.  " +
