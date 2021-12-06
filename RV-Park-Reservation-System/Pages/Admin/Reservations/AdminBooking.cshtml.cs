@@ -192,6 +192,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     reservationVM.reservationObj.ResStatusID = 1;
                     reservationVM.reservationObj.ResLastModifiedBy = User.Identity.Name;
                     reservationVM.reservationObj.ResVehicleLength = vehicleLength;
+                    //reservationVM.reservationObj.Vehicle_Type = vehicle;
 
 
                     reservationVM.paymentObj.PayDate = DateTime.Now;

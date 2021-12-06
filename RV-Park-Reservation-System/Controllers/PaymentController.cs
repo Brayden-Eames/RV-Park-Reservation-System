@@ -33,7 +33,14 @@ namespace RV_Park_Reservation_System.Controllers
                 ReservationVM reservationVM = new ReservationVM();
                 reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
                 Payment paymentObj = reservationVM.paymentObj;
-                ApplicationCore.Models.Customer modelCustomer = await _unitOfWork.Customer.GetAsync(c => c.Email == User.Identity.Name);
+                if(reservationVM.reservationObj.ResID == 0)
+                {
+                    ApplicationCore.Models.Customer modelCustomer = await _unitOfWork.Customer.GetAsync(c => c.Email == User.Identity.Name);
+                }
+                {
+                    ApplicationCore.Models.Customer modelCustomer = await _unitOfWork.Customer.GetAsync(c => c.Id == reservationVM.reservationObj.Id);
+                }
+                
                 if (reservationVM.paymentObj.CCReference == null )
                 {
                     var options = new PaymentIntentCreateOptions

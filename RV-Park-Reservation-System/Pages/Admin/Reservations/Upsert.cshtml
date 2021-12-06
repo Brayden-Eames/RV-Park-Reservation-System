@@ -3,114 +3,161 @@
 @{
 }
 
-<br />
-<br />
-<div class="container">
-    <form class="form" method="post" id="reservationForm">
-        <div class="col-6">
-            <input type="hidden" value="@Model.CustomerReservation.ResID" asp-for="@Model.CustomerReservation.ResID" />
-        </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResID">Reservation #</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResID" value="@Model.CustomerReservation.ResID" readonly>
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResStartDate.Date">Reservation Start Date</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString()">
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResCreatedDate">Reservation Created Date</label>
-                <input class="form-control custom-checkbox text-success" asp-for="@Model.CustomerReservation.ResCreatedDate" value="@Model.CustomerReservation.ResCreatedDate" readonly>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerInfo.CustFirstName">Customer First Name</label>
-                <input class="form-control" asp-for="@Model.CustomerInfo.CustFirstName" value="@Model.CustomerInfo.CustFirstName" readonly>
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResEndDate.Date">Reservation End Date</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResEndDate.Date" value="@Model.CustomerReservation.ResEndDate.Date">
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResVehicleLength">Reservation Vehicle Length (in ft)</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResVehicleLength" value="@Model.CustomerReservation.ResVehicleLength">
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerInfo.CustLastName">Customer Last Name</label>
-                <input class="form-control" asp-for="@Model.CustomerInfo.CustLastName" value="@Model.CustomerInfo.CustLastName" readonly>
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResNumAdults">Reservation Number of Adults</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResNumAdults" value="@Model.CustomerReservation.ResNumAdults">
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.Vehicle_Type">Reservation Vehicle Type</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.Vehicle_Type" value="@Model.CustomerReservation.Vehicle_Type">
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerInfo.CustPhone">Customer Phone #</label>
-                <input class="form-control" asp-for="@Model.CustomerInfo.CustPhone" value="@Model.CustomerInfo.CustPhone" readonly>
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResNumChildren">Reservation Number of Children</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResNumChildren" value="@Model.CustomerReservation.ResNumChildren">
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.Reservation_Status">Reservation Status</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.Reservation_Status" value="@Model.CustomerReservation.Reservation_Status">
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.SiteID">Site Number</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.SiteID" value="@Model.CustomerReservation.SiteID">
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResNumPets">Reservation Number of Pets</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResNumPets" value="@Model.CustomerReservation.ResNumPets">
-            </div>
-            <div class="form-group col-md-4">
+<form class="form" method="post" onload="checkDates()" id="reservationForm" onsubmit="return checkinput();">
+    <h1 class="display-4 text-center text-primary my-5">EDIT RESERVATION</h1>
 
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerInfo.Service_Status_Type">Customer Service Status</label>
-                <input class="form-control" asp-for="@Model.CustomerInfo.Service_Status_Type" value="@Model.CustomerInfo.Service_Status_Type" readonly>
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResAcknowledgeValidPets">Customer 2-Pet Policy Acknowledged?</label>
-                <input class="form-control" asp-for="@Model.CustomerReservation.ResAcknowledgeValidPets" value="@Model.CustomerReservation.ResAcknowledgeValidPets">
-            </div>
-            <div class="form-group col-md-4">
+    <input type="hidden" value="@Model.CustomerReservation.ResID" asp-for="@Model.CustomerReservation.ResID" />
+    <input type="hidden" value="@Model.CustomerReservation.Site" asp-for="@Model.CustomerReservation.Site" />
+    <input type="hidden" value="@Model.CustomerReservation.Site.SiteID" asp-for="@Model.CustomerReservation.Site.SiteID" />
+    <input type="hidden" value="@Model.CustomerReservation.Site.SiteNumber" asp-for="@Model.CustomerReservation.Site.SiteNumber" />
+    <input type="hidden" id="totalCost"value="@Model.totalCost" asp-for="@Model.totalCost" />
+    <input type="hidden" value="@Model.CustomerInfo.CustFirstName" asp-for="@Model.CustomerInfo.CustFirstName" />
+    <input type="hidden" value="@Model.CustomerInfo.CustLastName" asp-for="@Model.CustomerInfo.CustLastName" />
+    <input type="hidden" value="@Model.CustomerReservation.ResStatusID" asp-for="reservationStatusID" />
 
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerInfo.DOD_Affiliation">Customer DOD Affiliation</label>
-                <input class="form-control" asp-for="@Model.CustomerInfo.DOD_Affiliation" value="@Model.CustomerInfo.DOD_Affiliation" readonly>
-            </div>
-            <div class="form-group col-md-4">
-                <label asp-for="@Model.CustomerReservation.ResComment">Reservation Comments</label>
-                <textarea class="form-control" asp-for="@Model.CustomerReservation.ResComment" rows="5" value="@Model.CustomerReservation.ResComment"></textarea>
-            </div>
-            <div class="form-group col-md-4">
 
+    <div class="row border  pt-3 pb-2 mt-2 mb-2 ml-7 mr-7 justify-content-center">
+        <div class="pt-3 pb-3 pl-3 ml-2 mt-2 mb-3 col-md-3 border">
+            <label class="pl-2">Customer Info</label>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">First Name</span>
+                <input class="form-control" placeholder="First Name" asp-for="@Model.CustomerInfo.CustFirstName" value="@Model.CustomerInfo.CustFirstName" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Last Name</span>
+                <input type="text" class="form-control" placeholder="Last Name" asp-for="@Model.CustomerInfo.CustLastName" value="@Model.CustomerInfo.CustLastName" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="serviceStatus">Service Status </span>
+                <input type="text" class="form-control" id="serviceStatusInputField" placeholder="Service Status" asp-for="@Model.CustomerInfo.ServiceStatusID" value="@Model.CustomerInfo.Service_Status_Type.ServiceStatusType" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="dodAffiliation">DOD Affiliation </span>
+                <input type="text" class="form-control" id="dodInputField" placeholder="DOD Affiliation" asp-for="@Model.CustomerInfo.DODAffiliationID" value="@Model.CustomerInfo.DOD_Affiliation.DODAffiliationType" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Phone Number</span>
+                <input type="text" class="form-control" placeholder="Phone Number" asp-for="@Model.CustomerInfo.CustPhone" value="@Model.CustomerInfo.CustPhone" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Vehicle Type</span>
+                <input type="text" class="form-control" id="ddlVehicleType" placeholder="Vehicle Type" @*onload="vehicleTypeCheck(@Model.CustomerReservation.TypeID)"*@ asp-for="@Model.CustomerReservation.TypeID" value="@Model.custVehicleType.TypeName" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Vehicle Length (ft)</span>
+                <input type="text" class="form-control" id="ddlVehicleLength" placeholder="Vehicle Length" asp-for="@Model.CustomerReservation.ResVehicleLength" value="@Model.CustomerReservation.ResVehicleLength" readonly>
             </div>
         </div>
-        <button type="submit" class="btn btn-success text-light" asp-route-value="update">Update</button>
-        <input type="submit" id="deleteRecord" value="Delete" class="btn btn-danger text-light" asp-route-value="delete"/>
-    </form>
-</div>
+        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border">
+            <label class="pl-2">Reservation Info</label>
+            <div class="input-group mb-3 mt-3">
+                @*<label class="input-group-text pt-0 pb-0">Reservation Status</label>*@
+                <span class="input-group-text pt-0 pb-0" id="">Reservation Status</span>
+                <input type="text" class="form-control" placeholder="Reservation Status" value="@Model.CustomerReservation.Reservation_Status.ResStatusName" readonly>
+                @*<span class="text-danger" asp-validation-for="@Model.reservationStatusID"></span>*@
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Reservation ID</span>
+                <input type="text" class="form-control" placeholder="Reservation Num" asp-for="@Model.CustomerReservation.ResID" value="@Model.CustomerReservation.ResID" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Total Cost</span>
+                <input type="text" class="form-control" placeholder="Total Cost" id="totalCost2"  value="$@Model.CustomerPayment.PayTotalCost" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Start Date</span>
+                <input class="form-control" placeholder="Start Date" id="" type="datetime" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">End Date</span>
+                <input class="form-control" placeholder="End Date" id="" type="datetime" value="@Model.CustomerReservation.ResEndDate.ToString("MM/dd/yyyy")" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Site Number</span>
+                <input type="text" class="form-control" placeholder="Site Number" asp-for="@Model.CustomerReservation.Site" value="@Model.CustomerReservation.Site.SiteNumber" readonly>
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Number of Adults</span>
+                <input type="text" class="form-control" placeholder="Number of Adults" asp-for="@Model.CustomerReservation.ResNumAdults" value="@Model.CustomerReservation.ResNumAdults">
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Number of Children</span>
+                <input type="text" class="form-control" placeholder="Number of Children" asp-for="@Model.CustomerReservation.ResNumChildren" value="@Model.CustomerReservation.ResNumChildren">
+            </div>
+            <div class="input-group mt-3">
+                <span class="input-group-text" id="">Number of Pets</span>
+                <input type="text" class="form-control" placeholder="Number of Pets" asp-for="@Model.CustomerReservation.ResNumPets" value="@Model.CustomerReservation.ResNumPets">
+            </div>
+            <br />
+            @{
+                @if (Model.CustomerReservation.ResNumPets > 0)
+                {
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupSelect01">Pet Policy Acknowledged?</label>
+                        <select class="form-select" id="inputGroupSelect01" asp-for="@Model.CustomerReservation.ResAcknowledgeValidPets" value="@Model.CustomerReservation.ResAcknowledgeValidPets">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                }
+            }
+            <br />
+        </div>
+        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border form" id="actionForm">
+            <label class="pl-2">Actions</label>
+            <br />
+            <button class="btn btn-success form-control mt-3 mb-2 text-light" style="background-color: #5E700E; border-color: #5E700E" asp-route-value="update" asp-route-updateType="addDays" id="submitUpdate">Update Reservation</button>
+            <br />
+            <a class="btn btn-primary form-control mt-2 mb-2 text-light" id="" href="/Admin/Reservations">Back to List</a>
+            <br />
+            <a class="btn btn-danger form-control mt-2 mb-2 text-light" id="deleteRecord">Cancel Reservation</a>
+            <br />
+            <label class="pl-2 mt-2">Update Reservation Status</label>
+            @Html.DropDownListFor(s => s.CustomerReservation.ResStatusID, Model.lstReservationStatus, new { @class = "form-control text-center", @id = "ddlResStatus" })
+            <br />
+
+            <div class="pt-3 pb-3 pl-3  mt-0 mb-0 col-md-12 border">
+                <label class="pl-2">Edit Reservation Dates and Site Number</label>
+                <div class="input-group mt-3">
+                    <span class="input-group-text" id="">New Start Date</span>
+                    <input class="form-control pt-1 pb-1" onchange="clearEndDate(); checkDates();" placeholder="Start Date" id="startDate" type="datetime" asp-for="@Model.CustomerReservation.ResStartDate" value="@Model.CustomerReservation.ResStartDate.ToString("MM/dd/yyyy")" readonly>
+                </div>@*datepicker container-fluid <- this goes inside the class="" above*@
+                <div class="input-group mt-3">
+                    <span class="input-group-text" id="">New End Date</span>
+                    <input class="form-control pt-1 pb-1" onchange="checkDates();" placeholder="End Date" id="endDate" type="datetime" asp-for="@Model.CustomerReservation.ResEndDate" value="@Model.CustomerReservation.ResEndDate.ToString("MM/dd/yyyy")" readonly>
+                </div>@*datepicker container-fluid <- this goes inside the class="" above*@
+                <div class="row justify-content-center mt-3 mb-3" id="btnSeeReservations">
+                    <div class="col-md-12">
+                        <button @*onclick="loadReservations();"*@ type="button" class="btn container-fluid btn-primary">See Available Lots</button>
+                    </div>
+                </div>
+                <div style="display: none" id="ddlSitesDiv" class="row justify-content-center ">
+                    <div class="col-md-12 mt-2 disabled">
+                        <label class="pl-2">Campsite location</label>
+                        <select onchange="continuePayment(); hideUpdateBtn();" asp-for="siteid" id="ddlSites" class="form-control">
+                            <option value="0">- Please Select a camp site - </option>
+
+                        </select>
+                        <div class="d-md-none">
+                            Click <a class="text-info" data-toggle="modal" data-target="#siteMap">here </a> to view the site map.
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="row justify-content-center mt-3 mb-3">
+                    <div class="col-md-12 mt-2" style="display: none" id="btnPayment">
+                        <button class="btn btn-success col-md-12" style="background-color: #5E700E; border-color: #5E700E" asp-route-value="addDaysUpdate">Continue to Payment and Update</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
 
 @section Scripts {
+    <script src="~/js/adminBooking.js"></script>
     <script type="text/javascript">
         $("#deleteRecord").on("click", function (e) {
             e.preventDefault();
@@ -122,21 +169,23 @@
                 dangerMode: true
             }).then(function (willDelete) {
                 if (willDelete) {
-
+                    
                     $.ajax({
                         type: 'DELETE',
-                        url: '/api/clientReservation/' + @Model.CustomerReservation.ResID,
+                        url: '/api/adminReservationUpdate/' + @Model.CustomerReservation.ResID,
                         success: function (data) {
                             if (data.success) {
                                 toastr.success(data.message);
-                                
+                                console.log("Success!");
+
                             }
                             else {
                                 toastr.error(data.message);
+                                console.log("Failure!");
                             }
                         }
                     }).done(function () {
-                    
+
                         document.getElementById("reservationForm").submit();
                         return true;
 
@@ -146,6 +195,14 @@
                     return false;
                 }
             })
+                .catch(err => {
+                    if (err) {
+                        swal("Oh noes!", "The AJAX request failed!", "error");
+                    } else {
+                        swal.stopLoading();
+                        swal.close();
+                    }
+                });
         })
     </script>
 }

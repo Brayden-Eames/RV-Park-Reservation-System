@@ -186,6 +186,16 @@ function checkAgreement() {
     $('#breedPolicyAgreement').prop("checked", true);
 }
 
+//Hides 'Update Reservation' Button when a new site and dates are picked (forces the user to proceed to pay for added days).
+function hideUpdateBtn() {
+    $('#submitUpdate').css('display', 'none');
+}
+
+//removes end date value from the new end date field (to prevent error box from showing up while selecting new dates)
+function clearEndDate() {
+    document.getElementById("endDate").value = "";
+}
+
 //Hides the site drop down list if any information is changed. 
 function hideLots() {
     $('#btnPayment').css('display', 'none');
@@ -231,16 +241,18 @@ function checkChange(option) {
         $('.genericAccount').css('visibility', 'visible');
         $('.createAccount').css('display', 'none');
         $('.createAccount').css('visibility', 'hidden');
+        $('.custNameFields').css('display', 'block');
+        $('.custNameFields').css('visibility', 'visible');
         document.getElementById("inputFirstName").value = "Generic";
         document.getElementById("inputLastName").value = "Account";
         document.getElementById("inputEmail").value = "genericaccount@gmail.com";
         document.getElementById("inputPhoneNumber").value = "8888888888";
         document.getElementById("ddlDODAffiliation").value = 1;
         document.getElementById("ddlServiceStatusType").value = 1;
-
     }
     if (option.value == 'chooseDefault') {
         $('.genericAccount').css('display', 'none');
         $('.createAccount').css('display', 'none');
     }
 }
+

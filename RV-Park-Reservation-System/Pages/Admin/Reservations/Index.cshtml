@@ -14,71 +14,52 @@
             </div>
         </div>
         <br /><br />
-        <p style="display: none;" id="success">@Model.Success.ToString()</p>
-        <p class="hidden" id="message">@Model.Message</p>
-        <table class="table table-striped table-bordered" style="width:100%">
+        <table id="DT_load" class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">Reservation #</th>
-                    <th scope="col">Customer Name</th>
-                    <th scope="col">Site Number</th>
-                    <th scope="col">Start Date</th>
-                    <th scope="col">End Date</th>
-                    <th scope="col">Customer Phone #</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
+                    <th>
+                        Reservation ID
+                    </th>
+                    <th>
+                        Customer Name
+                    </th>
+                    <th>
+                        Customer Email
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Site Number
+                    </th>
+                    <th>
+                       Status
+                    </th>
+                    <th>
+                        Actions
+                    </th>
                 </tr>
             </thead>
-            <tbody>
-                @{
-                    foreach (var reservation in Model.ReservationList)
-                    {
-                        <tr>
-                            <td id="reservationID">@reservation.ResID</td>
-                            <td>@reservation.Customer.CustFirstName  @reservation.Customer.CustLastName</td>
-                            <td>@reservation.Site.SiteNumber</td>
-                            <td>@reservation.ResStartDate</td>
-                            <td>@reservation.ResEndDate</td>
-                            <td>@reservation.Customer.CustPhone</td>
-                            @if(reservation.ResStatusID == 1)
-                            { 
-                                <td class="text-danger"><b>PENDING</b></td>
-                            }
-                            @if(reservation.ResStatusID == 4)
-                                { 
-                                <td class="text-warning"><b>ONGOING</b></td>
-                            }
-                            @if(reservation.ResStatusID == 9)
-                                { 
-                                <td class="text-success"><b>SCHEDULED</b></td>
-                            }
-                            <td>
-                                <form method="post">
-                                    <a class="btn btn-success text-light" asp-page="/Admin/Reservations/Upsert" asp-route-id="@reservation.ResID" asp-route-userId="@reservation.Customer.Id"><i class="far fa-edit"></i> Edit</a>
-                                    <input type="hidden" value="@reservation.ResID" />
-                                    <input type="hidden" value="@reservation.Customer.Id" />
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
         </table>
     </div>
 </div>
 
 @section Scripts{
-   
-<script>
-    function alertFunc() {
-                var success = $("#success").html()
-                var message = $("#message").html();
-                console.log(success);
-                console.log(message);
-                if (success == "True") {
-                    toastr.success(message);
-                };
-            }
+
+    <script src="~/js/adminReservation.js"></script>
+    <script>
+        function alertFunc() {
+            var success = $("#success").html()
+            var message = $("#message").html();
+            console.log(success);
+            console.log(message);
+            if (success == "True") {
+                toastr.success(message);
+            };
+        }
         window.onload = alertFunc();
-</script>
+    </script>
 }
