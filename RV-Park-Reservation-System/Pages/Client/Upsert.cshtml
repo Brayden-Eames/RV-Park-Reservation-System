@@ -17,8 +17,8 @@
     <input type="hidden" value="@Model.CustomerReservation.ResStatusID" asp-for="reservationStatusID" />
 
 
-    <div class="row border  pt-3 pb-2 mt-2 mb-2 ml-7 mr-7 justify-content-center">
-        <div class="pt-3 pb-3 pl-3 ml-2 mt-2 mb-3 col-md-3 border">
+    <div class="row border  pt-3 pb-2 mt-2 mb-2 mx-auto justify-content-center">
+        <div class="pt-3 pb-3 mt-2 mb-3 mx-1 col-12 col-md-3 border">
             <label class="pl-2">Customer Info</label>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">First Name</span>
@@ -49,7 +49,7 @@
                 <input type="text" class="form-control" id="ddlVehicleLength" placeholder="Vehicle Length" asp-for="@Model.CustomerReservation.ResVehicleLength" value="@Model.CustomerReservation.ResVehicleLength" readonly>
             </div>
         </div>
-        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border">
+        <div class="pt-3 pb-3 mt-2 mb-3 mx-1 col-12 col-md-3 border">
             <label class="pl-2">Reservation Info</label>
             <div class="input-group mb-3 mt-3">
                 @*<label class="input-group-text pt-0 pb-0">Reservation Status</label>*@
@@ -79,11 +79,11 @@
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Number of Adults</span>
-                <input type="text" class="form-control" placeholder="Number of Adults" asp-for="@Model.CustomerReservation.ResNumAdults" value="@Model.CustomerReservation.ResNumAdults">
+                <input type="number" class="form-control" placeholder="Number of Adults" asp-for="@Model.CustomerReservation.ResNumAdults" value="@Model.CustomerReservation.ResNumAdults">
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Number of Children</span>
-                <input type="text" class="form-control" placeholder="Number of Children" asp-for="@Model.CustomerReservation.ResNumChildren" value="@Model.CustomerReservation.ResNumChildren">
+                <input type="number" class="form-control" placeholder="Number of Children" asp-for="@Model.CustomerReservation.ResNumChildren" value="@Model.CustomerReservation.ResNumChildren">
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Number of Pets</span>
@@ -104,7 +104,7 @@
             }
             <br />
         </div>
-        <div class="pt-3 pb-3 pl-3 ml-3 mt-2 mb-3 col-md-3 border form" id="actionForm">
+        <div class="pt-3 pb-3 mt-2 mb-3 mx-1 col-12 col-md-3 border form" id="actionForm">
             <label class="pl-2">Actions</label>
             <br />
             <button class="btn btn-success form-control mt-3 mb-2 text-light" style="background-color: #5E700E; border-color: #5E700E" asp-route-value="update" asp-route-updateType="addDays" id="submitUpdate">Update Reservation</button>
