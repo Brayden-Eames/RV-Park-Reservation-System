@@ -139,11 +139,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             {
                 Error = (bool)error;
             }
-            vehicleTypes = _unitOfWork.Vehicle_Type.List().Select(f => new SelectListItem { Value = f.TypeID.ToString(), Text = f.TypeName });
+            vehicleTypes = _unitOfWork.Vehicle_Type.List().Select(f => new SelectListItem { Value = f.TypeID.ToString(), Text = f.TypeName }); //list of vehicle types 
 
-            sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
-            lstServiceStatus = _unitOfWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });
-            lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
+            sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });  //list of sites 
+            lstServiceStatus = _unitOfWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType }); // list of service Status
+            lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });  //list of DODAffiliations
 
             return Page();
         }
@@ -153,7 +153,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
         {
 
             
-            reservationVM = new ReservationVM()
+            reservationVM = new ReservationVM()  //Create New Reservations view model
             {
                 reservationObj = new Reservation(),
                 paymentObj = new Payment(),
@@ -168,7 +168,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 TimeSpan EndTime = new TimeSpan(12, 0, 0);
                 EndDate = EndDate.Date + EndTime;
 
-                if(Input.accountOption == "newUser")
+                if(Input.accountOption == "newUser")  //New user Booking
                 {
                     reservationVM.customerObj.CustFirstName = Input.firstName;
                     reservationVM.customerObj.CustLastName = Input.lastName;
@@ -236,9 +236,9 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
                 if(Input.accountOption == "newUser")
                 {
-                    if (reservationVM.paymentObj.CCReference == null)
+                    if (reservationVM.paymentObj.CCReference == null)  //check if reservation viewmodel payment object's ccreference is null
                     {
-                        var options = new PaymentIntentCreateOptions
+                        var options = new PaymentIntentCreateOptions  //create payment Intent 
                         {
                             Amount = Convert.ToInt32(reservationVM.paymentObj.PayTotalCost * 100),
                             Currency = "usd",
@@ -251,9 +251,9 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 
                         var service = new PaymentIntentService();
                         var paymentIntent = service.Create(options);
-                        reservationVM.paymentObj.CCReference = paymentIntent.Id;
+                        reservationVM.paymentObj.CCReference = paymentIntent.Id;  //Saving PaymentIntent Id to payment object CCReference
                     }
-                    HttpContext.Session.Set(SD.ReservationSession, reservationVM);
+                    HttpContext.Session.Set(SD.ReservationSession, reservationVM);  //Storing Reservation viewmodel into reservation Session
 
                     return RedirectToPage("/Admin/Reservations/AdminPaymentSummary");
                 }

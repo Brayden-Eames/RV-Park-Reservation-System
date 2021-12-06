@@ -77,13 +77,13 @@ namespace RV_Park_Reservation_System.Pages.Client
             CustomerInfo = await _unitOfWork.Customer.GetAsync(c => c.Id == CustomerReservation.Id); // Getting customer details with reservation details
             CustomerPayment = await _unitOfWork.Payment.GetAsync(p => p.ResID == id); //Gettting Payment associated with reservation id
 
-            sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });
+            sites = _unitOfWork.Site.List().Select(f => new SelectListItem { Value = f.SiteID.ToString(), Text = "Lot " + f.SiteID.ToString() });  // Getting list of Available Sites 
             lstServiceStatus = _unitOfWork.Service_Status_Type.List().Select(s => new SelectListItem { Value = s.ServiceStatusID.ToString(), Text = s.ServiceStatusType });  //Getting Servives Status of customer 
             lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });  //Getting DODAffiliationstomer 
 
             lstReservationStatus = _unitOfWork.Reservation_Status.List().Select(s => new SelectListItem { Value = s.ResStatusID.ToString(), Text = s.ResStatusName });
 
-            custVehicleType = await _unitOfWork.Vehicle_Type.GetAsync(v => v.TypeID == CustomerReservation.TypeID);
+            custVehicleType = await _unitOfWork.Vehicle_Type.GetAsync(v => v.TypeID == CustomerReservation.TypeID); //Gets vehicle type name from Typeid in Reservation
 
 
             return Page();
@@ -93,26 +93,26 @@ namespace RV_Park_Reservation_System.Pages.Client
         {
             if (value == "update") //conditional for updating everything except for adding a new site and/or dates.
             {
-                var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID);
-                var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == CustomerReservation.Site.SiteID);
+                var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID); //Getting reservation details for the reservation Id
+                var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == CustomerReservation.Site.SiteID);  // Getting Site Details for Site from reservation site Id
                
-                reservation.ResNumAdults = CustomerReservation.ResNumAdults;
-                reservation.ResNumChildren = CustomerReservation.ResNumChildren;
+                reservation.ResNumAdults = CustomerReservation.ResNumAdults;  //Updating Number of Adults for the reservation
+                reservation.ResNumChildren = CustomerReservation.ResNumChildren;  //Updating Number of Children for the reservation
                 reservation.ResNumPets = CustomerReservation.ResNumPets;
 
 
-                _unitOfWork.Reservation.Update(reservation);
+                _unitOfWork.Reservation.Update(reservation);  //Updating Reservation
                 _unitOfWork.Commit();
                 return RedirectToPage("./MyReservations", new { success = true, message = "Update Successful" });
             }
             else if (value == "addDaysUpdate") //conditional for adding new days/new site
             {
-                var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID);
-                var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == siteid);
-                var paymentObject = await _unitOfWork.Payment.GetAsync(p => p.ResID == CustomerReservation.ResID);
+                var reservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == CustomerReservation.ResID);  //Get reservation details for this reservation Id
+                var siteObj = await _unitOfWork.Site.GetAsync(s => s.SiteID == siteid);  //Get Site details for this Site Id
+                var paymentObject = await _unitOfWork.Payment.GetAsync(p => p.ResID == CustomerReservation.ResID);  //Get Payment Obj details for this reservation Id
                 var customerInfoObj = await _unitOfWork.Customer.GetAsync(c => c.CustFirstName == CustomerInfo.CustFirstName && c.CustLastName == CustomerInfo.CustLastName);
 
-                reservationVM = new ReservationVM()
+                reservationVM = new ReservationVM()  //Creating Reservation View Model and adding reservation object, Payment Object and Customer Object.
                 {
                     reservationObj = reservation,
                     paymentObj = paymentObject,
@@ -120,6 +120,8 @@ namespace RV_Park_Reservation_System.Pages.Client
                 };
 
                 //Functionality is being displayed due to problem in implementing it.
+
+
                 //reservationVM.reservationObj.Site = siteObj;
                 //reservationVM.reservationObj.Site.SiteNumber = siteObj.SiteNumber;
                 //reservationVM.reservationObj.ResStartDate = CustomerReservation.ResStartDate;

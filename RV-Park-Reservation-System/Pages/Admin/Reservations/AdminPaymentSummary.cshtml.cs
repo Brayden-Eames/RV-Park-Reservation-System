@@ -70,12 +70,12 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 {
                     Error = true;
                 }
-                reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
+                reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);  //Getting reservation ViewModel from Session
 
-                newReservation = reservationVM.reservationObj;
-                paymentObj = reservationVM.paymentObj;
-                customerObj = reservationVM.customerObj;
-                vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;
+                newReservation = reservationVM.reservationObj; //Storing reservation viewmodel's reservation object to a new Reservation
+                paymentObj = reservationVM.paymentObj;  //Storing reservation viewmodel's payment object to a new payment Object
+                customerObj = reservationVM.customerObj;   //Storing reservation viewmodel's customer object to a new Customer Obj
+                vehicleType = _unitOfWork.Vehicle_Type.Get(v => v.TypeID == newReservation.TypeID).TypeName;  //Getting Vehicle type name from vehicle type id in Reservation
                 ReturnUrl = returnUrl;
 
             }
