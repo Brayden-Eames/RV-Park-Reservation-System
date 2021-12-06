@@ -142,10 +142,15 @@ namespace RV_Park_Reservation_System.Pages.Client
                 {
 
 
-                    DateTime endOfMonthStartDate = new DateTime(StartDate.Year,
-                                                       StartDate.Month,
-                                                       DateTime.DaysInMonth(StartDate.Year,
-                                                                            StartDate.Month));
+                    DateTime endOfMonthStartDate = new DateTime(
+                        StartDate.Year,
+                        StartDate.Month,
+                        DateTime.DaysInMonth(
+                            StartDate.Year,
+                            StartDate.Month
+                        )
+                    );
+
                     DateTime nextMonthStartDate = new DateTime();
                     if (StartDate.Month == 12)
                     {
@@ -157,8 +162,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                                                                              
                     }
 
-                    DateTime startOfMonthEndDate = new DateTime(EndDate.Year,
-                                                                EndDate.Month, 1);
+                    DateTime startOfMonthEndDate = new DateTime(EndDate.Year, EndDate.Month, 1);
                     var totalDayDiff = Math.Ceiling((endOfMonthStartDate - StartDate).TotalDays) + 1 + Math.Floor((EndDate - startOfMonthEndDate).TotalDays);
                     var monthDiff = getMonthDifference(nextMonthStartDate, startOfMonthEndDate);
 
@@ -199,30 +203,30 @@ namespace RV_Park_Reservation_System.Pages.Client
                             int payID = await createPayment(700, resid);
                             longTermReservationVM.paymentObj[i + 1] = _unitOfWork.Payment.Get(p => p.PayID == payID);
                         }
-                       /* if (monthDiff >=1)
-                        {
+                        /* if (monthDiff >=1)
+                  {
 
-                            for (int i = 0; i < monthDiff; i++)
-                            {
-                                DateTime startOfMonth = nextMonthStartDate;
-                                DateTime endOfMonth = new DateTime();
-                                if (startOfMonth.Month == 12)
-                                {
-                                    nextMonthStartDate = new DateTime(startOfMonth.Year + 1, 1, 1);
-                                    endOfMonth = new DateTime(startOfMonth.Year +1, startOfMonth.Month , DateTime.DaysInMonth(startOfMonth.Year, startOfMonth.Month ));
-                                }
-                                else
-                                {
-                                    nextMonthStartDate = new DateTime(startOfMonth.Year, startOfMonth.Month + 1, 1);
-                                    endOfMonth = new DateTime(startOfMonth.Year, startOfMonth.Month, DateTime.DaysInMonth(startOfMonth.Year, startOfMonth.Month));
-                                }
-                                int monthResId = await createReservation(startOfMonth, endOfMonth, 700);
-                                longTermReservationVM.reservationObj[1 + i] = _unitOfWork.Reservation.Get(r=>r.ResID == monthResId);
-                                longTermReservationVM.paymentObj[1 + i] = _unitOfWork.Payment.Get(p=> p.ResID == monthResId);
+                      for (int i = 0; i < monthDiff; i++)
+                      {
+                          DateTime startOfMonth = nextMonthStartDate;
+                          DateTime endOfMonth = new DateTime();
+                          if (startOfMonth.Month == 12)
+                          {
+                              nextMonthStartDate = new DateTime(startOfMonth.Year + 1, 1, 1);
+                              endOfMonth = new DateTime(startOfMonth.Year +1, startOfMonth.Month , DateTime.DaysInMonth(startOfMonth.Year, startOfMonth.Month ));
+                          }
+                          else
+                          {
+                              nextMonthStartDate = new DateTime(startOfMonth.Year, startOfMonth.Month + 1, 1);
+                              endOfMonth = new DateTime(startOfMonth.Year, startOfMonth.Month, DateTime.DaysInMonth(startOfMonth.Year, startOfMonth.Month));
+                          }
+                          int monthResId = await createReservation(startOfMonth, endOfMonth, 700);
+                          longTermReservationVM.reservationObj[1 + i] = _unitOfWork.Reservation.Get(r=>r.ResID == monthResId);
+                          longTermReservationVM.paymentObj[1 + i] = _unitOfWork.Payment.Get(p=> p.ResID == monthResId);
 
 
-                            }
-                        }*/
+                      }
+                  }*/
                         if ((EndDate - startOfMonthEndDate).TotalDays != 0)
                         {
                             decimal endCost = (decimal)(Math.Floor((EndDate - startOfMonthEndDate).TotalDays)) * 25;
@@ -230,9 +234,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                             
                             longTermReservationVM.paymentObj[longTermReservationVM.paymentObj.Count()-1] = _unitOfWork.Payment.Get(p => p.PayID == payid);
 
-                        }
-
-                        
+                        }                        
                         
                         //Sets the Reservation view model in a session. 
                         HttpContext.Session.Set(SD.LongTermReservationSession, longTermReservationVM);
@@ -244,25 +246,13 @@ namespace RV_Park_Reservation_System.Pages.Client
                         reservationVM.reservationObj = _unitOfWork.Reservation.Get(r => r.ResID == resid);
                         reservationVM.paymentObj = _unitOfWork.Payment.Get(p => p.PayID == payid);
 
-
                         //Sets the Reservation view model in a session. 
                         HttpContext.Session.Set(SD.ReservationSession, reservationVM);
 
-
                     }
-
 
                     //Resirects to the payment page for user to make the payment and review the information. 
                     return RedirectToPage("/Client/PaymentSummary");
-
-
-
-
-
-
-
-
-
                 }
                 else
                 {
@@ -290,10 +280,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
                     //Resirects to the payment page for user to make the payment and review the information. 
                     return RedirectToPage("/Client/PaymentSummary");
-                }
-
-
-                
+                }                
             }
             else
             {
@@ -312,19 +299,16 @@ namespace RV_Park_Reservation_System.Pages.Client
 
             _unitOfWork.Reservation.Delete(reservations);
         }
-
         public static int getMonthDifference(DateTime startDate, DateTime endDate)
         {
             int monthsApart = 12 * (startDate.Year - endDate.Year) + startDate.Month - endDate.Month;
             return Math.Abs(monthsApart);
         }
 
-
         public async Task<int> createReservation(DateTime startDate, DateTime endDate)
         {
             Reservation Res = new Reservation();
             ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
-
 
             Res.ResAcknowledgeValidPets = breedPolicy;
             Res.ResStartDate = startDate;

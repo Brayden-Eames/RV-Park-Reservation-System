@@ -9,7 +9,7 @@ namespace RV_Park_Reservation_System.Pages.Shared
         public string UrlPath { get; set; }
         public IActionResult OnGet(string path)
         {
-            UrlPath = path;
+            UrlPath = path; //this is for redirecting back after log in.
             return Page();
         }
     }
