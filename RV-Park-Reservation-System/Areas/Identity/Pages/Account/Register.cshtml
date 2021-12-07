@@ -6,8 +6,8 @@
 @{ ViewData["Title"] = "Register"; }
 <div class="py-4 my-4">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="row form-group">
-        <div class="col-4 offset-4">
+    <div class="row form-group justify-content-center">
+        <div class="col-12 col-lg-4 mx-auto">
             <div class="card">
                 <div class="card-body px-lg-5 pt-4">
                     <form method="post" autocomplete="off" asp-route-returnUrl="@Model.ReturnUrl">
@@ -51,19 +51,19 @@
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                         </div>
                         <div class="form-group row">
-                          <div class="col-3">
+                          <div class="col-12">
                                 <label asp-for="Input.ServiceStatusID"></label>
                             </div>
-                            <div class="col-9">
+                            <div class="col-12">
                                 @Html.DropDownListFor(s => s.Input.ServiceStatusID, Model.lstServiceStatus, " - Please select a service type - ", new { @class = "form-control", @id = "ddlServiceStatus" })
                                 <span class="text-danger" asp-validation-for="Input.ServiceStatusID"></span>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-3">
+                            <div class="col-12">
                                 <label asp-for="Input.DODAffiliationID"></label>
                             </div>
-                            <div class="col-9">
+                            <div class="col-12">
                                 @Html.DropDownListFor(s => s.Input.DODAffiliationID, Model.lstDODAffiliation, " - Please select a service type - ", new { @class = "form-control", @id = "ddlDODAffiliation" })
                                 <span class="text-danger" asp-validation-for="Input.DODAffiliationID"></span>
                             </div>
