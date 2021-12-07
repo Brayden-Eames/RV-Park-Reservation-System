@@ -18,13 +18,11 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 {    
     public class ReservationsUpdateModel : PageModel
     {
-        private readonly IUnitOfWork _unitOfWork;
-        //private readonly UserManager<Customer> _userManager;
+        private readonly IUnitOfWork _unitOfWork;        
 
         public ReservationsUpdateModel(IUnitOfWork unitOfWork/*, UserManager<Customer> userManager*/)
         {
-            _unitOfWork = unitOfWork;
-            //_userManager = userManager;
+            _unitOfWork = unitOfWork;           
         }
 
         //passing the 'ResID' in through the reservations.cshtml, we can then use that to go through unitofWork and retrieve that reservation, and by extension the customer's info
@@ -92,8 +90,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             lstDODAffiliation = _unitOfWork.DOD_Affiliation.List().Select(d => new SelectListItem { Value = d.DODAffiliationID.ToString(), Text = d.DODAffiliationType });
 
             lstReservationStatus = _unitOfWork.Reservation_Status.List().Select(s => new SelectListItem { Value = s.ResStatusID.ToString(), Text = s.ResStatusName });
-
-            //custVehicleType = _unitOfWork.Vehicle_Type.GetAsync(v => v.TypeID == CustomerReservation.TypeID);
+           
             custVehicleType = await _unitOfWork.Vehicle_Type.GetAsync(v => v.TypeID == CustomerReservation.TypeID);
 
 
@@ -136,51 +133,8 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                 {
                     reservationObj = reservation,
                     paymentObj = paymentObject,
-                    customerObj = customerInfoObj,
-                    //paymentUpdateObj = new Payment()
-                };
-                //This entire functionality is being disabled due to problems with implementing it. 
-
-/*                reservation.Site = siteObj;
-                reservation.Site.SiteNumber = siteObj.SiteNumber;
-                reservation.ResStartDate = CustomerReservation.ResStartDate;
-                reservation.ResEndDate = CustomerReservation.ResEndDate;
-                reservation.ResNumAdults = CustomerReservation.ResNumAdults;
-                reservation.ResNumChildren = CustomerReservation.ResNumChildren;
-                reservation.ResNumPets = CustomerReservation.ResNumPets;
-                reservation.ResAcknowledgeValidPets = CustomerReservation.ResAcknowledgeValidPets;
-                reservation.ResComment = CustomerReservation.ResComment;
-                reservation.ResVehicleLength = CustomerReservation.ResVehicleLength;
-                reservation.Vehicle_Type = CustomerReservation.Vehicle_Type;
-                reservation.ResStatusID = reservationStatusID;
-
-                reservationVM.paymentObj.PayDate = DateTime.Now;
-                reservationVM.paymentObj.PayLastModifiedBy = User.Identity.Name;
-                reservationVM.paymentObj.PayLastModifiedDate = DateTime.Now;
-                reservationVM.paymentObj.PayReasonID = 1;
-                reservationVM.paymentObj.PayTypeID = 1;
-                reservationVM.paymentObj.IsPaid = false;
-                reservationVM.paymentObj.PayTotalCost = totalCost;
-
-                reservationVM.paymentObj.CCReference = null;*/
-
-
-                //var options = new PaymentIntentCreateOptions
-                //{
-                //    Amount = Convert.ToInt32(totalCost * 100),
-                //    Currency = "usd",
-
-                //    PaymentMethodTypes = new List<string>
-                //        {
-                //            "card",
-                //        },
-                //};
-
-
-
-                //var service = new PaymentIntentService();
-                //var paymentIntent = service.Create(options);
-                //reservationVM.paymentObj.CCReference = paymentIntent.Id;
+                    customerObj = customerInfoObj,                 
+                };             
 
                 HttpContext.Session.Clear();
                 HttpContext.Session.Set(SD.ReservationSession, reservationVM); //uses the ReservationSession string to handle this separate from regular sessions.

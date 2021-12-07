@@ -44,7 +44,7 @@ namespace RV_Park_Reservation_System.Pages.Client
         public async Task<IActionResult> OnPost()
         {
 
-            ReservationVM reservationVM = new ReservationVM()
+            ReservationVM reservationVM = new ReservationVM()  //creating new reservation view model
             {
                 reservationObj = new Reservation(),
                 paymentObj = new Payment(),
@@ -52,10 +52,10 @@ namespace RV_Park_Reservation_System.Pages.Client
             };
 
             
-            reservationVM.paymentObj = _unitOfWork.Payment.Get(p => p.PayID == payID);
-            reservationVM.reservationObj = _unitOfWork.Reservation.Get(r => r.ResID == reservationVM.paymentObj.ResID);
+            reservationVM.paymentObj = _unitOfWork.Payment.Get(p => p.PayID == payID); //Gets payment object from payment table 
+            reservationVM.reservationObj = _unitOfWork.Reservation.Get(r => r.ResID == reservationVM.paymentObj.ResID);  //Gets reservation object from reseravtion table using reservationId
             var paymentList = _unitOfWork.Payment.List().Where(p => p.ResID == reservationVM.reservationObj.ResID).ToList().ToArray();
-            longTermReservationVM longTermReservationVM = new longTermReservationVM()
+            longTermReservationVM longTermReservationVM = new longTermReservationVM()  //Reservation view model for longterm reservations
             {
                 reservationObj = reservationVM.reservationObj,
                 paymentObj = paymentList,
@@ -63,8 +63,8 @@ namespace RV_Park_Reservation_System.Pages.Client
             };
 
 
-            HttpContext.Session.Set(SD.ReservationSession, reservationVM);
-            HttpContext.Session.Set(SD.LongTermReservationSession, longTermReservationVM);
+            HttpContext.Session.Set(SD.ReservationSession, reservationVM); //storing reservation session for regular reservation
+            HttpContext.Session.Set(SD.LongTermReservationSession, longTermReservationVM);  //storing reservation session for long-term reservation
             return RedirectToPage("/Client/PaymentSummary");
         }
     }

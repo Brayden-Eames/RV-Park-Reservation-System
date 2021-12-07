@@ -4,14 +4,14 @@ var DTvacancyReport;
 var DTActivity;
 
 function generateVacantSitesData() {
-    destroyVacantTable();
+    destroyVacantTable(); //destroys current table to prevent errors.
     let startDate = document.getElementById('startDate').value.toString();
     let endDate = document.getElementById('endDate').value.toString();
     getVacantSitesList(startDate, endDate);
 }
 
 function generateHistoricSitesData() {
-    destroyHistoricTable();
+    destroyHistoricTable(); //destroys current table to prevent errors.
     let startDate = document.getElementById('historicStartDate').value.toString();
     let endDate = document.getElementById('historicEndDate').value.toString();
     getHistoricReservationList(startDate, endDate);
@@ -20,8 +20,7 @@ function generateHistoricSitesData() {
 function destroyVacantTable() {
     var table = $('#DTvacancyReport').DataTable()
     if (table) {        
-        table.destroy();
-        
+        table.destroy();        
     }
 }
 
@@ -33,7 +32,7 @@ function destroyHistoricTable() {
 }
 
 function getVacantSitesList(startDate, endDate) {
-        
+    
         DTvacancyReport = $('#DTvacancyReport').DataTable({
         dom: 'Bfrtip',
         buttons: [ 'csv', 'excel', 'pdf', 'print'],
@@ -83,6 +82,7 @@ function getHistoricReservationList(startDate, endDate) {
     });
 }
 
+//activityList is the upcoming Checkin/Check Out activity. 
 function getActivityList() {   
 
     $('#DTActivity thead tr').clone(true).addClass('filters').appendTo('#DTActivity thead'); //this clones the first row
@@ -132,7 +132,7 @@ function getActivityList() {
         dom: 'Bfrtip',
         buttons: ['csv', 'excel', 'pdf', 'print'],
         "ajax": {
-            "url": "/api/reports",
+            "url": "/api/reports", /*this controller is used only for the activity list or the check In/ Check Out report*/
             "type": "GET",
             "datatype": "json"
         },
