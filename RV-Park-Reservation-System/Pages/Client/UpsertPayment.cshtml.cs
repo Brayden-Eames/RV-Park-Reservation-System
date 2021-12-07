@@ -35,7 +35,7 @@ namespace RV_Park_Reservation_System.Pages.Client
         public int payID { get; set; }
         #endregion
 
-        public void OnGet(int id)
+        public void OnGet(int? id)
         {
             payments = _unitOfWork.Payment.List().Where(p => p.ResID == id);
 

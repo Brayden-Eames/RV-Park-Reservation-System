@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -6,39 +7,40 @@ using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using PasswordGenerator;
 using RV_Park_Reservation_System.ViewModels;
 using Stripe;
 
-namespace RV_Park_Reservation_System.Pages.Client
+namespace RV_Park_Reservation_System.Pages.Admin.Reservations
 {
-    public class PaymentSummaryModel : PageModel
+    public class MakeCardPaymentModel : PageModel
     {
-        #region injectedServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<ApplicationCore.Models.Customer> _userManager;
         private readonly IEmailSender _emailSender;
 
-        public PaymentSummaryModel(IUnitOfWork unitOfWork, UserManager<ApplicationCore.Models.Customer> userManager, IEmailSender emailSender)
+        public MakeCardPaymentModel(IUnitOfWork unitOfWork, UserManager<ApplicationCore.Models.Customer> userManager, IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _emailSender = emailSender;
 
         }
-        #endregion
 
-        #region properties
+
         [BindProperty]
         public Reservation newReservation { get; set; }
 
         [BindProperty]
         public Payment paymentObj { get; set; }
+
+        [BindProperty]
+        public ApplicationCore.Models.Customer customerObj { get; set; }
 
         [BindProperty]
         public int reservationID { get; set; }
@@ -47,25 +49,19 @@ namespace RV_Park_Reservation_System.Pages.Client
         public int paymentID { get; set; }
 
         [BindProperty]
-        public string  vehicleType { get; set; }
+        public string vehicleType { get; set; }
 
         public bool Error { get; set; } = false;
 
-        public decimal paymentAmount { get; set; }
-
-        public decimal amountDue { get; set; }
+        public string ReturnUrl { get; set; }
 
         public ReservationVM reservationVM { get; set; }
+        public longTermReservationVM longTermReservationVM { get; private set; }
+        public decimal totalAmount { get; private set; }
 
-        public longTermReservationVM longTermReservationVM { get; set; }
-
-        public decimal totalAmount { get; set; }
-
-        #endregion
-
-
-        public IActionResult OnGet(bool? error)
+        public IActionResult OnGet(bool? error, string returnUrl = null)
         {
+
             //Checks if user is logged in and a customer. 
             if (!User.Identity.IsAuthenticated && !User.IsInRole("Customer"))
             {
@@ -82,7 +78,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                 }
             }
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
-            { 
+            {
                 //Sets the error state. 
                 if (error != null)
                 {
@@ -108,21 +104,18 @@ namespace RV_Park_Reservation_System.Pages.Client
             }
             return Page();
         }
-
-
-
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             //Gets reservationVM from session and sets it to reservationVM
             if (HttpContext.Session.Get<ReservationVM>(SD.ReservationSession) != null)
             {
-               reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
+                reservationVM = HttpContext.Session.Get<ReservationVM>(SD.ReservationSession);
             }
 
 
             //Creates a payment intent service though stripes api. 
             var service = new PaymentIntentService();
-            PaymentIntent paymentIntent; 
+            PaymentIntent paymentIntent;
 
 
             //"Pings" the selected payment intent until stripe updates it to succeeded and payment is fully processed or some error occurs. 
@@ -137,12 +130,11 @@ namespace RV_Park_Reservation_System.Pages.Client
                 //checks if payment intent succeed and addes it to the payment table in database. 
                 if (paymentIntent.Status.ToLower() == "succeeded")
                 {
-                    //get the current logged in customer. 
-                    ApplicationCore.Models.Customer customer = _unitOfWork.Customer.Get(c => c.CustEmail == User.Identity.Name);
+
 
                     //Finalizes the payment object. 
-                    
-                    
+
+
                     reservationVM.paymentObj.IsPaid = true;
                     _unitOfWork.Payment.Update(reservationVM.paymentObj);
                     _unitOfWork.Commit();
@@ -167,7 +159,8 @@ namespace RV_Park_Reservation_System.Pages.Client
                     HttpContext.Session.Clear();
 
                     //Sends an email to the user with confirmation code. 
-                    var user = await _userManager.FindByEmailAsync(User.Identity.Name);
+                    var customer = await _unitOfWork.Customer.GetAsync(c => c.Id == reservationVM.reservationObj.Id);
+                    var user = await _userManager.FindByEmailAsync(customer.Email);
                     var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -179,7 +172,7 @@ namespace RV_Park_Reservation_System.Pages.Client
                     await _emailSender.SendEmailAsync(
                         user.CustEmail,
                         "FamCamp Reservation Confirmation",
-                        $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account. " +
+                        $"This is a confirmation that your reservation is confirmed and paid " + reservationVM.paymentObj.PayTotalCost + ". to view this reservation please visit the MyReservation page under your account. " +
                         $"Your reservation confirmation number is " + reservationVM.reservationObj.ResID.ToString() + "."
                         );
 
@@ -191,15 +184,7 @@ namespace RV_Park_Reservation_System.Pages.Client
 
             }
             //Some error occured and payment was not completed. Return to current page and display error message. 
-            return RedirectToPage("/Client/PaymentSummary", new { error = true });
-
+            return RedirectToPage("/Admin/Reservations/PaymentSummary", new { error = true });
         }
-
-        public static int getMonthDifference(DateTime startDate, DateTime endDate)
-        {
-            int monthsApart = 12 * (startDate.Year - endDate.Year) + startDate.Month - endDate.Month;
-            return Math.Abs(monthsApart);
-        }
-
     }
 }

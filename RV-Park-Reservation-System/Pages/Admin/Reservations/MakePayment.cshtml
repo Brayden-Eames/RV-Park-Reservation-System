@@ -1,0 +1,86 @@
+﻿@page
+@model RV_Park_Reservation_System.Pages.Admin.Reservations.MakePaymentModel
+@{
+}
+<form method="post" >
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <input type="hidden" id="paymentID" asp-for="payID" />
+                <input type="hidden" id="paymentOption" asp-for="@Model.PaymentOption" />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Pay ID</th>
+                            <th scope="col">Payment Created Date</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Paid</th>
+                            <th scope="col">Payment Option</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var payment in Model.payments)
+                        {
+                            if (payment.IsPaid)
+                            {
+                            <tr class="table-success">
+                                <th scope="row">@payment.PayID</th>
+                                <td>@payment.PayDate</td>
+                                <td>@payment.PayTotalCost</td>
+                                <td>@payment.IsPaid</td>
+                                <td class="form-group">
+                                    <select asp-for="@Model.PaymentOption" class="form-select" aria-label="Default select example">
+                                        <option value="Card">Card</option>
+                                        <option value="Cash">Cash</option>
+                                    </select>
+                                </td>
+                                <td><button disabled class="btn btn-success">Make Payment</button></td>
+
+                            </tr>
+                            }
+                            else
+                            {
+                                <tr class="table-danger">
+                                    <th scope="row">@payment.PayID</th>
+                                    <td>@payment.PayDate</td>
+                                    <td>@payment.PayTotalCost</td>
+                                    <td>@payment.IsPaid</td>
+                                    <td class="form-group">
+                                        <select class="form-select" onchange="setPaymentOption(this.id);" id="PaymentOption+@payment.PayID" aria-label="Default select example">
+                                            <option value="Card">Card</option>
+                                            <option value="Cash">Cash</option>
+
+                                        </select>
+                                    </td>
+                                    <td><button onclick="setPayId(@payment.PayID)" class="btn btn-success">Make Payment</button></td>
+                                </tr>
+                            }
+
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        function setPayId(id) {
+            document.getElementById('paymentID').value = id;
+            console.log(id);
+
+        }
+        function setPaymentOption(id) {
+
+            document.getElementById('paymentOption').value = document.getElementById(id).value;
+            console.log(document.getElementById('paymentOption').value);
+        }
+ 
+    </script>
+
+}

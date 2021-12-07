@@ -80,7 +80,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
             {
                 return RedirectToPage("/Shared/Prohibited", new { path = "/Admin/Reservations/Upsert" });
             }
-
+            reservationID = (int)id;
             CustomerReservation = await _unitOfWork.Reservation.GetAsync(c => c.ResID == id);
             CustomerInfo = await _unitOfWork.Customer.GetAsync(c => c.Id == CustomerReservation.Id);
             CustomerPayment = await _unitOfWork.Payment.GetAsync(p => p.ResID == id);
