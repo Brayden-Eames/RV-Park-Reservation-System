@@ -172,7 +172,7 @@ namespace RV_Park_Reservation_System.Pages.Admin.Reservations
                     await _emailSender.SendEmailAsync(
                         user.CustEmail,
                         "FamCamp Reservation Confirmation",
-                        $"This is a confirmation that your reservation is confirmed and paid in it's entirety. to view this reservation please visit the MyReservation page under your account. " +
+                        $"This is a confirmation that your reservation is confirmed and paid " + reservationVM.paymentObj.PayTotalCost + ". to view this reservation please visit the MyReservation page under your account. " +
                         $"Your reservation confirmation number is " + reservationVM.reservationObj.ResID.ToString() + "."
                         );
 
