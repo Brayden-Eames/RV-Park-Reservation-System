@@ -27,7 +27,7 @@
                             <tr class="table-success">
                                 <th scope="row">@payment.PayID</th>
                                 <td>@payment.PayDate</td>
-                                <td>@payment.PayTotalCost</td>
+                                <td>@payment.PayTotalCost.ToString("C2")</td>
                                 <td>@payment.IsPaid</td>
                                 <td class="form-group">
                                     <select asp-for="@Model.PaymentOption" class="form-select" aria-label="Default select example">
@@ -44,7 +44,7 @@
                                 <tr class="table-danger">
                                     <th scope="row">@payment.PayID</th>
                                     <td>@payment.PayDate</td>
-                                    <td>@payment.PayTotalCost</td>
+                                    <td>@payment.PayTotalCost.ToString("C2")</td>
                                     <td>@payment.IsPaid</td>
                                     <td class="form-group">
                                         <select class="form-select" onchange="setPaymentOption(this.id);" id="PaymentOption+@payment.PayID" aria-label="Default select example">
