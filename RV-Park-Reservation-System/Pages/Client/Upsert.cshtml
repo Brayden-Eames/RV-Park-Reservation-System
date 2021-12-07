@@ -63,7 +63,7 @@
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Total Cost</span>
-                <input type="text" class="form-control" placeholder="Total Cost" id="totalCost" asp-for="@Model.totalCost" value="$@Model.CustomerPayment.PayTotalCost" readonly>
+                <input type="text" class="form-control" placeholder="Total Cost" id="totalCost" asp-for="@Model.totalCost" value="@Model.CustomerPayment.PayTotalCost.ToString("C2")" readonly>
             </div>
             <div class="input-group mt-3">
                 <span class="input-group-text" id="">Start Date</span>
