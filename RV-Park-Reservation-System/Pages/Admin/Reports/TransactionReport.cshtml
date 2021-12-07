@@ -193,20 +193,40 @@
                         break;
                 }
             } else if (range == "today") {
-                initStartDate = year + "-" + (month + 1) + "-" + day;
-                initEndDate = year + "-" + (month + 1) + "-" + day;
+                if (day < 10) {
+                    initStartDate = year + "-" + (month + 1) + "-0" + day;
+                    initEndDate = year + "-" + (month + 1) + "-0" + day;
+                }
+                else {
+                    initStartDate = year + "-" + (month + 1) + "-" + day;
+                    initEndDate = year + "-" + (month + 1) + "-" + day;
+                }
             } else if (range == "week") {
-                initEndDate = year + "-" + (month + 1) + "-" + day;
-                let weekEnd = today;
-                weekEnd.setDate(today.getDate() - 7);
-                console.log(weekEnd);
-                initStartDate = year + "-" + (weekEnd.getMonth() + 1) + "-" + weekEnd.getDate();
+                if (day < 10) {
+                    initEndDate = year + "-" + (month + 1) + "-0" + day;
+                }
+                else {
+                    initEndDate = year + "-" + (month + 1) + "-" + day;
+                }
+                let weekStart = today;
+                weekStart.setDate(today.getDate() - 7);
+                console.log(weekStart);
+                initStartDate = year + "-" + (weekStart.getMonth() + 1) + "-" + weekStart.getDate();
                 console.log(initStartDate)
             } else if (range == "month") {
-                initEndDate = year + "-" + (month + 1)  + "-" + day;
+                if (day < 10) {
+                    initEndDate = year + "-" + (month + 1) + "-0" + day;
+                }
+                else {
+                    initEndDate = year + "-" + (month + 1) + "-" + day;
+                }
                 let monthEnd = today;
                 monthEnd.setDate(today.getDate() - 30);
-                initStartDate = year + "-" + (monthEnd.getMonth() + 1) + "-" + monthEnd.getDate();
+                if (monthEnd.getDate() < 10) {
+                    initStartDate = year + "-" + (monthEnd.getMonth() + 1) + "-0" + monthEnd.getDate();
+                } else {
+                    initStartDate = year + "-" + (monthEnd.getMonth() + 1) + "-" + monthEnd.getDate();
+                }
             }
             
             document.getElementById('startDate').value = initStartDate;
