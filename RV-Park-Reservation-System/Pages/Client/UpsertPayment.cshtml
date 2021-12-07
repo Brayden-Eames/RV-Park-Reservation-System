@@ -25,7 +25,7 @@
                         <tr class="table-success">
                             <th scope="row">@payment.PayID</th>
                             <td>@payment.PayDate</td>
-                            <td>@payment.PayTotalCost</td>
+                            <td>@payment.PayTotalCost.ToString("C2")</td>
                             <td>@payment.IsPaid</td>
                             <td><button disabled class="btn btn-success">Make Payment</button></td>
                         </tr>
@@ -35,7 +35,7 @@
                     <tr class="table-danger">
                         <th scope="row">@payment.PayID</th>
                         <td>@payment.PayDate</td>
-                        <td>@payment.PayTotalCost</td>
+                        <td>@payment.PayTotalCost.ToString("C2")</td>
                         <td>@payment.IsPaid</td>
                         <td><button onclick="setPayId(@payment.PayID)" class="btn btn-success">Make Payment</button></td>
                     </tr>
